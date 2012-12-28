@@ -1,4 +1,5 @@
 (function(G, THREE) {
+    var Sprites = G.Sprites;
     var WIDTH = window.innerWidth-100, HEIGHT = window.innerHeight-100;
 
     var camera, scene, renderer;
@@ -6,43 +7,6 @@
 
     init();
     collidables = [];
-
-    function loadSprite(path, callback, img) {
-        if(!img) {
-            var image = THREE.ImageUtils.loadTexture(path+'.png', {},
-                function success() { loadSprite(path, callback, image) },
-                function error() { loadSprite(path, callback) } // retry
-            );
-        } else {
-            var geometry = new THREE.PlaneGeometry(img.image.width, img.image.height);
-            var material = new THREE.MeshPhongMaterial({
-                map : img,
-                transparent : true
-            });
-            sprite = new THREE.Mesh(geometry, material);
-            sprite.width = img.image.width;
-            sprite.height = img.image.height;
-
-            if(callback) callback(sprite);
-        }
-    }
-
-    function loadSprites(path, count, callback) {
-        var sprites = [];
-        for(var i = 0; i < count; i++) {
-            (function(j) {
-                loadSprite(path + (j+1), function(sprite) {
-                    sprites[j] = sprite;
-                    if(count == _.compact(sprites).length) { // all loaded
-                        console.log(j);
-                        callback();
-                    }
-                })
-            })(i)
-        }
-        
-        return sprites;
-    }
 
     function animation(path,num,x,y,scalex,scaley) {
         var that = this;
@@ -52,7 +16,7 @@
         this.speed = 100;
         this.frameTime = 0;
         this.loaded = false;
-        this.sprites = loadSprites(path, that.frames, function() {
+        this.sprites = Sprites.loadSprites(path, that.frames, function() {
             //scale, position, and rotation get set to same object for all sprites
             that.scale = that.sprites[0].scale
             that.position = that.sprites[0].position
@@ -129,7 +93,7 @@
             y : 0
         };
         player.loaded = false;
-        loadSprite("img/player", function(sprite){
+        Sprites.loadSprite("img/player", function(sprite){
             player.sprite = sprite;
             player.sprite.position.x = -1400;
             player.sprite.position.y = -200 - player.sprite.height/2;

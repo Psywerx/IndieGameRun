@@ -25,14 +25,17 @@
         },
         loadSprite: function(path, n, callback) {
             var sprites = [];
-            for (var i=0; i < n; i++) {
-                Sprite.loadSprite(path + (i+1), function(sprite) {
-                    sprites.push(sprite);
-                    if ( sprites.length === n) { // all loaded
-                        callback();
-                    }
-                });
+            for(var i = 0; i < count; i++) {
+                (function(j) {
+                    loadSprite(path + (j+1), function(sprite) {
+                        sprites[j] = sprite;
+                        if(count == _.compact(sprites).length) { // all loaded
+                            callback();
+                        }
+                    })
+                })(i)
             }
+            
             return sprites;
         }
     });
