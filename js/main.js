@@ -5,6 +5,7 @@
     var geometry, material, mesh;
 
     init();
+    collidables = [];
         
     function loadSprite(path, callback, img) {
         if(!img) {
@@ -129,6 +130,7 @@
     }
 
    function init() {
+
         camera = new THREE.PerspectiveCamera(75, WIDTH / HEIGHT, 1, 10000);
         camera.position.z = 1000;
 
@@ -151,6 +153,7 @@
         }
 
         document.body.appendChild(renderer.domElement);
+
     }
 
     function update() {
@@ -178,15 +181,20 @@
         }
         player.speed.y -= 0.1 * dt;
         if(player.loaded) {
+			// TODO: Check for collisions:
+		    for ( var i in collidables) {
+		        var vertices = collidables[i].geometry.vertices;
+		    }
+
             player.sprite.position.x += player.speed.x * dt * 0.1;
             player.sprite.position.y += player.speed.y;
             if (player.sprite.position.y < -100) {
                 player.sprite.position.y = -100;
-                player.speed.y = 0;
-                player.jumpCount = 0;
-                player.jumpLock = false;
-                
-            }        
+		        player.speed.y = 0;
+		        player.jumpCount = 0;
+		        player.jumpLock = false;
+            
+            }
         }
 
         fires.forEach(function(fire){ fire.update(); })
@@ -202,3 +210,4 @@
 
     }
 })();
+
