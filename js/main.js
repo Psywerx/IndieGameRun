@@ -8,11 +8,12 @@
         
     function loadSprite(path, callback, img) {
         if(!img) {
-            var image = THREE.ImageUtils.loadTexture(path+'.png', {}, function(){ loadSprite(path, callback, image) }, function() { loadSprite(path, callback) });
+            var image = THREE.ImageUtils.loadTexture(path+'.png', {}, 
+                function success() { loadSprite(path, callback, image) }, 
+                function error() { loadSprite(path, callback) } // retry
+            );
         } else {
-            //var geometry = new THREE.PlaneGeometry(img.image.width, img.image.height);
             var geometry = new THREE.PlaneGeometry(img.image.width, img.image.height);
-
             var material = new THREE.MeshPhongMaterial({
                 map : img,
                 transparent : true
@@ -34,13 +35,10 @@
             })
         }
         return sprites;
-    }    
+    }
     
-    function animation(path,num,x,y,size) {
+    function animation(path,num,x,y,scalex,scaley) {
         var that = this;
-        this.x = x;
-        this.y = y;
-        this.size = size;
         this.running = false;
         this.frame = 0;
         this.frames = num;
@@ -48,14 +46,22 @@
         this.frameTime = 0;
         this.loaded = false
         this.sprites = loadSprites(path, that.frames, function() {
-            that.width = that.sprites[0].material.map.image.width*size;
-            that.height = that.sprites[0].material.map.image.height*size;
+            //scale, position, and rotation get set to same object for all sprites
+            that.scale = that.sprites[0].scale
+            that.position = that.sprites[0].position
+            that.rotation = that.sprites[0].rotation
             that.sprites.forEach(function(sprite) {
-                sprite.scale.x = sprite.scale.x*size;
-                sprite.scale.y = sprite.scale.y*size;
-                sprite.position.x = that.x;
-                sprite.position.y = that.y + that.height/2 - 200;
+                sprite.scale = that.scale
+                sprite.position = that.position
+                sprite.rotation = that.rotation
             })
+            that.scale.x = scalex || 1;
+            that.scale.y = scalex || scaley || 1;
+            that.width = that.sprites[0].material.map.image.width*that.scale.x;
+            that.height = that.sprites[0].material.map.image.height*that.scale.y;
+            that.position.x = x;
+            that.position.y = y + that.height/2;
+            
             that.loaded = true;
         });
 
@@ -72,9 +78,6 @@
                 if(lastFrame != that.frame) {
                     scene.remove(that.sprites[lastFrame])
                     scene.add(that.sprites[that.frame])
-                    //that.sprites[that.frame].position.x = Math.random()*50-Math.random()*50
-                    //that.sprites[that.frame].position.y = Math.random()*50-Math.random()*50
-                    //that.sprites[that.frame].position.z = Math.random()*50-Math.random()*50
                     that.frameTime = now
                 }
             }
@@ -110,16 +113,18 @@
 
     }
     function initPlayer() {
-        player = {}
+        player = {};
         player.jumpCount = 0;
         player.speed = {
             x : 0,
             y : 0
         };
+        player.loaded = false;
         loadSprite("img/player", function(sprite){ 
-            player.sprite = sprite
-            player.sprite.position.x = -1400
-            scene.add(player.sprite)
+            player.sprite = sprite;
+            player.sprite.position.x = -1400;
+            scene.add(player.sprite);
+            player.loaded = true;
         });
     }
 
@@ -140,7 +145,7 @@
 
         fires = [];
         for(var i=0; i<5; i++) {
-            var f = fire(-1000+500*i+Math.random()*300, 0, Math.random()*0.5+0.5)
+            var f = fire(-1000+500*i+Math.random()*300, -200, Math.random()*0.5+0.5)
             f.start();
             fires.push(f);
         }
@@ -172,7 +177,7 @@
             player.jumpLock = true;
         }
         player.speed.y -= 0.1 * dt;
-        if(player.sprite) {
+        if(player.loaded) {
             player.sprite.position.x += player.speed.x * dt * 0.1;
             player.sprite.position.y += player.speed.y;
             if (player.sprite.position.y < -100) {
