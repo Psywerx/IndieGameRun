@@ -25,7 +25,6 @@
     
     
     function animation(path,num,x,y,size) {
-        var time = function() { return new Date().getTime(); }
         that = this
         this.x = x;
         this.y = y;
@@ -58,67 +57,98 @@
         return new animation("img/fire",16,x,y,size)
     }
 
-    function init() {
+    var prevTime = +new Date();
+
+    var keyboard = new THREEx.KeyboardState();
+
+    function initWorld() {
+        var geometry = new THREE.PlaneGeometry(10000, 100);
+        var texture = THREE.ImageUtils.loadTexture('img/test.png', {}, function() {
+            animate();
+        });
+        var material = new THREE.MeshBasicMaterial({
+            color : 0x000000
+        });
+        world = new THREE.Mesh(geometry, material);
+        world.position.set(0, -200, 0);
+        scene.add(world);
+
+    }
+    function initPlayer() {
+        var geometry = new THREE.PlaneGeometry(100, 200);
+        var texture = THREE.ImageUtils.loadTexture('img/player.png', {}, function() {
+            animate();
+        });
+        var material = new THREE.MeshPhongMaterial({
+            map : texture,
+            transparent : true
+        });
+        player = new THREE.Mesh(geometry, material);
+        player.impulse = 0;
+        player.speed = {
+            x : 0,
+            y : 0
+        };
+        scene.add(player);
+    }
+
+   function init() {
+
         camera = new THREE.PerspectiveCamera(75, WIDTH / HEIGHT, 1, 10000);
         camera.position.z = 1000;
 
         scene = new THREE.Scene();
 
-        geometry = new THREE.PlaneGeometry(800, 800);
+        initWorld();
+        initPlayer();
 
-        texture = THREE.ImageUtils.loadTexture('img/test.png', {}, function() {
-            animate();
-        });
-        material1 = new THREE.MeshPhongMaterial({
-            map: texture
-        });
-        material2 = new THREE.MeshPhongMaterial({
-            map: texture,
-            transparent: true
-        });
-        
-//        var loader = new THREE.BinaryLoader();
-//        loader.load({
-//            model: "obj/wc.js",
-//            callback: function (geometry) {
-//                mesh3 = new THREE.Mesh(geometry, material1);
-//                scene.add(mesh3);
-//            }
-//        });
-        
-        mesh1 = new THREE.Mesh(geometry, material1);
-        mesh2 = new THREE.Mesh(geometry, material2);
-        
-        //scene.add(mesh1);
-        //scene.add(mesh2);
-
-        var pointLight = new THREE.PointLight(0xff0000);
-        pointLight.position.set(10, 50, 130);
-        scene.add(pointLight);
-        
-        var light = new THREE.AmbientLight( 0xffffff ); scene.add( light );
-
-        fire1 = fire(200, 200, 2);
-        fire1.start();
+        var light = new THREE.AmbientLight(0xffffff);
+        scene.add(light);
 
         renderer = new THREE.WebGLRenderer();
         renderer.setSize(WIDTH, HEIGHT);
+
+        fire1 = fire(200, 200, 2);
+        fire1.start();
 
         document.body.appendChild(renderer.domElement);
 
     }
 
-    function animate() {
+    function update() {
+        var dt = (+new Date()) - prevTime;
+        prevTime = +new Date();
+        player.speed.x = 0;
+        if (keyboard.pressed('A') || keyboard.pressed('left')) {
+            player.speed.x -= 10;
+        }
+        if (keyboard.pressed('D') || keyboard.pressed('right')) {
+            player.speed.x += 10;
+        }
+        if (keyboard.pressed('W') || keyboard.pressed('up') || keyboard.pressed('space')) {
+            if(player.position.y == -100){
+                player.speed.y = 40;
+            }
+            console.log(player.speed.y);
+        }
+        player.speed.y -= 0.1 * dt;
+        player.position.x += player.speed.x * dt * 0.1;
+        player.position.y += player.speed.y;
+        if (player.position.y < -100) {
+            player.position.y = -100;
+            player.speed.y = 0;
+        }
+        
+    }
+
+   function animate() {
+
         // note: three.js includes requestAnimationFrame shim
-        requestAnimationFrame(animate);
-
-        material2.opacity = 1 + Math.sin(new Date().getTime() * .0025)
-
-        mesh1.rotation.z += 0.001;
-        //mesh.rotation.y += 0.02;
-
+        update();
         fire1.update();
 
+        requestAnimationFrame(animate);
         renderer.render(scene, camera);
+
     }
 })();
