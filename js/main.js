@@ -6,8 +6,21 @@
     var camera, scene, renderer;
     var geometry, material, mesh;
 
+    var score = 0;
+    var scoreSprite;
+    
+    
     init();
     collidables = [];
+
+    function padZeros(number, length) {
+        
+        var str = '' + number;
+        while (str.length < length) {
+            str = '0' + str;
+        }
+        return str;
+    }
 
     function animation(path,num,x,y,scalex,scaley) {
         var that = this;
@@ -106,6 +119,17 @@
         });
     }
 
+    function createTextTexture(text){
+        var canvas = document.createElement('canvas');
+        var context = canvas.getContext('2d');
+        context.font = '40px Calibri';
+        context.fillText(text, 10, 40);
+        
+        var texture = new THREE.Texture(canvas);
+        texture.needsUpdate = true;
+        return texture;
+    }
+
     function init() {
 
         camera = new THREE.PerspectiveCamera(75, WIDTH / HEIGHT, 1, 10000);
@@ -128,6 +152,13 @@
             f.start();
             fires.push(f);
         }
+        scoreSprite = new G.text(padZeros(score));
+        
+		var test = Sprites.loadSprite("", function(sprite){
+            scoreSprite = sprite;
+            console.log(scoreSprite, "AAA");
+            scene.add(scoreSprite);
+        }, createTextTexture("Text"));
 
         document.body.appendChild(renderer.domElement);
 
@@ -175,6 +206,11 @@
         fires.forEach(function(fire) {
             fire.update();
         })
+		
+		score += 1;
+        
+        scoreSprite.material = new THREE.MeshBasicMaterial({map: createTextTexture(padZeros(score, 6))});
+        scoreSprite.position.set(0, 500, 0);
     }
 
     function animate() {
