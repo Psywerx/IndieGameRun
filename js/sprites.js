@@ -1,11 +1,26 @@
 (function(G, THREE, _) {
     var Sprite = G.Sprites = {};
 
-    _.extend(G, {
-        loadSprites: function(path, callback, img) {
+    _.extend(Sprite, {
+        loadSprites: function(path, count, callback) {
+            var sprites = [];
+            for(var i = 0; i < count; i++) {
+                (function(j) {
+                    Sprite.loadSprite(path + (j+1), function(sprite) {
+                        sprites[j] = sprite;
+                        if ( count === _.compact(sprites).length) { // all loaded
+                            callback();
+                        }
+                    });
+                })(i);
+            }
+
+            return sprites;
+        },
+        loadSprite: function(path, callback, img) {
             if (!img) {
-                var image = THREE.ImageUtils.loadTexture( path + '.png', {},
-                    function success() { Sprite.loadSprite(path, callback, image); },
+                return THREE.ImageUtils.loadTexture( path + '.png', {},
+                    function success( image ) { Sprite.loadSprite(path, callback, image); },
                     function error() { Sprite.loadSprite(path, callback); } // retry
                 );
             }
@@ -22,19 +37,7 @@
             sprite.width = width;
             sprite.height = height;
             callback && callback(sprite);
-        },
-        loadSprite: function(path, n, callback) {
-            var sprites = [];
-            for (var i=0; i < n; i++) {
-                Sprite.loadSprite(path + (i+1), function(sprite) {
-                    sprites.push(sprite);
-                    if ( sprites.length === n) { // all loaded
-                        callback();
-                    }
-                });
-            }
-            return sprites;
         }
     });
-})( window.GAME || {}, THREE, _ );
-
+    console.log(G);
+})( GAME || {}, THREE, _ );
