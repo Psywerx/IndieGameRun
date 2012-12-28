@@ -9,19 +9,35 @@
     var keyboard = new THREEx.KeyboardState();
 
     init();
+    
+    function drawGround(f, t, lit) {
+        var imgSize = 100.0;
+        var w = t-f;
+        var h = 100;
+        var geometry = new THREE.PlaneGeometry(w, h);
 
+        var image = new Image();
+        image.onload = function () { texture.needsUpdate = true; };
+        image.src = lit ? "img/floor_light.png" : "img/floor_dark.png";
+
+        var texture  = new THREE.Texture( image, new THREE.UVMapping(), THREE.RepeatWrapping, THREE.RepeatWrapping, THREE.NearestFilter, THREE.LinearMipMapLinearFilter );
+
+        texture.repeat.x = w / imgSize;
+        texture.repeat.y = h / imgSize;
+        
+        var material =  new THREE.MeshLambertMaterial( { map: texture } );
+        
+        
+        var ground = new THREE.Mesh(geometry, material);
+        ground.position.set(f+w*0.5, 0 ,0);
+        
+        return ground;
+        
+    }
+    
     function initWorld() {
-        var geometry = new THREE.PlaneGeometry(10000, 100);
-        var texture = THREE.ImageUtils.loadTexture('img/test.png', {}, function() {
-            animate();
-        });
-        var material = new THREE.MeshBasicMaterial({
-            color : 0x000000
-        });
-        world = new THREE.Mesh(geometry, material);
-        world.position.set(0, -200,0);
-        scene.add(world);
-
+        scene.add(drawGround(0, 700, false));
+        scene.add(drawGround(700, 1000, true));
     }
     function initPlayer() {
         var geometry = new THREE.PlaneGeometry(100, 200);
@@ -38,6 +54,7 @@
     function init() {
 
         camera = new THREE.PerspectiveCamera(75, WIDTH / HEIGHT, 1, 10000);
+        //camera = new THREE.OrthographicCamera( WIDTH / - 2, WIDTH / 2, HEIGHT / 2, HEIGHT / - 2, 1, 10000 );
         camera.position.z = 1000;
 
         scene = new THREE.Scene();
