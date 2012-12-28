@@ -186,4 +186,4 @@
         renderer.render(scene, camera);
 
     }
-})(window.GAME || {}, THREE, _);
+})( GAME || {}, THREE, _);
