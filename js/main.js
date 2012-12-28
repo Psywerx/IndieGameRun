@@ -1,4 +1,6 @@
 (function(G, THREE, _) {
+    var Sprites = G.Sprites;
+
     var WIDTH = window.innerWidth - 100, HEIGHT = window.innerHeight - 100;
 
     var camera, scene, renderer;
@@ -7,43 +9,7 @@
     init();
     collidables = [];
 
-    function loadSprite(path, callback, img) {
-        if (!img) {
-            var image = THREE.ImageUtils.loadTexture(path + '.png', {}, function success() {
-                loadSprite(path, callback, image)
-            }, function error() {
-                loadSprite(path, callback)
-            } // retry
-            );
-        } else {
-            var geometry = new THREE.PlaneGeometry(img.image.width, img.image.height);
-            var material = new THREE.MeshPhongMaterial({
-                map : img,
-                transparent : true
-            });
-            sprite = new THREE.Mesh(geometry, material);
-            sprite.width = img.image.width;
-            sprite.height = img.image.height;
-
-            if (callback)
-                callback(sprite);
-        }
-    }
-
-    function loadSprites(path, n, callback) {
-        var sprites = [];
-        for ( var i = 1; i < n; i++) {
-            loadSprite(path + i, function(sprite) {
-                sprites.push(sprite);
-                if (sprites.length == n) { // all loaded
-                    callback();
-                }
-            })
-        }
-        return sprites;
-    }
-
-    function animation(path, num, x, y, scalex, scaley) {
+    function animation(path,num,x,y,scalex,scaley) {
         var that = this;
         this.running = false;
         this.frame = 0;
@@ -51,9 +17,8 @@
         this.speed = 100;
         this.frameTime = 0;
         this.loaded = false;
-        this.sprites = loadSprites(path, that.frames, function() {
-            // scale, position, and rotation get set to same object for all
-            // sprites
+        this.sprites = Sprites.loadSprites(path, that.frames, function() {
+            //scale, position, and rotation get set to same object for all sprites
             that.scale = that.sprites[0].scale
             that.position = that.sprites[0].position
             that.rotation = that.sprites[0].rotation
@@ -131,11 +96,11 @@
             y : 0
         };
         player.loaded = false;
-        loadSprite("img/player", function(sprite) {
+        Sprites.loadSprite("img/player", function(sprite){
             player.sprite = sprite;
             player.sprite.position.x = -1400;
-            player.sprite.position.y = -200 - player.sprite.height / 2;
-            console.log(player.sprite)
+            player.sprite.position.y = -200 - player.sprite.height/2;
+
             scene.add(player.sprite);
             player.loaded = true;
         });
