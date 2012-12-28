@@ -28,7 +28,7 @@
         
         var loader = new THREE.BinaryLoader();
         loader.load({
-            model: "obj.js",
+            model: "obj/wc.js",
             callback: function (geometry) {
                 mesh3 = new THREE.Mesh(geometry, material1);
                 scene.add(mesh3);
