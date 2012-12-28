@@ -6,6 +6,8 @@
     
     var prevTime = +new Date();
     
+    var keyboard = new THREEx.KeyboardState();
+
     init();
 
     function initWorld() {
@@ -54,6 +56,14 @@
     }
 
     function update(){
+        
+        if(keyboard.pressed('A') || keyboard.pressed('left')){
+            player.position.x -= 10;
+        }
+        if(keyboard.pressed('D') || keyboard.pressed('right')){
+            player.position.x += 10;
+        }
+        
     }
     
     function animate() {
