@@ -18,31 +18,18 @@
             });
             sprite = new THREE.Mesh(geometry, material);
 
-            /*var img = THREE.ImageUtils.loadTexture(path +".png");
-            var geometry = new THREE.PlaneGeometry(img.image.width, img.image.height);
-            var material = new THREE.MeshPhongMaterial({ 
-                map : img,
-                transparent : true
-            });
-            sprite = new THREE.Mesh(geometry, material);
-            //scene.add(world);*/
-
-
-            /*var img = THREE.ImageUtils.loadTexture(path + ".png");
-            var material = new THREE.SpriteMaterial({ map: img, useScreenCoordinates: false, color: 0xffffff });
-            var sprite = new THREE.Sprite(material);
-
-            sprite.scale.set(img.image.width, img.image.height, 1);*/
-
             if(callback) callback(sprite)
         }
     }
     
-    function loadSprites(path, n) {
+    function loadSprites(path, n, callback) {
         var sprites = [];
         for(var i=0; i<n; i++) {
             loadSprite(path + (i+1), function(sprite) {
                 sprites.push(sprite);
+                if(sprites.length == n) { // all loaded
+                    callback();
+                }
             })
         }
         return sprites;
@@ -58,18 +45,21 @@
         this.frames = num;
         this.speed = 100;
         this.frameTime = 0;
-        this.sprites = loadSprites(path, that.frames);
-        that.sprites.forEach(function(sprite) {
-            sprite.position.x = that.x
-            sprite.position.y = that.y
-            sprite.scale.x = sprite.scale.x*size
-            sprite.scale.y = sprite.scale.y*size
-        })
-        //this.width = that.sprites[0].material.map.image.width
-        //this.height = that.sprites[0].material.map.image.height
+        this.loaded = false
+        this.sprites = loadSprites(path, that.frames, function() {
+            that.sprites.forEach(function(sprite) {
+                sprite.position.x = that.x;
+                sprite.position.y = that.y;
+                sprite.scale.x = sprite.scale.x*size;
+                sprite.scale.y = sprite.scale.y*size;
+            })
+            that.width = that.sprites[0].material.map.image.width;
+            that.height = that.sprites[0].material.map.image.height;
+            that.loaded = true;
+        });
 
         this.update = function() {
-            if(that.running) {
+            if(that.running && that.loaded) {
                 var now = +new Date()
 
                 var lastFrame = that.frame
@@ -78,7 +68,7 @@
                     that.frame %= that.frames
                 }
                 
-                if(lastFrame != that.frame && that.sprites[lastFrame] && that.sprites[that.frame]) {
+                if(lastFrame != that.frame) {
                     scene.remove(that.sprites[lastFrame])
                     scene.add(that.sprites[that.frame])
                     //that.sprites[that.frame].position.x = Math.random()*50-Math.random()*50
@@ -119,19 +109,6 @@
 
     }
     function initPlayer() {
-        /*var geometry = new THREE.PlaneGeometry(100, 200);
-        var texture = THREE.ImageUtils.loadTexture('img/player.png');
-        var material = new THREE.MeshPhongMaterial({
-            map : texture,
-            transparent : true
-        });
-        player = new THREE.Mesh(geometry, material);
-        player.jumpCount = 0;
-        player.speed = {
-            x : 0,
-            y : 0
-        };
-        scene.add(player);*/
         player = {}
         player.jumpCount = 0;
         player.speed = {
