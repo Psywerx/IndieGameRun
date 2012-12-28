@@ -31,13 +31,23 @@
         this.size = size
         this.frame = 0
         this.frames = num
+        this.speed = 100
+        this.frameTime = 0
         this.sprites = loadSprites(path, that.frames)
         this.update = function() {
-            var lastframe = that.sprites[(that.frame)%that.frames]
-            var currframe = that.sprites[(that.frame+1)%that.frames]
-            that.frame++
-            scene.remove(lastframe)
-            scene.add(currframe)
+            var now = +new Date()
+
+            var lastFrame = that.frame
+            if(now > that.frameTime + that.speed) {
+                that.frame += 1
+                that.frame %= that.frames
+            }
+            
+            if(lastFrame != that.frame) {
+                scene.remove(that.sprites[lastFrame])
+                scene.add(that.sprites[that.frame])
+                that.frameTime = now
+            }
         }
         this.start = function() {
             that.sprites.forEach(function(sprite) {
