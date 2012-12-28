@@ -20,8 +20,10 @@
                 transparent : true
             });
             sprite = new THREE.Mesh(geometry, material);
+            sprite.width = img.image.width;
+            sprite.height = img.image.height;
 
-            if(callback) callback(sprite)
+            if(callback) callback(sprite);
         }
     }
     
@@ -57,9 +59,9 @@
                 sprite.rotation = that.rotation
             })
             that.scale.x = scalex || 1;
-            that.scale.y = scalex || scaley || 1;
-            that.width = that.sprites[0].material.map.image.width*that.scale.x;
-            that.height = that.sprites[0].material.map.image.height*that.scale.y;
+            that.scale.y = scaley || scalex || 1;
+            that.width = that.sprites[0].width * that.scale.x;
+            that.height = that.sprites[0].height * that.scale.y;
             that.position.x = x;
             that.position.y = y + that.height/2;
             
@@ -110,6 +112,8 @@
         });
         world = new THREE.Mesh(geometry, material);
         world.position.set(0, -200, 0);
+        world.width = texture.image.width;
+        world.height = texture.image.height;
         scene.add(world);
 
     }
@@ -124,6 +128,8 @@
         loadSprite("img/player", function(sprite){ 
             player.sprite = sprite;
             player.sprite.position.x = -1400;
+            player.sprite.position.y = -200 - player.sprite.height/2;
+            console.log(player.sprite)
             scene.add(player.sprite);
             player.loaded = true;
         });
@@ -188,8 +194,8 @@
 
             player.sprite.position.x += player.speed.x * dt * 0.1;
             player.sprite.position.y += player.speed.y;
-            if (player.sprite.position.y < -100) {
-                player.sprite.position.y = -100;
+            if (player.sprite.position.y < world.position.y+world.height+player.sprite.height/2-10) {
+                player.sprite.position.y = world.position.y+world.height+player.sprite.height/2-10;
 		        player.speed.y = 0;
 		        player.jumpCount = 0;
 		        player.jumpLock = false;
