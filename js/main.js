@@ -1,42 +1,41 @@
 (function() {
-    var WIDTH = window.innerWidth - 100, HEIGHT = window.innerHeight - 100;
+    var WIDTH = window.innerWidth-100, HEIGHT = window.innerHeight-100;
 
     var camera, scene, renderer;
     var geometry, material, mesh;
 
-    var collidables = [];
-    
     init();
+        
+    function loadSprite(path, callback, img) {
+        if(!img) {
+            var image = THREE.ImageUtils.loadTexture(path+'.png', {}, function(){ loadSprite(path, callback, image) });
+        } else {
+            var geometry = new THREE.PlaneGeometry(img.image.width, img.image.height);
 
-    function loadSprite(path) {
-        var img = THREE.ImageUtils.loadTexture(path + ".png");
-        var material = new THREE.SpriteMaterial({
-            map : img,
-            useScreenCoordinates : false,
-            color : 0xffffff,
-            alphaTest: 0.5
-        });
+            var material = new THREE.MeshPhongMaterial({
+                map : img,
+                transparent : true
+            });
+            sprite = new THREE.Mesh(geometry, material);
 
-        var sprite = new THREE.Sprite(material);
-
-        sprite.scale.set(img.image.width, img.image.height, 1);
-        sprite.width = img.image.width;
-        sprite.height = img.image.height;
-        return sprite;
-    }
-
-    function loadSprites(path, n) {
-        var sprites = [];
-        for ( var i = 0; i < n; i++) {
-            sprite = loadSprite(path + (i + 1));
-
-            sprites.push(sprite);
+            if(callback) callback(sprite)
         }
-
-        return sprites;
     }
+    
+    function loadSprites(path, n, callback) {
+        var sprites = [];
+        for(var i=0; i<n; i++) {
+            loadSprite(path + (i+1), function(sprite) {
+                sprites.push(sprite);
+                if(sprites.length == n) { // all loaded
+                    callback();
+                }
+            })
+        }
+        return sprites;
+    }    
 
-    function animation(path, num, x, y, size) {
+    function animation(path,num,x,y,size) {
         that = this;
         this.x = x;
         this.y = y;
@@ -47,38 +46,34 @@
         this.frameTime = 0;
         this.sprites = loadSprites(path, that.frames);
         this.update = function() {
-            var now = +new Date();
-            
-            var lastFrame = that.frame;
-            if (now > that.frameTime + that.speed) {
-                that.frame += 1;
-                that.frame %= that.frames;
-            }
+            var now = +new Date()
 
-            if (lastFrame != that.frame) {
-                scene.remove(that.sprites[lastFrame]);
-                scene.add(that.sprites[that.frame]);
-                that.frameTime = now;
+            var lastFrame = that.frame
+            if(now > that.frameTime + that.speed) {
+                that.frame += 1
+                that.frame %= that.frames
+            }
+            
+                if(lastFrame != that.frame) {
+                    scene.remove(that.sprites[lastFrame])
+                    scene.add(that.sprites[that.frame])
+                    //that.sprites[that.frame].position.x = Math.random()*50-Math.random()*50
+                    //that.sprites[that.frame].position.y = Math.random()*50-Math.random()*50
+                    //that.sprites[that.frame].position.z = Math.random()*50-Math.random()*50
+                    that.frameTime = now
             }
         };
         this.start = function() {
-            that.sprites.forEach(function(sprite) {
-                sprite.position.x = that.x;
-                sprite.position.y = that.y;
-                sprite.scale.x = sprite.width * that.size;
-                sprite.scale.y = sprite.height * that.size;
-            });
+            that.running = true;
         };
         this.stop = function() {
             that.sprites.forEach(function(sprite) {
-                scene.remove(sprite);
-            });
+                scene.remove(sprite)
+            })
         };
     }
-
-    function fire(x, y, size) {
-        return new animation("img/fire", 16, x, y, size);
-    }
+    
+    function fire(x,y,size) { return new animation("img/fire",16,x,y,size); }
 
     var prevTime = +new Date();
 
@@ -87,17 +82,14 @@
     function initWorld() {
         var geometry = new THREE.PlaneGeometry(10000, 100);
         var texture = THREE.ImageUtils.loadTexture('img/test.png', {}, function() {
-            //animate();
+            animate();
         });
         var material = new THREE.MeshBasicMaterial({
             color : 0x000000
         });
         world = new THREE.Mesh(geometry, material);
         world.position.set(0, -200, 0);
-        world.floor = true;
-        console.log(world);
         scene.add(world);
-        collidables.push(world);
 
     }
     function initPlayer() {
@@ -118,31 +110,19 @@
         scene.add(player);
     }
 
-    function init() {
+   function init() {
 
         camera = new THREE.PerspectiveCamera(75, WIDTH / HEIGHT, 1, 10000);
-        camera.position.z = 5000;
+        camera.position.z = 1000;
 
         scene = new THREE.Scene();
 
         initWorld();
         initPlayer();
 
-        var spotLight = new THREE.SpotLight(0x00ffff);
-        spotLight.position.set(0, 100, 0);
-        spotLight.castShadow = false;
-        spotLight.shadowMapWidth = 1024;
-        spotLight.shadowMapHeight = 1024;
-        spotLight.shadowCameraNear = 500;
-        spotLight.shadowCameraFar = 4000;
-        spotLight.shadowCameraFov = 30;
-        scene.add(spotLight);
-
-        //var SpotLightHelper = new THREE.SpotLightHelper();
-
         var light = new THREE.AmbientLight(0xffffff);
         scene.add(light);
-        console.log(scene);
+
         renderer = new THREE.WebGLRenderer();
         renderer.setSize(WIDTH, HEIGHT);
 
@@ -164,36 +144,39 @@
             player.speed.x += 10;
         }
         if (keyboard.pressed('W') || keyboard.pressed('up') || keyboard.pressed('space')) {
-            if (player.jumpCount < 10 && !player.jumpLock) {
+            if(player.jumpCount < 20 && !player.jumpLock){
                 player.speed.y = 20;
                 player.jumpCount += 1;
-            } else {
+            }
+            else{
                 player.jumpLock = true;
             }
-
-        } else {
+            
+        }
+        else{
             player.jumpLock = true;
         }
         player.speed.y -= 0.1 * dt;
-        player.position.x += player.speed.x * dt * 0.1;
-        player.position.y += player.speed.y;
-        
-        // TODO: Check for collisions:
-        for ( var i in collidables) {
-            var vertices = collidables[i].geometry.vertices;
-        }
-        
-        if (player.position.y < -200) { // Collided with floor example
-            player.position.y = -200;
+        if(player.sprite) {
+
+			// TODO: Check for collisions:
+		    for ( var i in collidables) {
+		        var vertices = collidables[i].geometry.vertices;
+		    }
+
+            player.sprite.position.x += player.speed.x * dt * 0.1;
+            player.sprite.position.y += player.speed.y;
+            if (player.sprite.position.y < -100) {
+                player.sprite.position.y = -100;
             player.speed.y = 0;
             player.jumpCount = 0;
             player.jumpLock = false;
-
+            
         }
-
+        
     }
 
-    function animate() {
+   function animate() {
 
         // note: three.js includes requestAnimationFrame shim
         update();
