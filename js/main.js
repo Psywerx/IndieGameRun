@@ -1,4 +1,4 @@
-(function() {
+(function(G, THREE) {
     var WIDTH = window.innerWidth-100, HEIGHT = window.innerHeight-100;
 
     var camera, scene, renderer;
@@ -29,8 +29,8 @@
 
     function loadSprites(path, n, callback) {
         var sprites = [];
-        for(var i=0; i<n; i++) {
-            loadSprite(path + (i+1), function(sprite) {
+        for (var i=1; i<n; i++) {
+            loadSprite(path + i, function(sprite) {
                 sprites.push(sprite);
                 if(sprites.length == n) { // all loaded
                     callback();
@@ -47,7 +47,7 @@
         this.frames = num;
         this.speed = 100;
         this.frameTime = 0;
-        this.loaded = false
+        this.loaded = false;
         this.sprites = loadSprites(path, that.frames, function() {
             //scale, position, and rotation get set to same object for all sprites
             that.scale = that.sprites[0].scale
@@ -215,5 +215,5 @@
         renderer.render(scene, camera);
 
     }
-})();
+})( window.GAME || {}, THREE, _ );
 
