@@ -5,6 +5,7 @@
     var geometry, material, mesh;
 
     init();
+    collidables = [];
         
     function loadSprite(path, callback, img) {
         if(!img) {
@@ -44,7 +45,19 @@
         this.frames = num;
         this.speed = 200;
         this.frameTime = 0;
-        this.sprites = loadSprites(path, that.frames);
+        this.loaded = false
+        this.sprites = loadSprites(path, that.frames, function() {
+            that.sprites.forEach(function(sprite) {
+                sprite.position.x = that.x;
+                sprite.position.y = that.y;
+                sprite.scale.x = sprite.scale.x*size;
+                sprite.scale.y = sprite.scale.y*size;
+            })
+            that.width = that.sprites[0].material.map.image.width;
+            that.height = that.sprites[0].material.map.image.height;
+            that.loaded = true;
+        });
+
         this.update = function() {
             var now = +new Date()
 
@@ -67,6 +80,7 @@
             that.running = true;
         };
         this.stop = function() {
+            that.running = false;
             that.sprites.forEach(function(sprite) {
                 scene.remove(sprite)
             })
@@ -93,21 +107,16 @@
 
     }
     function initPlayer() {
-        var geometry = new THREE.PlaneGeometry(100, 200);
-        var texture = THREE.ImageUtils.loadTexture('img/player.png', {}, function() {
-            animate();
-        });
-        var material = new THREE.MeshPhongMaterial({
-            map : texture,
-            transparent : true
-        });
-        player = new THREE.Mesh(geometry, material);
+        player = {}
         player.jumpCount = 0;
         player.speed = {
             x : 0,
             y : 0
         };
-        scene.add(player);
+        loadSprite("img/player", function(sprite){ 
+            player.sprite = sprite
+            scene.add(player.sprite)
+        });
     }
 
    function init() {
@@ -172,15 +181,16 @@
             player.jumpCount = 0;
             player.jumpLock = false;
             
+            }
         }
         
+        fire1.update();
     }
 
    function animate() {
 
         // note: three.js includes requestAnimationFrame shim
         update();
-        fire1.update();
 
         requestAnimationFrame(animate);
         renderer.render(scene, camera);
