@@ -119,17 +119,6 @@
         });
     }
 
-    function createTextTexture(text){
-        var canvas = document.createElement('canvas');
-        var context = canvas.getContext('2d');
-        context.font = '40px Calibri';
-        context.fillText(text, 10, 40);
-        
-        var texture = new THREE.Texture(canvas);
-        texture.needsUpdate = true;
-        return texture;
-    }
-
     function init() {
 
         camera = new THREE.PerspectiveCamera(75, WIDTH / HEIGHT, 1, 10000);
@@ -152,14 +141,8 @@
             f.start();
             fires.push(f);
         }
-        scoreSprite = new G.text(padZeros(score));
-        
-		var test = Sprites.loadSprite("", function(sprite){
-            scoreSprite = sprite;
-            console.log(scoreSprite, "AAA");
-            scene.add(scoreSprite);
-        }, createTextTexture("Text"));
-
+        scoreSprite = new G.text(padZeros(score, 6));
+        scene.add(scoreSprite.sprite);
         document.body.appendChild(renderer.domElement);
 
     }
@@ -209,8 +192,7 @@
 		
 		score += 1;
         
-        scoreSprite.material = new THREE.MeshBasicMaterial({map: createTextTexture(padZeros(score, 6))});
-        scoreSprite.position.set(0, 500, 0);
+        scoreSprite.update(padZeros(score, 6));
     }
 
     function animate() {
