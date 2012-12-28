@@ -5,7 +5,7 @@
     var geometry, material, mesh;
 
     init();
-    animate();
+    
 
     function init() {
 
@@ -15,16 +15,22 @@
         scene = new THREE.Scene();
 
         geometry = new THREE.CubeGeometry(200, 200, 200);
-        material = new THREE.MeshPhongMaterial({
-            color : 0xff0000
+        texture = THREE.ImageUtils.loadTexture('test.jpg', {}, function() {
+            animate();
         });
-
+        material = new THREE.MeshPhongMaterial({
+            map: texture
+        });
+        
+        
         mesh = new THREE.Mesh(geometry, material);
         scene.add(mesh);
 
-        var light = new THREE.PointLight(0xff0000);
-        light.position.set(10, 50, 130);
-        scene.add(light);
+        var pointLight = new THREE.PointLight(0xff0000);
+        pointLight.position.set(10, 50, 130);
+        scene.add(pointLight);
+        
+        var light = new THREE.AmbientLight( 0xffffff ); scene.add( light );
 
         renderer = new THREE.WebGLRenderer();
         renderer.setSize(WIDTH, HEIGHT);
