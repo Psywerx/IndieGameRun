@@ -32,7 +32,7 @@
             map : texture
         });
         player = new THREE.Mesh(geometry, material);
-        player.impulse = 0;
+        player.jumpCount = 0;
         player.speed = {
             x : 0,
             y : 0
@@ -70,10 +70,17 @@
             player.speed.x += 10;
         }
         if (keyboard.pressed('W') || keyboard.pressed('up') || keyboard.pressed('space')) {
-            if(player.position.y == -100){
-                player.speed.y = 40;
+            if(player.jumpCount < 20 && !player.jumpLock){
+                player.speed.y = 20;
+                player.jumpCount += 1;
             }
-            console.log(player.speed.y);
+            else{
+                player.jumpLock = true;
+            }
+            
+        }
+        else{
+            player.jumpLock = true;
         }
         player.speed.y -= 0.1 * dt;
         player.position.x += player.speed.x * dt * 0.1;
@@ -81,6 +88,9 @@
         if (player.position.y < -100) {
             player.position.y = -100;
             player.speed.y = 0;
+            player.jumpCount = 0;
+            player.jumpLock = false;
+            
         }
         
     }
