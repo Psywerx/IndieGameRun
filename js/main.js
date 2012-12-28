@@ -1,11 +1,37 @@
-(function() {
-    var WIDTH = window.innerWidth-100, HEIGHT = window.innerHeight-100;
+-(function() {
+    var WIDTH = window.innerWidth - 100, HEIGHT = window.innerHeight - 100;
 
-    var camera, scene, renderer;
+    var camera, scene, renderer, player, world;
     var geometry, material, mesh;
-
-    init();
     
+    var prevTime = +new Date();
+    
+    init();
+
+    function initWorld() {
+        var geometry = new THREE.PlaneGeometry(10000, 100);
+        var texture = THREE.ImageUtils.loadTexture('img/test.png', {}, function() {
+            animate();
+        });
+        var material = new THREE.MeshBasicMaterial({
+            color : 0x000000
+        });
+        world = new THREE.Mesh(geometry, material);
+        world.position.set(0, -200,0);
+        scene.add(world);
+
+    }
+    function initPlayer() {
+        var geometry = new THREE.PlaneGeometry(100, 200);
+        var texture = THREE.ImageUtils.loadTexture('img/test.png', {}, function() {
+            animate();
+        });
+        var material = new THREE.MeshPhongMaterial({
+            map : texture
+        });
+        player = new THREE.Mesh(geometry, material);
+        scene.add(player);
+    }
 
     function init() {
 
@@ -14,39 +40,11 @@
 
         scene = new THREE.Scene();
 
-        geometry = new THREE.PlaneGeometry(800, 800);
-        texture = THREE.ImageUtils.loadTexture('img/test.png', {}, function() {
-            animate();
-        });
-        material1 = new THREE.MeshPhongMaterial({
-            map: texture
-        });
-        material2 = new THREE.MeshPhongMaterial({
-            map: texture,
-            transparent: true
-        });
-        
-//        var loader = new THREE.BinaryLoader();
-//        loader.load({
-//            model: "obj/wc.js",
-//            callback: function (geometry) {
-//                mesh3 = new THREE.Mesh(geometry, material1);
-//                scene.add(mesh3);
-//            }
-//        });
-        
-        mesh1 = new THREE.Mesh(geometry, material1);
-        mesh2 = new THREE.Mesh(geometry, material2);
-        mesh2.z += 10;
-        
-        scene.add(mesh1);
-        scene.add(mesh2);
+        initWorld();
+        initPlayer();
 
-        var pointLight = new THREE.PointLight(0xff0000);
-        pointLight.position.set(10, 50, 130);
-        scene.add(pointLight);
-        
-        var light = new THREE.AmbientLight( 0xffffff ); scene.add( light );
+        var light = new THREE.AmbientLight(0xffffff);
+        scene.add(light);
 
         renderer = new THREE.WebGLRenderer();
         renderer.setSize(WIDTH, HEIGHT);
@@ -55,16 +53,14 @@
 
     }
 
+    function update(){
+    }
+    
     function animate() {
 
         // note: three.js includes requestAnimationFrame shim
+        update();
         requestAnimationFrame(animate);
-
-        material2.opacity = 1 + Math.sin(new Date().getTime() * .0025)
-
-        mesh1.rotation.z += 0.01;
-        //mesh.rotation.y += 0.02;
-
         renderer.render(scene, camera);
 
     }
