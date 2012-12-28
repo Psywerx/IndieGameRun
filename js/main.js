@@ -6,11 +6,11 @@
 
     init();
     collidables = [];
-        
+
     function loadSprite(path, callback, img) {
         if(!img) {
-            var image = THREE.ImageUtils.loadTexture(path+'.png', {}, 
-                function success() { loadSprite(path, callback, image) }, 
+            var image = THREE.ImageUtils.loadTexture(path+'.png', {},
+                function success() { loadSprite(path, callback, image) },
                 function error() { loadSprite(path, callback) } // retry
             );
         } else {
@@ -26,7 +26,7 @@
             if(callback) callback(sprite);
         }
     }
-    
+
     function loadSprites(path, n, callback) {
         var sprites = [];
         for(var i=0; i<n; i++) {
@@ -39,7 +39,7 @@
         }
         return sprites;
     }
-    
+
     function animation(path,num,x,y,scalex,scaley) {
         var that = this;
         this.running = false;
@@ -64,7 +64,7 @@
             that.height = that.sprites[0].height * that.scale.y;
             that.position.x = x;
             that.position.y = y + that.height/2;
-            
+
             that.loaded = true;
         });
 
@@ -77,7 +77,7 @@
                     that.frame += 1
                     that.frame %= that.frames
                 }
-                
+
                 if(lastFrame != that.frame) {
                     scene.remove(that.sprites[lastFrame])
                     scene.add(that.sprites[that.frame])
@@ -95,7 +95,7 @@
             })
         };
     }
-    
+
     function fire(x,y,size) { return new animation("img/fire",16,x,y,size); }
 
     var prevTime = +new Date();
@@ -125,7 +125,7 @@
             y : 0
         };
         player.loaded = false;
-        loadSprite("img/player", function(sprite){ 
+        loadSprite("img/player", function(sprite){
             player.sprite = sprite;
             player.sprite.position.x = -1400;
             player.sprite.position.y = -200 - player.sprite.height/2;
@@ -180,26 +180,26 @@
             else{
                 player.jumpLock = true;
             }
-            
+
         }
         else{
             player.jumpLock = true;
         }
         player.speed.y -= 0.1 * dt;
         if(player.loaded) {
-			// TODO: Check for collisions:
-		    for ( var i in collidables) {
-		        var vertices = collidables[i].geometry.vertices;
-		    }
+            // TODO: Check for collisions:
+            for ( var i in collidables) {
+                var vertices = collidables[i].geometry.vertices;
+            }
 
             player.sprite.position.x += player.speed.x * dt * 0.1;
             player.sprite.position.y += player.speed.y;
             if (player.sprite.position.y < world.position.y+world.height+player.sprite.height/2-10) {
                 player.sprite.position.y = world.position.y+world.height+player.sprite.height/2-10;
-		        player.speed.y = 0;
-		        player.jumpCount = 0;
-		        player.jumpLock = false;
-            
+                player.speed.y = 0;
+                player.jumpCount = 0;
+                player.jumpLock = false;
+
             }
         }
 
