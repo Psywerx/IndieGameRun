@@ -1,11 +1,11 @@
 (function(G, THREE, _) {
     var Sprite = G.Sprites = {};
 
-    _.extend(G, {
+    _.extend(Sprite, {
         loadSprites: function(path, callback, img) {
             if (!img) {
-                var image = THREE.ImageUtils.loadTexture( path + '.png', {},
-                    function success() { Sprite.loadSprite(path, callback, image); },
+                return THREE.ImageUtils.loadTexture( path + '.png', {},
+                    function success( image ) { Sprite.loadSprite(path, callback, image); },
                     function error() { Sprite.loadSprite(path, callback); } // retry
                 );
             }
