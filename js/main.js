@@ -27,16 +27,22 @@
         }
     }
 
-    function loadSprites(path, n, callback) {
+    function loadSprites(path, count, callback) {
         var sprites = [];
-        for(var i=0; i<n; i++) {
-            loadSprite(path + (i+1), function(sprite) {
-                sprites.push(sprite);
-                if(sprites.length == n) { // all loaded
-                    callback();
-                }
-            })
+        var done = false;
+        for(var i = 0; i < count; i++) {
+            (function(j) {
+                loadSprite(path + (j+1), function(sprite) {
+                    sprites[j] = sprite;
+                    if(!done && count == _.compact(sprites).length && !done) { // all loaded
+                        done = true;
+                        console.log(j);
+                        callback();
+                    }
+                })
+            })(i)
         }
+        
         return sprites;
     }
 
@@ -129,7 +135,6 @@
             player.sprite = sprite;
             player.sprite.position.x = -1400;
             player.sprite.position.y = -200 - player.sprite.height/2;
-            console.log(player.sprite)
             scene.add(player.sprite);
             player.loaded = true;
         });
