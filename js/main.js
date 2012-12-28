@@ -1,4 +1,4 @@
-(function() {
+(function(G, THREE) {
     var WIDTH = window.innerWidth-100, HEIGHT = window.innerHeight-100;
 
     var camera, scene, renderer;
@@ -29,13 +29,11 @@
 
     function loadSprites(path, count, callback) {
         var sprites = [];
-        var done = false;
         for(var i = 0; i < count; i++) {
             (function(j) {
                 loadSprite(path + (j+1), function(sprite) {
                     sprites[j] = sprite;
-                    if(!done && count == _.compact(sprites).length && !done) { // all loaded
-                        done = true;
+                    if(count == _.compact(sprites).length) { // all loaded
                         console.log(j);
                         callback();
                     }
@@ -53,7 +51,7 @@
         this.frames = num;
         this.speed = 100;
         this.frameTime = 0;
-        this.loaded = false
+        this.loaded = false;
         this.sprites = loadSprites(path, that.frames, function() {
             //scale, position, and rotation get set to same object for all sprites
             that.scale = that.sprites[0].scale
@@ -220,5 +218,5 @@
         renderer.render(scene, camera);
 
     }
-})();
+})( window.GAME || {}, THREE, _ );
 
