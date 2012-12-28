@@ -26,14 +26,14 @@
             transparent: true
         });
         
-        var loader = new THREE.BinaryLoader();
-        loader.load({
-            model: "obj/wc.js",
-            callback: function (geometry) {
-                mesh3 = new THREE.Mesh(geometry, material1);
-                scene.add(mesh3);
-            }
-        });
+//        var loader = new THREE.BinaryLoader();
+//        loader.load({
+//            model: "obj/wc.js",
+//            callback: function (geometry) {
+//                mesh3 = new THREE.Mesh(geometry, material1);
+//                scene.add(mesh3);
+//            }
+//        });
         
         mesh1 = new THREE.Mesh(geometry, material1);
         mesh2 = new THREE.Mesh(geometry, material2);
