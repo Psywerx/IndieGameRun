@@ -1,11 +1,11 @@
--(function() {
+(function() {
     var WIDTH = window.innerWidth - 100, HEIGHT = window.innerHeight - 100;
 
     var camera, scene, renderer, player, world;
     var geometry, material, mesh;
-    
+
     var prevTime = +new Date();
-    
+
     var keyboard = new THREEx.KeyboardState();
 
     init();
@@ -19,7 +19,7 @@
             color : 0x000000
         });
         world = new THREE.Mesh(geometry, material);
-        world.position.set(0, -200,0);
+        world.position.set(0, -200, 0);
         scene.add(world);
 
     }
@@ -32,6 +32,11 @@
             map : texture
         });
         player = new THREE.Mesh(geometry, material);
+        player.impulse = 0;
+        player.speed = {
+            x : 0,
+            y : 0
+        };
         scene.add(player);
     }
 
@@ -54,18 +59,32 @@
         document.body.appendChild(renderer.domElement);
 
     }
-
-    function update(){
-        
-        if(keyboard.pressed('A') || keyboard.pressed('left')){
-            player.position.x -= 10;
+    function update() {
+        var dt = (+new Date()) - prevTime;
+        prevTime = +new Date();
+        player.speed.x = 0;
+        if (keyboard.pressed('A') || keyboard.pressed('left')) {
+            player.speed.x -= 10;
         }
-        if(keyboard.pressed('D') || keyboard.pressed('right')){
-            player.position.x += 10;
+        if (keyboard.pressed('D') || keyboard.pressed('right')) {
+            player.speed.x += 10;
+        }
+        if (keyboard.pressed('W') || keyboard.pressed('up') || keyboard.pressed('space')) {
+            if(player.position.y == -100){
+                player.speed.y = 40;
+            }
+            console.log(player.speed.y);
+        }
+        player.speed.y -= 0.1 * dt;
+        player.position.x += player.speed.x * dt * 0.1;
+        player.position.y += player.speed.y;
+        if (player.position.y < -100) {
+            player.position.y = -100;
+            player.speed.y = 0;
         }
         
     }
-    
+
     function animate() {
 
         // note: three.js includes requestAnimationFrame shim
