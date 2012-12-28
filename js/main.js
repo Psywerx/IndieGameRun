@@ -8,8 +8,9 @@
         
     function loadSprite(path, callback, img) {
         if(!img) {
-            var image = THREE.ImageUtils.loadTexture(path+'.png', {}, function(){ loadSprite(path, callback, image) });
+            var image = THREE.ImageUtils.loadTexture(path+'.png', {}, function(){ loadSprite(path, callback, image) }, function() { loadSprite(path, callback) });
         } else {
+            //var geometry = new THREE.PlaneGeometry(img.image.width, img.image.height);
             var geometry = new THREE.PlaneGeometry(img.image.width, img.image.height);
 
             var material = new THREE.MeshPhongMaterial({
@@ -36,7 +37,7 @@
     }    
     
     function animation(path,num,x,y,size) {
-        that = this;
+        var that = this;
         this.x = x;
         this.y = y;
         this.size = size;
@@ -47,14 +48,14 @@
         this.frameTime = 0;
         this.loaded = false
         this.sprites = loadSprites(path, that.frames, function() {
+            that.width = that.sprites[0].material.map.image.width*size;
+            that.height = that.sprites[0].material.map.image.height*size;
             that.sprites.forEach(function(sprite) {
-                sprite.position.x = that.x;
-                sprite.position.y = that.y;
                 sprite.scale.x = sprite.scale.x*size;
                 sprite.scale.y = sprite.scale.y*size;
+                sprite.position.x = that.x;
+                sprite.position.y = that.y + that.height/2 - 200;
             })
-            that.width = that.sprites[0].material.map.image.width;
-            that.height = that.sprites[0].material.map.image.height;
             that.loaded = true;
         });
 
@@ -117,6 +118,7 @@
         };
         loadSprite("img/player", function(sprite){ 
             player.sprite = sprite
+            player.sprite.position.x = -1400
             scene.add(player.sprite)
         });
     }
@@ -136,8 +138,12 @@
         renderer = new THREE.WebGLRenderer();
         renderer.setSize(WIDTH, HEIGHT);
 
-        fire1 = fire(200, 200, 2);
-        fire1.start();
+        fires = [];
+        for(var i=0; i<5; i++) {
+            var f = fire(-1000+500*i+Math.random()*300, 0, Math.random()*0.5+0.5)
+            f.start();
+            fires.push(f);
+        }
 
         document.body.appendChild(renderer.domElement);
     }
@@ -178,7 +184,7 @@
             }        
         }
 
-        fire1.update();
+        fires.forEach(function(fire){ fire.update(); })
     }
 
    function animate() {
