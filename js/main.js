@@ -6,10 +6,10 @@
 
     init();
         
-    function getSprites(path, n) {
+    function loadSprites(path, n) {
         var sprites = [];
         for(var i=0; i<n; i++) {
-            var img = THREE.ImageUtils.loadTexture(path + i + ".png");
+            var img = THREE.ImageUtils.loadTexture(path + (i+1) + ".png");
             var material = new THREE.SpriteMaterial({ map: img, useScreenCoordinates: false, color: 0xffffff });
             
             var sprite = new THREE.Sprite(material);
@@ -24,45 +24,38 @@
     }
     
     
-    function fire(x,y,size) {
+    function animation(path,num,x,y,size) {
         var time = function() { return new Date().getTime(); }
         that = this
         this.x = x;
         this.y = y;
         this.size = size
-        this.explode = false;
-        this.sprites = getSprites("img/fire/", 3);
+        this.frame = 0
+        this.frames = num
+        this.sprites = loadSprites(path, that.frames)
         this.update = function() {
-            var i = 0
-            this.sprites.forEach(function(sprite) {
-                if(i==0) {
-                    sprite.material.opacity = 1;
-                } else {
-                    sprite.material.opacity = 1.0 + Math.sin(sprite.theta + sprite.gamma * time() * 0.25)*0.8;
-                }
-                sprite.rotation += Math.sin(sprite.theta + sprite.gamma * time() * 0.2)/50;
-                sprite.scale.x += Math.sin(sprite.theta + sprite.gamma * time() * 2);
-                sprite.scale.y += Math.sin(sprite.theta + sprite.gamma * time() * 2);
-                if(Math.random() < 0.01) sprite.scale.x = sprite.width
-                if(Math.random() < 0.01) sprite.scale.y = sprite.height
-                if(Math.random() < 0.01) sprite.rotation = 0
-                i++
-            })
-        };
+            var lastframe = that.sprites[(that.frame)%that.frames]
+            var currframe = that.sprites[(that.frame+1)%that.frames]
+            that.frame++
+            scene.remove(lastframe)
+            scene.add(currframe)
+        }
         this.start = function() {
-            this.sprites.forEach(function(sprite) {
-                sprite.theta = Math.random(1)
-                sprite.gamma = Math.random(1)
-                sprite.position.x = that.x;
-                sprite.position.y = that.y;
-                scene.add(sprite);
+            that.sprites.forEach(function(sprite) {
+                sprite.position.x = that.x
+                sprite.position.y = that.y
+                sprite.scale.x = sprite.width*that.size
+                sprite.scale.y = sprite.height*that.size
             })
-        };
+        }
         this.stop = function() {
-            this.sprites.forEach(function(sprite) {
-                scene.remove(sprite);
+            that.sprites.forEach(function(sprite) {
+                scene.remove(sprite)
             })
-        };
+        }
+    }
+    function fire(x,y,size) {
+        return new animation("img/fire",16,x,y,size)
     }
 
     function init() {
@@ -105,7 +98,7 @@
         
         var light = new THREE.AmbientLight( 0xffffff ); scene.add( light );
 
-        fire1 = new fire(200, 200);
+        fire1 = fire(200, 200, 2);
         fire1.start();
 
         renderer = new THREE.WebGLRenderer();
