@@ -6,16 +6,22 @@
 
     init();
         
+    function loadSprite(path) {
+        var img = THREE.ImageUtils.loadTexture(path + ".png");
+        var material = new THREE.SpriteMaterial({ map: img, useScreenCoordinates: false, color: 0xffffff });
+        
+        var sprite = new THREE.Sprite(material);
+        sprite.scale.set(img.image.width, img.image.height, 1);
+        sprite.width = img.image.width;
+        sprite.height = img.image.height;
+        
+        return sprite;
+    }
+    
     function loadSprites(path, n) {
         var sprites = [];
         for(var i=0; i<n; i++) {
-            var img = THREE.ImageUtils.loadTexture(path + (i+1) + ".png");
-            var material = new THREE.SpriteMaterial({ map: img, useScreenCoordinates: false, color: 0xffffff });
-            
-            var sprite = new THREE.Sprite(material);
-            sprite.scale.set(img.image.width, img.image.height, 1);
-            sprite.width = img.image.width
-            sprite.height = img.image.height
+            sprite = loadSprite(path + (i+1));
             
             sprites.push(sprite);
         }
@@ -25,15 +31,15 @@
     
     
     function animation(path,num,x,y,size) {
-        that = this
+        that = this;
         this.x = x;
         this.y = y;
-        this.size = size
-        this.frame = 0
-        this.frames = num
-        this.speed = 100
-        this.frameTime = 0
-        this.sprites = loadSprites(path, that.frames)
+        this.size = size;
+        this.frame = 0;
+        this.frames = num;
+        this.speed = 200;
+        this.frameTime = 0;
+        this.sprites = loadSprites(path, that.frames);
         this.update = function() {
             var now = +new Date()
 
@@ -48,7 +54,7 @@
                 scene.add(that.sprites[that.frame])
                 that.frameTime = now
             }
-        }
+        };
         this.start = function() {
             that.sprites.forEach(function(sprite) {
                 sprite.position.x = that.x
@@ -56,16 +62,15 @@
                 sprite.scale.x = sprite.width*that.size
                 sprite.scale.y = sprite.height*that.size
             })
-        }
+        };
         this.stop = function() {
             that.sprites.forEach(function(sprite) {
                 scene.remove(sprite)
             })
-        }
+        };
     }
-    function fire(x,y,size) {
-        return new animation("img/fire",16,x,y,size)
-    }
+    
+    function fire(x,y,size) { return new animation("img/fire",16,x,y,size) }
 
     var prevTime = +new Date();
 
