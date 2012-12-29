@@ -54,7 +54,7 @@
                 sprite.position.set(0, -200, 0);
                 scene.add(world.sprite);
                 animate();
-            }
+            }            
         );
         tree = {};
         Sprite.loadSprite(

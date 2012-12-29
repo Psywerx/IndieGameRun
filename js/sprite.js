@@ -7,7 +7,7 @@
             ONCE : 1,
             BOUNCE : 2,
         },
-        Animation : function(path, count, onLoadCallback) {
+        Animation : function(type, path, count, onLoadCallback) {
             var that = this;
             this.started = false;
             this.frame = 0;
@@ -20,6 +20,9 @@
 
             this.materials = Sprite.loadMaterials(path, that.frameCount, null, function() {
                 var geometry = new THREE.PlaneGeometry(that.materials[0].width, that.materials[0].height);
+                if(type == "CUBE")
+                    geometry = new THREE.CubeGeometry(that.materials[0].width, that.materials[0].height, that.materials[0].height);
+                
                 that.sprite = new THREE.Mesh(geometry, that.materials[0]);
                 that.sprite.getWidth = function() { return that.materials[0].width * that.sprite.scale.x; };
                 that.sprite.getHeight = function() { return that.materials[0].height * that.sprite.scale.y; };
@@ -113,9 +116,9 @@
                     function error( err ) { console.log(err); Sprite.loadSprite(path, callback); }
                 );
             }
-
-            var geometry = new THREE.PlaneGeometry(img.image.width, img.image.height),
-                material = new THREE.MeshPhongMaterial({
+            var geometry = new THREE.PlaneGeometry(img.image.width, img.image.height);
+            
+            var material = new THREE.MeshPhongMaterial({
                     map : img,
                     transparent : true
                 }),
