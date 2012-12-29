@@ -1,6 +1,7 @@
 (function(G, THREE, THREEx, _) {
 
-    var Sprite = G.Sprite;
+    var Sprite = G.Sprite,
+        Collision = G.Collision;
     var keyboard = new THREEx.KeyboardState();
 
     _.extend(G, {
@@ -56,10 +57,8 @@
                         player.animation.sprite.position.x += player.speed.x * dt * 0.1;
                         player.animation.sprite.position.y += player.speed.y;
 
-                        // TODO: Check for collisions:
-                        for ( var i in collidables ) {
-                            var vertices = collidables[i].geometry.vertices;
-                        }
+                        var col = Collision.colliding(player, collidables);
+                        
                         if (player.animation.sprite.position.y < world.sprite.position.y + world.sprite.getHeight()/2 + player.animation.sprite.getHeight() / 2) {
                             player.animation.sprite.position.y = world.sprite.position.y + world.sprite.getHeight()/2 + player.animation.sprite.getHeight() / 2;
                             player.speed.y = 0;

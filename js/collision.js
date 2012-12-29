@@ -52,8 +52,8 @@
 
     _.extend(Collision, {
         colliding : function(player, collidables) {
-            var pv = player.animation.sprites[0].geometry.vertices;
-            var pp = player.animation.sprites[0].position;
+            var pv = player.animation.sprite.geometry.vertices;
+            var pp = player.animation.sprite.position;
             
             for ( var i in collidables) {
                 var cv = collidables[i].sprite.geometry.vertices;
