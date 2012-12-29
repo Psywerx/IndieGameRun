@@ -32,4 +32,4 @@
             return res;
         }
     });
-})(GAME || {}, THREE, _);
+})(GAME, THREE, _);

@@ -9,4 +9,4 @@
         },
 
     });
-})( GAME || {}, THREE, _ );
+})( GAME, THREE, _ );

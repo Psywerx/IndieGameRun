@@ -128,4 +128,4 @@
             callback && callback(sprite);
         }
     });
-})( GAME || {}, THREE, _ );
+})( GAME, THREE, _ );
