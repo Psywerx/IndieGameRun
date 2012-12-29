@@ -19,11 +19,11 @@
                     player.animation.speed = 1000;
                     player.animation.start();
                     scene.add(player.animation.sprite);
-                }),                
+                }),
                 update : function(dt, collidables, world){ // All these extra parameters :/
-                    
+
                     player.speed.x = 0;
-                    
+
                     if (keyboard.pressed('A') || keyboard.pressed('left')) {
                         player.speed.x -= 10;
                     }
@@ -40,13 +40,13 @@
                     } else {
                         player.jumpLock = true;
                     }
-                    
+
                     if (keyboard.pressed('S') || keyboard.pressed('down')) {
                         player.isCrouched = true;
                     } else {
                         player.isCrouched = false;
                     }
-                    
+
                     player.speed.y -= 0.1 * dt;
                     if (player.animation && player.animation.loaded) {
                         if(player.isCrouched) {
@@ -58,7 +58,7 @@
                         player.animation.sprite.position.y += player.speed.y;
 
                         var col = Collision.colliding(player, collidables);
-                        
+
                         if (player.animation.sprite.position.y < world.sprite.position.y + world.sprite.getHeight()/2 + player.animation.sprite.getHeight() / 2) {
                             player.animation.sprite.position.y = world.sprite.position.y + world.sprite.getHeight()/2 + player.animation.sprite.getHeight() / 2;
                             player.speed.y = 0;
