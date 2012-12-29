@@ -4,9 +4,8 @@
         Drawables = G.Drawables,
         Ground = G.Ground,
         Player = G.Player,
-        Ground = G.Ground;
         Collision = G.Collision;
-    
+
     var WIDTH = 800,
         HEIGHT = 600;
 
@@ -31,7 +30,7 @@
 
     var score = 0;
     var scoreSprite;
-    
+
     // utils.js?
     function padZeros(number, length) {
         var str = '' + number;
@@ -56,7 +55,7 @@
                 sprite.position.set(0, -200, 0);
                 scene.add(world.sprite);
                 animate();
-            }            
+            }
         );
         tree = {};
         Sprite.loadSprite(
@@ -79,7 +78,7 @@
         scene = new THREE.Scene();
 
         initWorld();
-        
+
         player = new Player(scene);
 
         var light = new THREE.AmbientLight(0xffffff);
@@ -87,7 +86,7 @@
 
         renderer = new THREE.WebGLRenderer();
         renderer.setSize(WIDTH, HEIGHT);
-     
+
 
         _.range(5).forEach(function(i){
             var f = Drawables.fire(function() {
@@ -101,7 +100,7 @@
             f.start();
             fires.push(f);
         });
-        
+
         var canvas = renderer.domElement;
         canvas.style.marginLeft = "auto";
         canvas.style.marginRight = "auto";
@@ -112,13 +111,14 @@
     function update() {
         var dt = (+new Date()) - prevTime;
         prevTime = +new Date();
-        
+
         player.update(dt, collidables, world);
 
         fires.forEach(function(fire) {
             fire.update();
-            if(fire.sprite)
+            if (fire.sprite) {
                 fire.sprite.position.z = 5;
+            }
         });
         effects.forEach(function(effect) {
             effect.update();

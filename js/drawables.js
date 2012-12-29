@@ -4,13 +4,8 @@
 
     _.extend(Drawables, {
         fire : function (callback) {
-            
-            
-            
-            // Q: Is there a way to actually extend class? (--> new fire(...) instead of just fire(...)) 
-            sprite = new Sprite.Animation("PLANE", "img/fire", 16, callback);
-            
-            return sprite;
+            // Q: Is there a way to actually extend class? (--> new fire(...) instead of just fire(...))
+            return new Sprite.Animation("PLANE", "img/fire", 16, callback);
         },
 
     });
