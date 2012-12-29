@@ -75,8 +75,8 @@
     function getDirection(player, line){
         var point = getClosetPoint(player, line, true);
         var r = {
-            "x" : player.x-point.x, 
-            "y" : player.y-point.y, 
+            "x" : Math.round(player.x-point.x), 
+            "y" : Math.round(player.y-point.y), 
             "z" : 0};
         r.count = (r.x != 0) + (r.y != 0) + (r.z != 0);
         return r;
