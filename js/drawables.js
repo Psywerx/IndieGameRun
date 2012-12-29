@@ -5,9 +5,9 @@
     _.extend(Drawables, {
         fire : function () {
             return new Sprite.Animation(Sprite.GeometryType.PLANE, "fire");
-        }
+        },
         background : function () {
-            return new Sprite.loadSprite("PLANE", "bg");
+            return new Sprite.getSprite("bg", "PLANE");
         }
     });
 })( GAME, THREE, _ );

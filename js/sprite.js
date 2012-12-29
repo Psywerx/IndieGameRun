@@ -6,6 +6,7 @@
         "fire" : { name: "fire", count: 16 },
         "test" : { name: "test", count: 1 },
         "tree" : { name: "tree", count: 1 },
+        "bg"   : { name: "bg", count : 1}
     };
 
     _.extend(Sprite, {
@@ -141,9 +142,23 @@
                 callback && callback(material);
             }
         },
-        getSprite: function(name) {
+        getSprite: function(name, geometryType) {
             var material = Sprite.getMaterial(name);
-            var geometry = new THREE.CubeGeometry(material.width, material.height, 600);
+            var geometry = null;
+            switch (geometryType) {
+                case Sprite.GeometryType.CUBE:
+                    geometry = new THREE.CubeGeometry(material.width, material.height, material.height, 3, 3, 3);                    
+                    break;
+                case Sprite.GeometryType.PLANE:
+                    geometry = new THREE.PlaneGeometry(material.width, material.height);
+                    break;
+                default:
+                    console.log("Unknown geometryType: ", geometryType);
+                    //fallback to plane:
+                    geometryType = Sprite.GeometryType.PLANE;
+                    geometry = new THREE.PlaneGeometry(material.width, material.height);
+                    break;
+            }
             sprite = new THREE.Mesh(geometry, material);
 
             sprite.material = material;

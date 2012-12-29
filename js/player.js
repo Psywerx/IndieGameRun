@@ -86,8 +86,8 @@
 
                     var col = Collision.colliding(player, collidables);
                     
-                    if (player.animation.sprite.position.y < world.sprite.position.y + world.sprite.getHeight()/2 + player.animation.sprite.getHeight() / 2) {
-                        player.animation.sprite.position.y = world.sprite.position.y + world.sprite.getHeight()/2 + player.animation.sprite.getHeight() / 2;
+                    if (player.animation.sprite.position.y < -100) {
+                        player.animation.sprite.position.y = -100;
                         player.speed.y = 0;
                         player.jumpCount = 0;
                         player.jumpLock = false;

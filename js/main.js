@@ -49,14 +49,17 @@
         world = {};
         world.sprite = Sprite.getSprite("test");
         world.sprite.scale.x = 10000;
+        world.sprite.scale.y = 2.5;
+        
         world.sprite.material.color = 0x000000;
         world.sprite.position.set(0, -200, 0);
+        
         scene.add(world.sprite);
 
         tree = {};
         tree.sprite = Sprite.getSprite("tree");
         tree.sprite.scale.set(3, 3, 1);
-        tree.sprite.position.set(0, -200 + sprite.getHeight()/2, 0);
+        tree.sprite.position.set(1800, -200 + sprite.getHeight()/2, 200);
         scene.add(tree.sprite);
 
         collidables.push(world);
@@ -64,7 +67,7 @@
         background = Drawables.background();
 
         background.position.set(0, 2500, -5000);
-        background.scale.set(20,20,20);
+        background.scale.set(20,20,1);
         scene.add(background);
 
     }
