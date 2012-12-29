@@ -2,10 +2,11 @@
     var Sprite = G.Sprite = {};
 
     _.extend(Sprite, {
-        AnimationType : {
+        AnimationType : { // Powers of 2, so they can be combined
             LOOP : 0,
             ONCE : 1,
             BOUNCE : 2,
+            JERKY : 4,
         },
         Animation : function(geometryType, path, count, onLoadCallback) {
             var that = this;
@@ -44,14 +45,18 @@
                     
                     var lastFrame = that.frame;
                     if (now >= that.frameTime + that.speed) {
-                        that.frame += that.direction;
+                        if(that.type & Sprite.AnimationType.JERKY) {
+                            that.frame += (Math.random()<0.5) ? that.direction : 0;
+                        } else {
+                            that.frame += that.direction;
+                        }
                         that.frame %= that.frameCount;
                         if(that.frame == 0) {
-                            if(that.type == Sprite.AnimationType.BOUNCE) that.direction = -that.direction;
+                            if(that.type & Sprite.AnimationType.BOUNCE) that.direction = -that.direction;
                         }
                         if(that.frame == that.frameCount-1) {
-                            if(that.type == Sprite.AnimationType.ONCE) that.stop();
-                            if(that.type == Sprite.AnimationType.BOUNCE) that.direction = -that.direction;
+                            if(that.type & Sprite.AnimationType.ONCE) that.stop();
+                            if(that.type & Sprite.AnimationType.BOUNCE) that.direction = -that.direction;
                         }
                         var currFrame = that.frame;
 
