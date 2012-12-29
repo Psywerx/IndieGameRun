@@ -3,15 +3,17 @@
 
     _.extend(Sprite, {
         loadSprites: function(path, count, callback, doneCallback) {
-            var sprites = [];
-            for(var i = 0; i < count; i++) {
-                (function(j) {
-                    Sprite.loadSprite(path + (j+1), function(sprite) {
+            var sprites = [],
+                i = 0;
+
+            for (;i < count; i++) {
+                (function( num ) {
+                    var spritePath = path + (num+1);
+                    Sprite.loadSprite(spritePath, function(sprite) {
                         callback && callback(sprite);
-                        sprites[j] = sprite;
-                        if (count === _.compact(sprites).length) { // all loaded
-                            doneCallback();
-                        }
+                        sprites[num] = sprite;
+
+                        count === _.compact(sprites).length && doneCallback();
                     });
                 })(i);
             }
@@ -22,7 +24,7 @@
             if (!img) {
                 return THREE.ImageUtils.loadTexture( path + '.png', {},
                     function success( image ) { Sprite.loadSprite(path, callback, image); },
-                    function error() { Sprite.loadSprite(path, callback); } // retry
+                    function error() { Sprite.loadSprite(path, callback); }
                 );
             }
 
@@ -41,5 +43,4 @@
             callback && callback(sprite);
         }
     });
-    console.log(G);
 })( GAME || {}, THREE, _ );
