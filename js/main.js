@@ -138,7 +138,7 @@
     }
 
 
-    Sprite.loadTextures(function (){
+    Sprite.loadAllTextures(function (){
         init();
     });
 })( GAME, THREE, THREEx, _);

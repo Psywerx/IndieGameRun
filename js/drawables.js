@@ -4,7 +4,7 @@
 
     _.extend(Drawables, {
         fire : function () {
-            return new Sprite.Animation(Sprite.GeometryType.PLANE, "fire");
+            return new Sprite.Animation("fire", "PLANE");
         },
         background : function () {
             return new Sprite.getSprite("bg", "PLANE");

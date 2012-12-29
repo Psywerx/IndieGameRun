@@ -5,7 +5,7 @@
     var keyboard = new THREEx.KeyboardState();
 
     var animation = function(scene) {
-        var anim = new Sprite.Animation("CUBE","player");
+        var anim = new Sprite.Animation("player", "CUBE");
         anim.sprite.position.x = -1400;
         anim.sprite.position.y = -200 + anim.sprite.getHeight();
         var modifier = new THREE.SubdivisionModifier(2);
@@ -54,6 +54,7 @@
                     if (keyboard.pressed('S') || keyboard.pressed('down')) {
                         player.isCrouched = true;
                     } else {
+                        if(player.isCrouched && player.speed.y == 0) player.speed.y = 17;
                         player.isCrouched = false;
                     }
                     

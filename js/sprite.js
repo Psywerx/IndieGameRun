@@ -10,7 +10,7 @@
     };
 
     _.extend(Sprite, {
-        loadTextures : function(callback) { // Don't read this... just don't...
+        loadAllTextures : function(callback) { // Don't read this... just don't...
             for(var texI in textures) (function(tex){
                 tex.materials = [];
                 _.range(Math.max(1,tex.count)).forEach(function(i) {
@@ -51,7 +51,7 @@
             PLANE : "PLANE",
             CUBE : "CUBE",
         },
-        Animation : function(geometryType, name) {
+        Animation : function(name, geometryType) {
             var that = this;
             this.started = false;
             this.frame = 0;
