@@ -3,10 +3,10 @@
 
     _.extend(Sprite, {
         AnimationType : { // Powers of 2, so they can be combined
-            LOOP : 0,
-            ONCE : 1,
-            BOUNCE : 2,
-            JERKY : 4,
+            LOOP : 1,
+            ONCE : 2,
+            BOUNCE : 4,
+            JERKY : 8,
         },
         Animation : function(geometryType, path, count, onLoadCallback) {
             var that = this;
