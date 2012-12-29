@@ -3,7 +3,9 @@
         Effect = G.Effect,
         Drawables = G.Drawables,
         Ground = G.Ground,
-        Player = G.Player;
+        Player = G.Player,
+        Ground = G.Ground;
+        Collision = G.Collision;
     
     var WIDTH = 800,
         HEIGHT = 600;
@@ -66,6 +68,7 @@
                 scene.add(tree.sprite);
             }
         );
+        collidables.push(world);
     }
 
     function init() {
