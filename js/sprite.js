@@ -7,7 +7,7 @@
             ONCE : 1,
             BOUNCE : 2,
         },
-        Animation : function(type, path, count, onLoadCallback) {
+        Animation : function(geometryType, path, count, onLoadCallback) {
             var that = this;
             this.started = false;
             this.frame = 0;
@@ -19,11 +19,14 @@
             this.type = Sprite.AnimationType.LOOP;
 
             this.materials = Sprite.loadMaterials(path, that.frameCount, null, function() {
-                var geometry = new THREE.PlaneGeometry(that.materials[0].width, that.materials[0].height);
-                if(type == "CUBE"){
-                    geometry = new THREE.CubeGeometry(that.materials[0].width, that.materials[0].height, that.materials[0].height, 2, 2, 2);
-                    var modifier = new THREE.SubdivisionModifier(2);
-                    modifier.modify(geometry);
+                var geometry = null;
+                switch (geometryType) {
+                    case "CUBE":
+                        geometry = new THREE.CubeGeometry(that.materials[0].width, that.materials[0].height, that.materials[0].height, 3, 3, 3);                    
+                        break;
+                    case "PLANE":
+                        geometry = new THREE.PlaneGeometry(that.materials[0].width, that.materials[0].height);
+                        break;
                 }
                 
                 that.sprite = new THREE.Mesh(geometry, that.materials[0]);
