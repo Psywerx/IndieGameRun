@@ -74,7 +74,7 @@
     
     function getDirection(player, line){
         var point = getClosetPoint(player, line, true);
-        return {"x":player.x-point.x, "y":player.y-point.y, "z":0 }
+        return {"x":player.x-point.x, "y":player.y-point.y, "z":0 };
     }
 
     function objectsCollide(position, player, obj, i) {

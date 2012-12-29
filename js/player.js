@@ -16,7 +16,7 @@
         scene.add(anim.sprite);
         
         return anim;
-    }
+    };
 
 
     _.extend(G, {
@@ -80,7 +80,7 @@
                     }
                     var col = Collision.colliding(player, collidables);
                     if (col.length > 0) {
-                        player.animation.sprite.position.y += 10;
+                        player.animation.sprite.position.y += 6;
                         player.speed.y = 0;
                         player.jumpCount = 0;
                         player.jumpLock = false;

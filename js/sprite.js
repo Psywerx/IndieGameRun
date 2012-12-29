@@ -60,7 +60,7 @@
             this.frameTime = 0;
             this.animationType = 0;
 
-            this.materials = Sprite.getMaterials(name)
+            this.materials = Sprite.getMaterials(name);
             this.frameCount = this.materials.length;
             var geometry = null;
             switch (geometryType) {
