@@ -13,7 +13,7 @@
                 this.done = false;
 
                 this.fires = _.range(15).map(function() { 
-                    var f = Drawables.fire(function(){
+                    var f = Drawables.fire(function() {
                         var scale = Math.random() * 0.3 + 0.2;
                         f.sprite.scale.set(scale, scale, 1);
                         f.sprite.position.set(
