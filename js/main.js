@@ -1,5 +1,7 @@
 (function(G, THREE, THREEx, _) {
     var Sprite = G.Sprite,
+        Effect = G.Effect,
+        Drawables = G.Drawables,
         Ground = G.Ground;
 
     var WIDTH = window.innerWidth - 100,
@@ -11,11 +13,23 @@
     var player = {},
         world = {},
         collidables = [],
-        fires = [];
+        fires = [],
+        effects = [];
+
+    //Burndown demo :)
+    function timeout() {
+        var burn = new Effect.BurnDown(tree, scene, function(){
+            effects = effects.filter(function(elt) { elt != burn; }) // :)
+        });
+        effects.push(burn);
+    }
+    setTimeout(timeout, 2000);
+
 
     var score = 0;
     var scoreSprite;
     
+    // utils.js?
     function padZeros(number, length) {
         var str = '' + number;
         while (str.length < length) {
@@ -24,82 +38,15 @@
         return str;
     }
 
-    function animation(path, count, x, y, scaleX, scaleY) {
-        var that = this;
-        this.started = false;
-        this.frame = 0;
-        this.frameCount = count;
-        this.speed = 100;
-        this.frameTime = 0;
-        this.loaded = false;
-
-        this.sprites = Sprite.loadSprites(path, that.frameCount, null, function() {
-            //scale, position, and rotation get set to same object for all sprites
-            that.scale = that.sprites[0].scale;
-            that.position = that.sprites[0].position;
-            that.rotation = that.sprites[0].rotation;
-            that.sprites.forEach(function(sprite) {
-                sprite.scale = that.scale;
-                sprite.position = that.position;
-                sprite.rotation = that.rotation;
-            });
-            that.scale.x = scaleX || 1;
-            that.scale.y = scaleY || scaleX || 1;
-            that.width = that.sprites[0].width * that.scale.x;
-            that.height = that.sprites[0].height * that.scale.y;
-            that.position.x = x;
-            that.position.y = y + that.height / 2;
-
-            that.loaded = true;
-        });
-
-        this.update = function() {
-            if (that.loaded) {
-                that.width = that.sprites[0].width * that.scale.x;
-                that.height = that.sprites[0].height * that.scale.y;
-            }
-            if (that.started && that.loaded) {
-                
-                var now = +new Date();
-
-                var lastFrame = that.frame;
-                if (now >= that.frameTime + that.speed) {
-                    that.frame += 1;
-                    that.frame %= that.frameCount;
-                    var currFrame = that.frame;
-
-                    scene.remove(that.sprites[lastFrame]);
-                    scene.add(that.sprites[currFrame]);
-
-                    that.frameTime = now;
-                }
-            }
-        };
-        this.start = function() {
-            that.started = true;
-        };
-        this.stop = function() {
-            that.started = false;
-            that.sprites.forEach(function(sprite) {
-                scene.remove(sprite);
-            });
-        };
-    }
-
-    function fire(x, y, size) {
-        return new animation("img/fire", 16, x, y, size);
-    }
-
     var prevTime = +new Date();
 
     var keyboard = new THREEx.KeyboardState();
 
     function initWorld() {
-        world = {}
+        world = {};
         Sprite.loadSprite(
             "img/test",
             function(sprite) {
-                //console.log(world.sprite)
                 world.sprite = sprite;
                 sprite.scale.x = 10000;
                 sprite.material.color = 0x000000;
@@ -108,17 +55,31 @@
                 animate();
             }
         );
+        tree = {};
+        Sprite.loadSprite(
+            "img/tree",
+            function(sprite) {
+                tree.sprite = sprite;
+                sprite.scale.set(3, 3, 1);
+                sprite.position.set(0, -200 + sprite.getHeight()/2, 0);
+                scene.add(tree.sprite);
+            }
+        );
     }
     function initPlayer() {
         player.jumpCount = 0;
+        player.isCrouched = false;
         player.speed = {
             x : 0,
             y : 0
         };
-        player.animation = new animation("img/playerStill", 2, -1400, -200);
-        player.animation.speed = 1000;
-        player.animation.start();
-        player.crouched = false;
+        player.animation = new Sprite.Animation("img/playerStill", 2, function() {
+            player.animation.sprite.position.x = -1400;
+            player.animation.sprite.position.y = -200 + player.animation.sprite.getHeight();
+            player.animation.speed = 1000;
+            player.animation.start();
+            scene.add(player.animation.sprite);
+        });
     }
 
     function init() {
@@ -136,11 +97,19 @@
         renderer = new THREE.WebGLRenderer();
         renderer.setSize(WIDTH, HEIGHT);
 
-        for ( var i = 0; i < 5; i++) {
-            var f = fire(-1000 + 500 * i + Math.random() * 300, -200, Math.random() * 0.5 + 0.5)
+        _.range(5).forEach(function(i){
+            var f = Drawables.fire(function() {
+                var scale = Math.random() * 0.5 + 0.5;
+                f.sprite.scale.set(scale, scale, 1);
+                f.sprite.position.set(-1000 + 500 * i + Math.random() * 300, -200 + f.sprite.getHeight()/2, 0);
+                if(i==0) f.type = Sprite.AnimationType.ONCE;
+                if(i==1) f.type = Sprite.AnimationType.BOUNCE;
+                scene.add(f.sprite);
+            })
             f.start();
             fires.push(f);
-        }
+        });
+        
         scoreSprite = new G.text(padZeros(score, 6));
         scene.add(scoreSprite.sprite);
         document.body.appendChild(renderer.domElement);
@@ -150,6 +119,7 @@
         var dt = (+new Date()) - prevTime;
         prevTime = +new Date();
         player.speed.x = 0;
+        
         if (keyboard.pressed('A') || keyboard.pressed('left')) {
             player.speed.x -= 10;
         }
@@ -181,15 +151,15 @@
             }
 
             if(player.isCrouched) {
-                player.animation.scale.y = player.animation.scale.y*0.9 + 0.5*0.1;
+                player.animation.sprite.scale.y = player.animation.sprite.scale.y*0.9 + 0.5*0.1;
             } else {
-                player.animation.scale.y = player.animation.scale.y*0.8 + 1.0*0.2;
+                player.animation.sprite.scale.y = player.animation.sprite.scale.y*0.8 + 1.0*0.2;
             }
 
-            player.animation.position.x += player.speed.x * dt * 0.1;
-            player.animation.position.y += player.speed.y;
-            if (player.animation.position.y < world.sprite.position.y + world.sprite.height/2 + player.animation.height / 2) {
-                player.animation.position.y = world.sprite.position.y + world.sprite.height/2 + player.animation.height / 2;
+            player.animation.sprite.position.x += player.speed.x * dt * 0.1;
+            player.animation.sprite.position.y += player.speed.y;
+            if (player.animation.sprite.position.y < world.sprite.position.y + world.sprite.getHeight()/2 + player.animation.sprite.getHeight() / 2) {
+                player.animation.sprite.position.y = world.sprite.position.y + world.sprite.getHeight()/2 + player.animation.sprite.getHeight() / 2;
                 player.speed.y = 0;
                 player.jumpCount = 0;
                 player.jumpLock = false;
@@ -201,6 +171,9 @@
 
         fires.forEach(function(fire) {
             fire.update();
+        });
+        effects.forEach(function(effect) {
+            effect.update();
         });
 
 		score += 1;
