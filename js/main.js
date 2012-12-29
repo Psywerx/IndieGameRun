@@ -1,6 +1,7 @@
 (function(G, THREE, _) {
     var Sprite = G.Sprite;
     var Ground = G.Ground;
+    var Collision = G.Collision;
 
     var WIDTH = window.innerWidth - 100, HEIGHT = window.innerHeight - 100;
 
@@ -10,8 +11,8 @@
     var score = 0;
     var scoreSprite;
     
-    init();
     collidables = [];
+    init();
 
     function padZeros(number, length) {
         var str = '' + number;
@@ -100,6 +101,7 @@
                 animate(); 
             }
         );
+        collidables.push(world);
     }
     function initPlayer() {
         player = {};
@@ -164,10 +166,8 @@
         }
         player.speed.y -= 0.1 * dt;
         if (player.animation && player.animation.loaded) {
-            // TODO: Check for collisions:
-            for ( var i in collidables) {
-                var vertices = collidables[i].geometry.vertices;
-            }
+            
+            var col = Collision.colliding(player, collidables);
 
             player.animation.position.x += player.speed.x * dt * 0.1;
             player.animation.position.y += player.speed.y;
