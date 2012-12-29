@@ -3,12 +3,11 @@
     var Sprite = G.Sprite;
 
     _.extend(Drawables, {
-        fire : function (callback) {
-            return new Sprite.Animation("PLANE", "img/fire", 16, callback);
-        },
-    
-        background : function (callback) {
-            return new Sprite.loadSprite("PLANE", "img/bg", callback);
+        fire : function () {
+            return new Sprite.Animation(Sprite.GeometryType.PLANE, "fire");
+        }
+        background : function () {
+            return new Sprite.loadSprite("PLANE", "bg");
         }
     });
 })( GAME, THREE, _ );

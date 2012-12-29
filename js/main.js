@@ -1,23 +1,33 @@
 (function(G, THREE, THREEx, _) {
-    var Sprite = G.Sprite, Effect = G.Effect, Drawables = G.Drawables, Ground = G.Ground, Player = G.Player, Collision = G.Collision;
+    var Sprite = G.Sprite,
+        Effect = G.Effect,
+        Drawables = G.Drawables,
+        Ground = G.Ground,
+        Player = G.Player,
+        Collision = G.Collision;
 
-    var WIDTH = 800, HEIGHT = 600;
+    var WIDTH = 800,
+        HEIGHT = 600;
 
     var camera, scene, renderer;
     var geometry, material, mesh;
 
-    var player = {}, world = {}, collidables = [], fires = [], effects = [], background = {};
+    var player = {},
+        world = {},
+        collidables = [],
+        fires = [],
+        effects = [],
+        background = {};
 
-    // Burndown demo :)
-//    function timeout() {
-//        var burn = new Effect.BurnDown(tree, scene, function() {
-//            effects = effects.filter(function(elt) {
-//                elt != burn;
-//            }); // :)
-//        });
-//        effects.push(burn);
-//    }
-//    setTimeout(timeout, 2000);
+    //Burndown demo :)
+    /*function timeout() {
+        var burn = new Effect.BurnDown(tree, scene, function(){
+            effects = effects.filter(function(elt) { elt != burn; }); // :)
+        });
+        effects.push(burn);
+    }
+    setTimeout(timeout, 2000);*/
+
 
     var score = 0;
     var scoreSprite;
@@ -37,30 +47,26 @@
 
     function initWorld() {
         world = {};
-        Sprite.loadSprite("CUBE", "img/test", function(sprite) {
-            world.sprite = sprite;
-            sprite.scale.x = 10000;
-            sprite.material.color = 0x000000;
-            sprite.position.set(0, -200, 0);
-            scene.add(world.sprite);
-            animate();
-        });
-        tree = {};
-        Sprite.loadSprite("PLANE", "img/tree", function(sprite) {
-            tree.sprite = sprite;
-            sprite.scale.set(3, 3, 1);
-            
-            sprite.position.set(1800, -200 + sprite.getHeight() / 2, 400);
-            scene.add(tree.sprite);
-        });
-        Drawables.background(function(sprite) {
+        world.sprite = Sprite.getSprite("test");
+        world.sprite.scale.x = 10000;
+        world.sprite.material.color = 0x000000;
+        world.sprite.position.set(0, -200, 0);
+        scene.add(world.sprite);
 
-            sprite.position.set(0, 2500, -5000);
-            sprite.scale.set(20,20,20);
-            background.sprite = sprite;
-            scene.add(background.sprite);
-        });
+        tree = {};
+        tree.sprite = Sprite.getSprite("tree");
+        tree.sprite.scale.set(3, 3, 1);
+        tree.sprite.position.set(0, -200 + sprite.getHeight()/2, 0);
+        scene.add(tree.sprite);
+
         collidables.push(world);
+
+        background = Drawables.background();
+
+        background.position.set(0, 2500, -5000);
+        background.scale.set(20,20,20);
+        scene.add(background);
+
     }
 
     function init() {
@@ -80,17 +86,16 @@
         renderer = new THREE.WebGLRenderer();
         renderer.setSize(WIDTH, HEIGHT);
 
-        _.range(5).forEach(function(i) {
-            var f = Drawables.fire(function() {
-                var scale = Math.random() * 0.5 + 0.5;
-                f.sprite.scale.set(scale, scale, 1);
-                f.sprite.position.set(-1000 + 500 * i + Math.random() * 300, -200 + f.sprite.getHeight() / 2, 0);
-                f.animationType = Sprite.AnimationType.JERKY;
-                if (i % 2 == 0)
-                    f.animationType |= Sprite.AnimationType.BOUNCE;
-                f.start();
-                scene.add(f.sprite);
-            });
+
+        _.range(5).forEach(function(i){
+            var f = Drawables.fire();
+            var scale = Math.random() * 0.5 + 0.5;
+            f.sprite.scale.set(scale, scale, 1);
+            f.sprite.position.set(-1000 + 500 * i + Math.random() * 300, -200 + f.sprite.getHeight()/2, 0);
+            f.animationType = Sprite.AnimationType.JERKY;
+            if(i%2==0)  f.animationType |= Sprite.AnimationType.BOUNCE;
+            f.start();
+            scene.add(f.sprite);
             fires.push(f);
         });
 
@@ -99,6 +104,8 @@
         canvas.style.marginRight = "auto";
         canvas.style.display = "block";
         document.getElementById("content").appendChild(canvas);
+
+        animate();
     }
 
     function update() {
@@ -117,8 +124,6 @@
             effect.update();
         });
 
-        score += 1;
-        // scoreSprite.update(padZeros(score, 6));
     }
 
     function animate() {
@@ -129,5 +134,8 @@
         renderer.render(scene, camera);
     }
 
-    init();
-})(GAME, THREE, THREEx, _);
+
+    Sprite.loadTextures(function (){
+        init();
+    });
+})( GAME, THREE, THREEx, _);
