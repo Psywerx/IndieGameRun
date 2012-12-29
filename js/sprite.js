@@ -82,6 +82,10 @@
             that.sprite.getWidth = function() { return that.materials[0].width * that.sprite.scale.x; };
             that.sprite.getHeight = function() { return that.materials[0].height * that.sprite.scale.y; };
 
+            var aa = (new THREE.PlaneGeometry(that.materials[0].width, that.materials[0].height)).vertices;
+            that.sprite.collisionFrame = [aa[0],aa[1],aa[3],aa[2]];
+                
+
             this.update = function() {
                 if (that.started) {
                     var now = +new Date();
@@ -165,6 +169,10 @@
             sprite.getWidth = function() { return material.width * sprite.scale.x; };
             sprite.getHeight = function() { return material.height * sprite.scale.y; };
             
+            var aa = (new THREE.PlaneGeometry(material.width, material.height)).vertices;
+            sprite.collisionFrame = [aa[0],aa[1],aa[3],aa[2]];
+            
+
             return sprite;
         },
     });

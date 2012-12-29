@@ -7,7 +7,7 @@
     var animation = function(scene) {
         var anim = new Sprite.Animation("player", "CUBE");
         anim.sprite.position.x = -1400;
-        anim.sprite.position.y = -200 + anim.sprite.getHeight();
+        anim.sprite.position.y = 100 + anim.sprite.getHeight();
         var modifier = new THREE.SubdivisionModifier(2);
         modifier.modify(anim.sprite.geometry);
         anim.speed = 1000;
@@ -78,6 +78,14 @@
                         player.animation.sprite.scale.y = player.animation.sprite.scale.y*0.8 + 1.0*0.2;
                         player.animation.sprite.scale.x = player.animation.sprite.scale.x*0.8 + 1.0*0.2;
                     }
+                    var col = Collision.colliding(player, collidables);
+                    if (col.length > 0) {
+                        player.animation.sprite.position.y += 10;
+                        player.speed.y = 0;
+                        player.jumpCount = 0;
+                        player.jumpLock = false;
+                        
+                    }
                     player.animation.sprite.position.x += player.speed.x * dt * 0.1;
                     player.animation.sprite.position.y += player.speed.y;
 
@@ -85,15 +93,6 @@
                         camera.position.x += player.speed.x * dt * 0.1;
                     }
 
-                    var col = Collision.colliding(player, collidables);
-                    
-                    if (player.animation.sprite.position.y < -100) {
-                        player.animation.sprite.position.y = -100;
-                        player.speed.y = 0;
-                        player.jumpCount = 0;
-                        player.jumpLock = false;
-
-                    }
 
                     player.animation.update();
                 }

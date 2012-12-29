@@ -2,81 +2,112 @@
 
     var Collision = GAME.Collision = {};
 
+    function getLine(arr, ind) {
+        return [ arr[+ind % arr.length], arr[(+ind + 1) % arr.length] ];
+    }
+    
+    function toVector3(obj){
+        return new THREE.Vector3( obj.x, obj.y, obj.z );
+    }
+    
     function linesCross(line1, line2) {
-        var p1 = line1[0], p2 = line1[1], p3 = line2[0], p4 = line2[1];
+        var p1 = toVector3(line1[0]),
+            p2 = toVector3(line1[1]), 
+            p3 = toVector3(line2[0]), 
+            p4 = toVector3(line2[1]);
+        
+        var v1 = (new THREE.Vector3()).sub( p2, p1 );
+        var v1a = (new THREE.Vector3()).sub( p3, p1 );
+        var v1b = (new THREE.Vector3()).sub( p4, p1 );
 
-        var v1 = new THREE.Vector3( p2.x - p1.x, p2.y - p1.y, p2.z - p1.z );
-        var v1a = new THREE.Vector3( p3.x - p1.x, p3.y - p1.y, p3.z - p1.z );
-        var v1b = new THREE.Vector3( p4.x - p1.x, p4.y - p1.y, p4.z - p1.z );
-
-        if ((v1.crossSelf(v1a)).dot(v1.crossSelf(v1b)) > 0) {
+        var v2 = (new THREE.Vector3()).sub( p4, p3 );
+        var v2a = (new THREE.Vector3()).sub( p1, p3 );
+        var v2b = (new THREE.Vector3()).sub( p2, p3 );
+        
+        if (((new THREE.Vector3()).cross(v1,v1a)).dot((new THREE.Vector3()).cross(v1,v1b)) > 0) {
             return false;
         }
-
-        var v2 = new THREE.Vector3( p4.x - p3.x, p4.y - p3.y, p4.z - p3.z );
-        var v2a = new THREE.Vector3( p1.x - p3.x, p1.y - p3.y, p1.z - p3.z );
-        var v2b = new THREE.Vector3( p2.x - p3.x, p2.y - p3.y, p2.z - p3.z );
-
-        if ((v2.crossSelf(v2a)).dot(v2.crossSelf(v2b)) > 0) {
+        
+        if (((new THREE.Vector3()).cross(v2,v2a)).dot((new THREE.Vector3()).cross(v2,v2b)) > 0) {
             return false;
         }
-
+        
         return true;
     }
+    
 
-    function translate(obj, vec) {
+    function getActualPosition(sprite) {
+        
+        var vertices = sprite.collisionFrame;
+        var vec = sprite.position;
+        var scale = sprite.scale;
+        
         var result = [];
-        _.each(obj,function(e,i){
+        _.each(vertices,function(e,i){
             result.push({
-                "x" : e.x + vec.x,
-                "y" : e.y + vec.y,
-                "z" : e.z + vec.z
+                "x" : e.x * scale.x + vec.x,
+                "y" : e.y * scale.y + vec.y,
+                "z" : e.z * scale.z + vec.z
             });
         });
+        
         return result;
     }
+    
 
-    function getLine(arr, ind) {
-        var arrLen = arr.length;
-        ind = +ind;
-
-        return [ arr[ind % arrLen], arr[(ind + 1) % arrLen] ];
+    function getClosetPoint(pos,line, segmentClamp){
+        var P = toVector3(pos);
+        var A = toVector3(line[0]);
+        var B = toVector3(line[1]);
+        var AP = P.clone().subSelf(A);
+        var AB = B.clone().subSelf(A);
+        var ab2 = AB.x*AB.x + AB.y*AB.y;
+        var ap_ab = AP.x*AB.x + AP.y*AB.y;
+        var t = ap_ab / ab2;
+        if (segmentClamp){
+             if (t < 0.0) t = 0.0;
+             else if (t > 1.0) t = 1.0;
+        }
+        var Closest = A.addSelf(AB.multiplyScalar(t));
+        return Closest;
+    }
+    
+    function getDirection(player, line){
+        var point = getClosetPoint(player, line, true);
+        return {"x":player.x-point.x, "y":player.y-point.y, "z":0 }
     }
 
-    function objectsCollide(o1, o2) {
-        for (var i in o1) {
-            for ( var j in o2) {
-                if (linesCross(getLine(o1, i), getLine(o2, j))) {
-                    return true;
+    function objectsCollide(position, player, obj, i) {
+        //console.log("player",player);
+        //console.log("object",obj);
+        var result = [];
+        for ( var i in player) {
+            for ( var j in obj) {
+                if (i!=1 || j!=0) break;
+                var playerLine = getLine(player, i);
+                var objectLine = getLine(obj, j);
+                //qconsole.log(linesCross(playerLine, objectLine));
+                if (linesCross(playerLine, objectLine)) {
+                    result.push({
+                        "index" : i,
+                        "vector" : getDirection(position, objectLine)
+                    });
                 }
             }
         }
+        return result;
     }
-    // This is probably bit faster
-    // function objectsCollide(o1, o2) {
-    //     var i = 0,
-    //         j = 0,
-    //         o1len = o1.length,
-    //         o2len = o2.length;
 
-    //     for (; i < o1len; i++) {
-    //         for (; j < o2len; j++) {
-    //             return linesCross(getLine(o1, i), getLine(o2, j));
-    //         }
-    //     }
-    // }
     _.extend(Collision, {
         colliding : function(player, collidables) {
-            var pv = player.animation.sprite.geometry.vertices;
-            var pp = player.animation.sprite.position;
-
+            var playerPosition = getActualPosition(player.animation.sprite);
+            var arr = [];
             for ( var i in collidables) {
-                var cv = collidables[i].sprite.geometry.vertices;
-                var cp = collidables[i].sprite.position;
-
-                return objectsCollide(translate(pv, pp), translate(cv, cp));
-
+                var obj = getActualPosition(collidables[i].sprite);
+                var co = objectsCollide(player.animation.sprite.position,playerPosition, obj, i);
+                arr.push(co);
             }
+            return co;
         }
     });
 
