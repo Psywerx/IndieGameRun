@@ -22,7 +22,7 @@
                 }
             };
 
-            var sprite = G.Sprites.loadSprite("", function(s) {
+            var sprite = G.Sprite.loadSprite("", function(s) {
                 res.sprite = s;
             }, createTextTexture(text));
 
