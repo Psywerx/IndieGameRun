@@ -3,7 +3,7 @@
     var Ground = G.Ground = {};
     
     _.extend(Ground, {
-        drawGrond : function(f, t, lit) {
+        drawGround : function(f, t, lit) {
             var imgSize = 100.0;
             var w = t - f;
             var h = 100;

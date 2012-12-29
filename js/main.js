@@ -18,6 +18,7 @@
         fires = [],
         effects = [],
         clouds = [],
+        grounds = [],
         background = {};
 
     //Burndown demo :)
@@ -193,9 +194,17 @@
     }
 
 
-    Sprite.loadAllTextures(function (){
+    Sprite.loadAllTextures(function () {
         loadLevel(1, function() {
             init();
+            if(level.objects.player) {
+                camera.position.x = level.objects.player[0].x;
+                player.animation.sprite.position.x = level.objects.player[0].x;
+                player.animation.sprite.position.y = level.objects.player[0].y;
+            }
+            //if(level.objects.ground) _.each(level.objects.ground, function(ground) {
+            //    var ground = 
+            //})
         });
     });
 })( GAME, THREE, THREEx, _);

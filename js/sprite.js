@@ -71,13 +71,8 @@
                 case Sprite.GeometryType.CUBE:
                     geometry = new THREE.CubeGeometry(that.materials[0].width, that.materials[0].height, that.materials[0].height, 3, 3, 3);                    
                     break;
-                case Sprite.GeometryType.PLANE:
-                    geometry = new THREE.PlaneGeometry(that.materials[0].width, that.materials[0].height);
-                    break;
+                case Sprite.GeometryType.PLANE: 
                 default:
-                    console.log("Unknown geometryType: ", geometryType);
-                    //fallback to plane:
-                    geometryType = Sprite.GeometryType.PLANE;
                     geometry = new THREE.PlaneGeometry(that.materials[0].width, that.materials[0].height);
                     break;
             }
@@ -175,12 +170,7 @@
                     geometry = new THREE.CubeGeometry(material.width, material.height, material.height, 3, 3, 3);                    
                     break;
                 case Sprite.GeometryType.PLANE:
-                    geometry = new THREE.PlaneGeometry(material.width, material.height);
-                    break;
                 default:
-                    console.log("Unknown geometryType: ", geometryType);
-                    //fallback to plane:
-                    geometryType = Sprite.GeometryType.PLANE;
                     geometry = new THREE.PlaneGeometry(material.width, material.height);
                     break;
             }
