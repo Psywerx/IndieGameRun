@@ -112,7 +112,7 @@
         var dt = (+new Date()) - prevTime;
         prevTime = +new Date();
 
-        player.update(dt, collidables, world);
+        player.update(dt, collidables, world, camera);
 
         fires.forEach(function(fire) {
             fire.update();

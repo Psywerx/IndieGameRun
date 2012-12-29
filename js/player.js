@@ -22,11 +22,11 @@
                     player.animation.animationType = Sprite.AnimationType.JERKY;
                     player.animation.start();
                     scene.add(player.animation.sprite);
-                }),
-                update : function(dt, collidables, world){ // All these extra parameters :/
-
+                }),                
+                update : function(dt, collidables, world, camera){ // All these extra parameters :/
+                    
                     player.speed.x = 0;
-
+                    
                     if (keyboard.pressed('A') || keyboard.pressed('left')) {
                         player.speed.x -= 10;
                     }
@@ -34,8 +34,8 @@
                         player.speed.x += 10;
                     }
                     if (keyboard.pressed('W') || keyboard.pressed('up') || keyboard.pressed('space')) {
-                        if (player.jumpCount < 20 && !player.jumpLock) {
-                            player.speed.y = 20;
+                        if (player.jumpCount < 10 && !player.jumpLock) {
+                            player.speed.y = 30;
                             player.jumpCount += 1;
                         } else {
                             player.jumpLock = true;
@@ -43,13 +43,13 @@
                     } else {
                         player.jumpLock = true;
                     }
-
+                    
                     if (keyboard.pressed('S') || keyboard.pressed('down')) {
                         player.isCrouched = true;
                     } else {
                         player.isCrouched = false;
                     }
-
+                    
                     player.speed.y -= 0.1 * dt;
                     if (player.animation && player.animation.loaded) {
                         if(player.isCrouched) {
@@ -60,8 +60,12 @@
                         player.animation.sprite.position.x += player.speed.x * dt * 0.1;
                         player.animation.sprite.position.y += player.speed.y;
 
-                        var col = Collision.colliding(player, collidables);
+                        if(player.animation.sprite.position.x > 0){ // TODO: player.sprite.position.x < levelEnd - 1800
+                            camera.position.x += player.speed.x * dt * 0.1;
+                        }
 
+                        var col = Collision.colliding(player, collidables);
+                        
                         if (player.animation.sprite.position.y < world.sprite.position.y + world.sprite.getHeight()/2 + player.animation.sprite.getHeight() / 2) {
                             player.animation.sprite.position.y = world.sprite.position.y + world.sprite.getHeight()/2 + player.animation.sprite.getHeight() / 2;
                             player.speed.y = 0;
