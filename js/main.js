@@ -71,6 +71,7 @@
     function init() {
         camera = new THREE.PerspectiveCamera(75, WIDTH / HEIGHT, 1, 10000);
         camera.position.z = 2000;
+        camera.position.y = 1000;
 
         scene = new THREE.Scene();
 
@@ -98,8 +99,6 @@
             fires.push(f);
         });
         
-        scoreSprite = new G.text(padZeros(score, 6));
-        scene.add(scoreSprite.sprite);
         var canvas = renderer.domElement;
         canvas.style.marginLeft = "auto";
         canvas.style.marginRight = "auto";
@@ -115,6 +114,8 @@
 
         fires.forEach(function(fire) {
             fire.update();
+            if(fire.sprite)
+                fire.sprite.position.z = 5;
         });
         effects.forEach(function(effect) {
             effect.update();
