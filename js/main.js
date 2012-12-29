@@ -1,18 +1,21 @@
-(function(G, THREE, _) {
-    var Sprite = G.Sprite;
-    var Ground = G.Ground;
+(function(G, THREE, THREEx, _) {
+    var Sprite = G.Sprite,
+        Ground = G.Ground;
 
-    var WIDTH = window.innerWidth - 100, HEIGHT = window.innerHeight - 100;
+    var WIDTH = window.innerWidth - 100,
+        HEIGHT = window.innerHeight - 100;
 
     var camera, scene, renderer;
     var geometry, material, mesh;
 
+    var player = {},
+        world = {},
+        collidables = [],
+        fires = [];
+
     var score = 0;
     var scoreSprite;
     
-    init();
-    collidables = [];
-
     function padZeros(number, length) {
         var str = '' + number;
         while (str.length < length) {
@@ -29,17 +32,17 @@
         this.speed = 100;
         this.frameTime = 0;
         this.loaded = false;
-        
+
         this.sprites = Sprite.loadSprites(path, that.frameCount, null, function() {
             //scale, position, and rotation get set to same object for all sprites
-            that.scale = that.sprites[0].scale
-            that.position = that.sprites[0].position
-            that.rotation = that.sprites[0].rotation
+            that.scale = that.sprites[0].scale;
+            that.position = that.sprites[0].position;
+            that.rotation = that.sprites[0].rotation;
             that.sprites.forEach(function(sprite) {
-                sprite.scale = that.scale
-                sprite.position = that.position
-                sprite.rotation = that.rotation
-            })
+                sprite.scale = that.scale;
+                sprite.position = that.position;
+                sprite.rotation = that.rotation;
+            });
             that.scale.x = scaleX || 1;
             that.scale.y = scaleY || scaleX || 1;
             that.width = that.sprites[0].width * that.scale.x;
@@ -64,10 +67,10 @@
                     that.frame += 1;
                     that.frame %= that.frameCount;
                     var currFrame = that.frame;
-                    
+
                     scene.remove(that.sprites[lastFrame]);
                     scene.add(that.sprites[currFrame]);
-                    
+
                     that.frameTime = now;
                 }
             }
@@ -78,8 +81,8 @@
         this.stop = function() {
             that.started = false;
             that.sprites.forEach(function(sprite) {
-                scene.remove(sprite)
-            })
+                scene.remove(sprite);
+            });
         };
     }
 
@@ -94,7 +97,7 @@
     function initWorld() {
         world = {}
         Sprite.loadSprite(
-            "img/test", 
+            "img/test",
             function(sprite) {
                 //console.log(world.sprite)
                 world.sprite = sprite;
@@ -102,12 +105,11 @@
                 sprite.material.color = 0x000000;
                 sprite.position.set(0, -200, 0);
                 scene.add(world.sprite);
-                animate(); 
+                animate();
             }
         );
     }
     function initPlayer() {
-        player = {};
         player.jumpCount = 0;
         player.speed = {
             x : 0,
@@ -120,7 +122,6 @@
     }
 
     function init() {
-
         camera = new THREE.PerspectiveCamera(75, WIDTH / HEIGHT, 1, 10000);
         camera.position.z = 1000;
 
@@ -135,7 +136,6 @@
         renderer = new THREE.WebGLRenderer();
         renderer.setSize(WIDTH, HEIGHT);
 
-        fires = [];
         for ( var i = 0; i < 5; i++) {
             var f = fire(-1000 + 500 * i + Math.random() * 300, -200, Math.random() * 0.5 + 0.5)
             f.start();
@@ -144,7 +144,6 @@
         scoreSprite = new G.text(padZeros(score, 6));
         scene.add(scoreSprite.sprite);
         document.body.appendChild(renderer.domElement);
-
     }
 
     function update() {
@@ -164,7 +163,6 @@
             } else {
                 player.jumpLock = true;
             }
-
         } else {
             player.jumpLock = true;
         }
@@ -178,7 +176,7 @@
         player.speed.y -= 0.1 * dt;
         if (player.animation && player.animation.loaded) {
             // TODO: Check for collisions:
-            for (var i in collidables) {
+            for ( var i in collidables ) {
                 var vertices = collidables[i].geometry.vertices;
             }
 
@@ -203,19 +201,19 @@
 
         fires.forEach(function(fire) {
             fire.update();
-        })
-		
+        });
+
 		score += 1;
 //        scoreSprite.update(padZeros(score, 6));
     }
 
     function animate() {
-
         // note: three.js includes requestAnimationFrame shim
         update();
 
         requestAnimationFrame(animate);
         renderer.render(scene, camera);
-
     }
-})( GAME || {}, THREE, _);
+
+    init();
+})( GAME || {}, THREE, THREEx, _);
