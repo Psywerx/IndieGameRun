@@ -51,7 +51,12 @@
         });
 
         this.update = function() {
+            if (that.loaded) {
+                that.width = that.sprites[0].width * that.scale.x;
+                that.height = that.sprites[0].height * that.scale.y;
+            }
             if (that.started && that.loaded) {
+                
                 var now = +new Date();
 
                 var lastFrame = that.frame;
@@ -111,6 +116,7 @@
         player.animation = new animation("img/playerStill", 2, -1400, -200);
         player.animation.speed = 1000;
         player.animation.start();
+        player.crouched = false;
     }
 
     function init() {
@@ -162,11 +168,24 @@
         } else {
             player.jumpLock = true;
         }
+        
+        if (keyboard.pressed('S') || keyboard.pressed('down')) {
+            player.isCrouched = true;
+        } else {
+            player.isCrouched = false;
+        }
+        
         player.speed.y -= 0.1 * dt;
         if (player.animation && player.animation.loaded) {
             // TODO: Check for collisions:
-            for ( var i in collidables) {
+            for (var i in collidables) {
                 var vertices = collidables[i].geometry.vertices;
+            }
+
+            if(player.isCrouched) {
+                player.animation.scale.y = player.animation.scale.y*0.9 + 0.5*0.1;
+            } else {
+                player.animation.scale.y = player.animation.scale.y*0.8 + 1.0*0.2;
             }
 
             player.animation.position.x += player.speed.x * dt * 0.1;
@@ -178,6 +197,7 @@
                 player.jumpLock = false;
 
             }
+
             player.animation.update();
         }
 
