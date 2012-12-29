@@ -15,8 +15,8 @@
                 },
                 animation : new Sprite.Animation("CUBE","img/playerStill", 2, function() {
                     player.animation.sprite.position.x = -1400;
-                    player.animation.sprite.position.y = -200 + player.animation.sprite.getHeight();
-                    var modifier = new THREE.SubdivisionModifier(2);
+                    player.animation.sprite.position.y = -300 + player.animation.sprite.getHeight();
+                    var modifier = new THREE.SubdivisionModifier(0);
                     modifier.modify(player.animation.sprite.geometry);
                     player.animation.speed = 1000;
                     player.animation.start();
@@ -58,16 +58,19 @@
                         }
                         player.animation.sprite.position.x += player.speed.x * dt * 0.1;
                         player.animation.sprite.position.y += player.speed.y;
-
-                        var col = Collision.colliding(player, collidables);
                         
-                        if (player.animation.sprite.position.y < world.sprite.position.y + world.sprite.getHeight()/2 + player.animation.sprite.getHeight() / 2) {
-                            player.animation.sprite.position.y = world.sprite.position.y + world.sprite.getHeight()/2 + player.animation.sprite.getHeight() / 2;
-                            player.speed.y = 0;
-                            player.jumpCount = 0;
-                            player.jumpLock = false;
-
-                        }
+                        
+                        console.log(collidables);
+                        
+                        var col = Collision.colliding(player, collidables);
+//                        
+//                        if (player.animation.sprite.position.y < world.sprite.position.y + world.sprite.getHeight()/2 + player.animation.sprite.getHeight() / 2) {
+//                            player.animation.sprite.position.y = world.sprite.position.y + world.sprite.getHeight()/2 + player.animation.sprite.getHeight() / 2;
+//                            player.speed.y = 0;
+//                            player.jumpCount = 0;
+//                            player.jumpLock = false;
+//
+//                        }
 
                         player.animation.update();
                     }

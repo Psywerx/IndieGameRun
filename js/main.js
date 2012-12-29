@@ -47,7 +47,7 @@
     function initWorld() {
         world = {};
         Sprite.loadSprite(
-            "img/test",
+            "img/test", 
             function(sprite) {
                 world.sprite = sprite;
                 sprite.scale.x = 10000;
