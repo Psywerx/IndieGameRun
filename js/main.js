@@ -1,5 +1,5 @@
 (function(G, THREE, _) {
-    var Sprites = G.Sprites;
+    var Sprite = G.Sprite;
 
     var WIDTH = window.innerWidth - 100, HEIGHT = window.innerHeight - 100;
 
@@ -9,12 +9,10 @@
     var score = 0;
     var scoreSprite;
     
-    
     init();
     collidables = [];
 
     function padZeros(number, length) {
-        
         var str = '' + number;
         while (str.length < length) {
             str = '0' + str;
@@ -22,15 +20,16 @@
         return str;
     }
 
-    function animation(path,count,x,y,scaleX,scaleY) {
+    function animation(path, count, x, y, scaleX, scaleY) {
         var that = this;
-        this.running = false;
+        this.started = false;
         this.frame = 0;
-        this.frames = count;
+        this.frameCount = count;
         this.speed = 100;
         this.frameTime = 0;
         this.loaded = false;
-        this.sprites = Sprites.loadSprites(path, that.frames, null, function() {
+        
+        this.sprites = Sprite.loadSprites(path, that.frameCount, null, function() {
             //scale, position, and rotation get set to same object for all sprites
             that.scale = that.sprites[0].scale
             that.position = that.sprites[0].position
@@ -51,28 +50,27 @@
         });
 
         this.update = function() {
-            if (that.running && that.loaded) {
+            if (that.started && that.loaded) {
                 var now = +new Date();
 
                 var lastFrame = that.frame;
-                if (now > that.frameTime + that.speed) {
+                if (now >= that.frameTime + that.speed) {
                     that.frame += 1;
-                    that.frame %= that.frames;
-                }
-                var currFrame = that.frame;
-
-                if (currFrame != lastFrame) {
+                    that.frame %= that.frameCount;
+                    var currFrame = that.frame;
+                    
                     scene.remove(that.sprites[lastFrame]);
                     scene.add(that.sprites[currFrame]);
+                    
                     that.frameTime = now;
                 }
             }
         };
         this.start = function() {
-            that.running = true;
+            that.started = true;
         };
         this.stop = function() {
-            that.running = false;
+            that.started = false;
             that.sprites.forEach(function(sprite) {
                 scene.remove(sprite)
             })
@@ -89,7 +87,7 @@
 
     function initWorld() {
         world = {}
-        Sprites.loadSprite(
+        Sprite.loadSprite(
             "img/test", 
             function(sprite) {
                 //console.log(world.sprite)
@@ -101,20 +99,6 @@
                 animate(); 
             }
         );
-        
-        /*var geometry = new THREE.PlaneGeometry(10000, 100);
-        var texture = THREE.ImageUtils.loadTexture('img/test.png', {}, function() {
-            animate();
-        });
-        var material = new THREE.MeshBasicMaterial({
-            color : 0x000000
-        });
-        world = new THREE.Mesh(geometry, material);
-        world.position.set(0, -200, 0);
-        world.width = texture.image.width;
-        world.height = texture.image.height;
-        scene.add(world);*/
-
     }
     function initPlayer() {
         player = {};

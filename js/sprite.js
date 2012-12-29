@@ -1,5 +1,5 @@
 (function(G, THREE, _) {
-    var Sprite = G.Sprites = {};
+    var Sprite = G.Sprite = {};
 
     _.extend(Sprite, {
         loadSprites: function(path, count, callback, doneCallback) {
