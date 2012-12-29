@@ -2,8 +2,9 @@
     var Sprite = G.Sprite,
         Effect = G.Effect,
         Drawables = G.Drawables,
-        Ground = G.Ground;
-
+        Ground = G.Ground,
+        Player = G.Player;
+    
     var WIDTH = 800,
         HEIGHT = 600;
 
@@ -66,7 +67,19 @@
             }
         );
     }
-    function initPlayer() {
+
+    function init() {
+        camera = new THREE.PerspectiveCamera(75, WIDTH / HEIGHT, 1, 10000);
+        camera.position.z = 2000;
+
+        scene = new THREE.Scene();
+
+        initWorld();
+        
+        
+        
+        
+        
         player.jumpCount = 0;
         player.isCrouched = false;
         player.speed = {
@@ -78,18 +91,10 @@
             player.animation.sprite.position.y = -200 + player.animation.sprite.getHeight();
             player.animation.speed = 1000;
             player.animation.start();
-            scene.add(player.animation.sprite);
         });
-    }
-
-    function init() {
-        camera = new THREE.PerspectiveCamera(75, WIDTH / HEIGHT, 1, 10000);
-        camera.position.z = 1000;
-
-        scene = new THREE.Scene();
-
-        initWorld();
-        initPlayer();
+//        player = new Player();
+        console.log(player);
+        scene.add(player.animation.sprite);
 
         var light = new THREE.AmbientLight(0xffffff);
         scene.add(light);
