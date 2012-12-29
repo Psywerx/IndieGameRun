@@ -1,10 +1,13 @@
 (function(G, THREE, _) {
+
+    var canvas = document.createElement('canvas');
+    var context = canvas.getContext('2d'); 
     _.extend(G, {
         text : function(text) {
 
             function createTextTexture(text) {
-                var canvas = document.createElement('canvas');
-                var context = canvas.getContext('2d');
+                
+                context.clearRect(0, 0, canvas.width, canvas.height);
                 context.font = '40px Calibri';
                 context.fillText(text, 10, 40);
 
