@@ -8,11 +8,13 @@
     var camera, scene, renderer;
     var geometry, material, mesh;
 
-    var score = 0;
-    var scoreSprite,
-        collidables = [];
+    var player = {},
+        world = {},
+        collidables = [],
+        fires = [];
 
-    init();
+    var score = 0;
+    var scoreSprite;
 
     function padZeros(number, length) {
         var str = '' + number;
@@ -88,7 +90,6 @@
     var keyboard = new THREEx.KeyboardState();
 
     function initWorld() {
-        var world = {};
         Sprite.loadSprite(
             "img/test",
             function(sprite) {
@@ -103,7 +104,6 @@
         );
     }
     function initPlayer() {
-        player = {};
         player.jumpCount = 0;
         player.speed = {
             x : 0,
@@ -129,7 +129,6 @@
         renderer = new THREE.WebGLRenderer();
         renderer.setSize(WIDTH, HEIGHT);
 
-        fires = [];
         for ( var i = 0; i < 5; i++) {
             var f = fire(-1000 + 500 * i + Math.random() * 300, -200, Math.random() * 0.5 + 0.5)
             f.start();
