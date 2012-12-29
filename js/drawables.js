@@ -8,7 +8,7 @@
         },
     
         background : function (callback) {
-            return new Sprite.loadSprite("img/bg", callback);
+            return new Sprite.loadSprite("PLANE", "img/bg", callback);
         }
     });
 })( GAME, THREE, _ );

@@ -122,14 +122,22 @@
 
             return sprites;
         },
-        loadSprite: function(path, callback, img) {
+        loadSprite: function(geometryType, path, callback, img) {
             if (!img) {
                 return THREE.ImageUtils.loadTexture( path + '.png', {},
-                    function success( image ) { Sprite.loadSprite(path, callback, image); },
-                    function error( err ) { console.log(err); Sprite.loadSprite(path, callback); }
+                    function success( image ) { Sprite.loadSprite(geometryType, path, callback, image); },
+                    function error( err ) { console.log(err); Sprite.loadSprite(geometryType, path, callback); }
                 );
             }
-            var geometry = new THREE.CubeGeometry(img.image.width, img.image.height, 600);
+            var geometry = null;
+            switch (geometryType) {
+                case "CUBE":
+                    geometry =  new THREE.CubeGeometry(img.image.width, img.image.height, 300);                    
+                    break;
+                case "PLANE":
+                    geometry =  new THREE.PlaneGeometry(img.image.width, img.image.height);
+                    break;
+            }
             
             var material = new THREE.MeshPhongMaterial({
                     map : img,

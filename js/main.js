@@ -9,15 +9,15 @@
     var player = {}, world = {}, collidables = [], fires = [], effects = [], background = {};
 
     // Burndown demo :)
-    function timeout() {
-        var burn = new Effect.BurnDown(tree, scene, function() {
-            effects = effects.filter(function(elt) {
-                elt != burn;
-            }); // :)
-        });
-        effects.push(burn);
-    }
-    setTimeout(timeout, 2000);
+//    function timeout() {
+//        var burn = new Effect.BurnDown(tree, scene, function() {
+//            effects = effects.filter(function(elt) {
+//                elt != burn;
+//            }); // :)
+//        });
+//        effects.push(burn);
+//    }
+//    setTimeout(timeout, 2000);
 
     var score = 0;
     var scoreSprite;
@@ -37,7 +37,7 @@
 
     function initWorld() {
         world = {};
-        Sprite.loadSprite("img/test", function(sprite) {
+        Sprite.loadSprite("CUBE", "img/test", function(sprite) {
             world.sprite = sprite;
             sprite.scale.x = 10000;
             sprite.material.color = 0x000000;
@@ -46,17 +46,17 @@
             animate();
         });
         tree = {};
-        Sprite.loadSprite("img/tree", function(sprite) {
+        Sprite.loadSprite("PLANE", "img/tree", function(sprite) {
             tree.sprite = sprite;
             sprite.scale.set(3, 3, 1);
-            sprite.position.set(0, -200 + sprite.getHeight() / 2, 0);
+            
+            sprite.position.set(1800, -200 + sprite.getHeight() / 2, 400);
             scene.add(tree.sprite);
         });
-        console.log(Drawables)
         Drawables.background(function(sprite) {
 
-            sprite.position.set(0, 1500, -5000);
-            sprite.scale.set(10,10,10)
+            sprite.position.set(0, 2500, -5000);
+            sprite.scale.set(20,20,20);
             background.sprite = sprite;
             scene.add(background.sprite);
         });
