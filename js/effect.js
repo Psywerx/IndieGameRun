@@ -11,7 +11,6 @@
                 this.object.burning = true;
                 this.animTime = 0;
                 this.done = false;
-                this.scene = scene;
 
                 this.fires = _.range(15).map(function() { 
                     var f = Drawables.fire(function(){
@@ -23,7 +22,7 @@
                             0
                         );
                         f.start();
-                        that.scene.add(f.sprite);
+                        scene.add(f.sprite);
                     });
                     
                     return f;
@@ -47,9 +46,10 @@
                             
                             if (object.sprite.scale.y < 0.1) {
                                 that.fires.forEach(function(fire) { 
-                                    that.scene.remove(fire.sprite);
+                                    fire.stop();
+                                    scene.remove(fire.sprite);
                                 });
-                                that.scene.remove(object.sprite);
+                                scene.remove(object.sprite);
 
                                 that.done = true;
 
