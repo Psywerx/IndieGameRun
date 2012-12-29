@@ -170,9 +170,32 @@
         requestAnimationFrame(animate);
         renderer.render(scene, camera);
     }
+    
+    function loadLevel(levelName, callback) {
+        var theOtherScript = '../lev/1.js';
+         
+        var el = document.createElement('script');
+        el.async = false;
+        el.src = theOtherScript;
+        el.type = 'text/javascript';
+         
+        (document.getElementsByTagName('HEAD')[0]||document.body).appendChild(el);
+        
+        (function is_loaded(cb){
+            if(typeof window.level == 'undefined')
+                setTimeout(function(){ is_loaded(cb); }, 100);
+            else
+                cb();
+        })(function(){
+            console.log(level);
+            callback();
+        });    
+    }
 
 
     Sprite.loadAllTextures(function (){
-        init();
+        loadLevel(1, function() {
+            init();
+        });
     });
 })( GAME, THREE, THREEx, _);
