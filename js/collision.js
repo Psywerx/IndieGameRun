@@ -111,12 +111,12 @@
         colliding : function(player, collidables) {
             var playerPosition = getActualPosition(player.animation.sprite);
             var arr = [];
-            for ( var i in collidables) {
+            _.range(collidables.length).forEach(function (i) {
                 var obj = getActualPosition(collidables[i].sprite);
                 var co = objectsCollide(player.animation.sprite.position,playerPosition, obj, i);
                 arr.push(co);
-            }
-            return co;
+            });
+            return arr;
         }
     });
 

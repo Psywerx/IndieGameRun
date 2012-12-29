@@ -91,26 +91,31 @@
                         player.animation.sprite.scale.x = player.animation.sprite.scale.x*0.8 + 1.0*0.2;
                     }
                     var col = Collision.colliding(player, collidables);
-                    if (Object.keys(col).length > 0) {
-                        _.each(col, function(collide){
-                            var h = player.animation.sprite.getHeight();
-                            var w = player.animation.sprite.getWidth();
-                            if(player.speed.y * collide.vector.y < 0){
+                    _.each(col, function(col) {
+                        _.each(Object.keys(col), function(collid) {
+                            var collide = col[collid];
+                            console.log(collidables);
+                            
+                            var h = player.animation.sprite.getHeight(),
+                                w = player.animation.sprite.getWidth();
+                                
+                            if(player.speed.y * collide.vector.y < 0) {
                                 player.speed.y = 0.0;
                                 player.animation.sprite.position.y += (h/2.0) - collide.vector.y;
-                            } 
-                            if(player.speed.x * collide.vector.x < 0){
+                            }
+                            if(player.speed.x * collide.vector.x < 0) {
                                 console.log(collide);
                                 player.speed.x = 0.0;
                                 player.animation.sprite.position.x += (w/2.0) - collide.vector.x;
-                            } 
+                            }
 
-                            if(collide.vector.y > 0){
+                            if(collide.vector.y > 0) {
                                 player.jumpCount = 0;
                                 player.jumpLock = false;
                             }
                         });
-                    }
+                    });
+                    //}
                     player.animation.sprite.position.x += player.speed.x * dt * 0.1;
                     player.animation.sprite.position.y += player.speed.y;
 

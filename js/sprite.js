@@ -182,7 +182,6 @@
             
             var aa = (new THREE.PlaneGeometry(material.width, material.height)).vertices;
             sprite.collisionFrame = [aa[0],aa[1],aa[3],aa[2]];
-            
 
             return sprite;
         },
