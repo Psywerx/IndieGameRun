@@ -26,12 +26,14 @@
                 update : function(dt, collidables, world, camera){ // All these extra parameters :/
                     
                     player.speed.x = 0;
-                    
+                    player.isMoving = false;
                     if (keyboard.pressed('A') || keyboard.pressed('left')) {
                         player.speed.x -= 10;
+                        player.isMoving = true;
                     }
                     if (keyboard.pressed('D') || keyboard.pressed('right')) {
                         player.speed.x += 10;
+                        player.isMoving = true;
                     }
                     if (keyboard.pressed('W') || keyboard.pressed('up') || keyboard.pressed('space')) {
                         if (player.jumpCount < 10 && !player.jumpLock) {
@@ -53,9 +55,23 @@
                     player.speed.y -= 0.1 * dt;
                     if (player.animation && player.animation.loaded) {
                         if(player.isCrouched) {
-                            player.animation.sprite.scale.y = player.animation.sprite.scale.y*0.9 + 0.5*0.1;
+                            player.animation.sprite.scale.y = player.animation.sprite.scale.y*0.8 + 0.01*0.2;
+                            player.animation.sprite.scale.x = player.animation.sprite.scale.x*0.9 + 2*0.1;
                         } else {
                             player.animation.sprite.scale.y = player.animation.sprite.scale.y*0.8 + 1.0*0.2;
+                            player.animation.sprite.scale.x = player.animation.sprite.scale.x*0.8 + 1.0*0.2;
+                        }
+                        if(player.isMoving){
+                            player.animation.sprite.scale.y = player.animation.sprite.scale.y + 0.01 * Math.sin(+new Date()/100);
+                            player.animation.sprite.scale.x = player.animation.sprite.scale.x + 0.01 * Math.sin(+new Date()/100);
+                        }
+                        if(!player.jumpLock){
+                            player.animation.sprite.scale.y = player.animation.sprite.scale.y*0.9 + 2*0.1;
+                            player.animation.sprite.scale.x = player.animation.sprite.scale.x*0.9 + 0.5*0.1;
+                        }
+                        else{
+                            player.animation.sprite.scale.y = player.animation.sprite.scale.y*0.8 + 1.0*0.2;
+                            player.animation.sprite.scale.x = player.animation.sprite.scale.x*0.8 + 1.0*0.2;
                         }
                         player.animation.sprite.position.x += player.speed.x * dt * 0.1;
                         player.animation.sprite.position.y += player.speed.y;
