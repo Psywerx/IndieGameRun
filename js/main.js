@@ -21,7 +21,7 @@
         background = {};
 
     //Burndown demo :)
-    function timeout() {
+    /*function timeout() {
         var burn = new Effect.BurnDown(tree, scene, function(remains) {
             //console.log(fires.length)
             //fires = fires.concat(remains.fires);
@@ -30,7 +30,7 @@
         });
         effects.push(burn);
     }
-    setTimeout(timeout, 3000);
+    setTimeout(timeout, 3000);*/
 
 
     var score = 0;
@@ -171,14 +171,14 @@
         renderer.render(scene, camera);
     }
     
-    function loadLevel(levelName, callback) {
-        var theOtherScript = '../lev/1.js';
-         
+    function loadLevel(levelNum, callback) {
+        var script = 'js/lev/lev'+levelNum+'.js';
+        
         var el = document.createElement('script');
         el.async = false;
-        el.src = theOtherScript;
+        el.src = script;
         el.type = 'text/javascript';
-         
+        
         (document.getElementsByTagName('HEAD')[0]||document.body).appendChild(el);
         
         (function is_loaded(cb){
