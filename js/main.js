@@ -18,6 +18,7 @@
         fires = [],
         effects = [],
         clouds = [],
+        grounds = [],
         background = {};
 
     //Burndown demo :)
@@ -58,8 +59,9 @@
         
         world.sprite.material.color = 0x000000;
         world.sprite.position.set(0, -500, 0);
-        
+        /*
         scene.add(world.sprite);
+        collidables.push(world);*/
 
         tree = {};
         tree.sprite = Sprite.getSprite("tree");
@@ -92,7 +94,6 @@
             return cloud;
         });
 
-        collidables.push(world);
 
         background = Drawables.background();
 
@@ -193,9 +194,28 @@
     }
 
 
-    Sprite.loadAllTextures(function (){
+    Sprite.loadAllTextures(function () {
         loadLevel(1, function() {
             init();
+            if(level.objects.player) {
+                camera.position.x = level.objects.player[0].x;
+                player.animation.sprite.position.x = level.objects.player[0].x;
+                player.animation.sprite.position.y = level.objects.player[0].y;
+            }
+            if(level.objects.grounds) grounds = _.each(level.objects.grounds, function(ground) {
+                var newGround = {}
+                newGround.sprite = Ground.makeGround(
+                    ground.f,
+                    ground.t,
+                    ground.y,// || -200,
+                    ground.depth || 0, 
+                    ground.texture || "floor_dark"
+                );
+                scene.add(newGround.sprite);
+                collidables.push(newGround);
+                
+                return newGround;
+            });
         });
     });
 })( GAME, THREE, THREEx, _);
