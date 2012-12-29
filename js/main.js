@@ -6,8 +6,7 @@
     var camera, scene, renderer;
     var geometry, material, mesh;
 
-    init();
-    collidables = [];
+    var collidables = [];
 
     function animation(path,num,x,y,scalex,scaley) {
         var that = this;
@@ -19,14 +18,14 @@
         this.loaded = false;
         this.sprites = Sprites.loadSprites(path, that.frames, function() {
             //scale, position, and rotation get set to same object for all sprites
-            that.scale = that.sprites[0].scale
-            that.position = that.sprites[0].position
-            that.rotation = that.sprites[0].rotation
+            that.scale = that.sprites[0].scale;
+            that.position = that.sprites[0].position;
+            that.rotation = that.sprites[0].rotation;
             that.sprites.forEach(function(sprite) {
-                sprite.scale = that.scale
-                sprite.position = that.position
-                sprite.rotation = that.rotation
-            })
+                sprite.scale = that.scale;
+                sprite.position = that.position;
+                sprite.rotation = that.rotation;
+            });
             that.scale.x = scalex || 1;
             that.scale.y = scaley || scalex || 1;
             that.width = that.sprites[0].width * that.scale.x;
@@ -39,18 +38,18 @@
 
         this.update = function() {
             if (that.running && that.loaded) {
-                var now = +new Date()
+                var now = +new Date();
 
-                var lastFrame = that.frame
+                var lastFrame = that.frame;
                 if (now > that.frameTime + that.speed) {
-                    that.frame += 1
-                    that.frame %= that.frames
+                    that.frame += 1;
+                    that.frame %= that.frames;
                 }
 
-                if (lastFrame != that.frame) {
-                    scene.remove(that.sprites[lastFrame])
-                    scene.add(that.sprites[that.frame])
-                    that.frameTime = now
+                if (lastFrame !== that.frame) {
+                    scene.remove(that.sprites[lastFrame]);
+                    scene.add(that.sprites[that.frame]);
+                    that.frameTime = now;
                 }
             }
         };
@@ -88,26 +87,8 @@
         scene.add(world);
 
     }
-    function initPlayer() {
-        player = {};
-        player.jumpCount = 0;
-        player.speed = {
-            x : 0,
-            y : 0
-        };
-        player.loaded = false;
-        Sprites.loadSprite("img/player", function(sprite){
-            player.sprite = sprite;
-            player.sprite.position.x = -1400;
-            player.sprite.position.y = -200 - player.sprite.height/2;
-
-            scene.add(player.sprite);
-            player.loaded = true;
-        });
-    }
 
     function init() {
-
         camera = new THREE.PerspectiveCamera(75, WIDTH / HEIGHT, 1, 10000);
         camera.position.z = 1000;
 
@@ -130,7 +111,6 @@
         }
 
         document.body.appendChild(renderer.domElement);
-
     }
 
     function update() {
@@ -174,16 +154,16 @@
 
         fires.forEach(function(fire) {
             fire.update();
-        })
+        });
     }
 
     function animate() {
-
         // note: three.js includes requestAnimationFrame shim
         update();
 
         requestAnimationFrame(animate);
         renderer.render(scene, camera);
-
     }
+
+    init();
 })( GAME || {}, THREE, _);
