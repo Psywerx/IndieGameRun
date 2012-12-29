@@ -21,8 +21,8 @@
             this.materials = Sprite.loadMaterials(path, that.frameCount, null, function() {
                 var geometry = new THREE.PlaneGeometry(that.materials[0].width, that.materials[0].height);
                 that.sprite = new THREE.Mesh(geometry, that.materials[0]);
-                that.sprite.getWidth = function() { return that.materials[0].width * that.sprite.scale.x; }
-                that.sprite.getHeight = function() { return that.materials[0].height * that.sprite.scale.y; }
+                that.sprite.getWidth = function() { return that.materials[0].width * that.sprite.scale.x; };
+                that.sprite.getHeight = function() { return that.materials[0].height * that.sprite.scale.y; };
 
                 that.loaded = true;
                 
@@ -122,8 +122,8 @@
                 sprite = new THREE.Mesh(geometry, material);
 
             sprite.material = material;
-            sprite.getWidth = function() { return img.image.width * sprite.scale.x; }
-            sprite.getHeight = function() { return img.image.height * sprite.scale.y; }
+            sprite.getWidth = function() { return img.image.width * sprite.scale.x; };
+            sprite.getHeight = function() { return img.image.height * sprite.scale.y; };
             
             callback && callback(sprite);
         }

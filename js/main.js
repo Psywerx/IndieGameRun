@@ -19,7 +19,7 @@
     //Burndown demo :)
     function timeout() {
         var burn = new Effect.BurnDown(tree, scene, function(){
-            effects = effects.filter(function(elt) { elt != burn; }) // :)
+            effects = effects.filter(function(elt) { elt != burn; }); // :)
         });
         effects.push(burn);
     }
@@ -106,7 +106,7 @@
                 if(i==0) f.type = Sprite.AnimationType.ONCE;
                 if(i==1) f.type = Sprite.AnimationType.BOUNCE;
                 scene.add(f.sprite);
-            })
+            });
             f.start();
             fires.push(f);
         });
