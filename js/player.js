@@ -1,7 +1,8 @@
 (function(G, THREE, THREEx, _) {
 
     var Sprite = G.Sprite,
-        Collision = G.Collision;
+        Collision = G.Collision,
+        Sounds = G.Sounds;
     var keyboard = new THREEx.KeyboardState();
 
     var animation = function(scene) {
@@ -35,12 +36,17 @@
                     if (keyboard.pressed('A') || keyboard.pressed('left')) {
                         player.speed.x -= 10;
                         player.isMoving = true;
+                       
                     }
+                    
                     if (keyboard.pressed('D') || keyboard.pressed('right')) {
                         player.speed.x += 10;
                         player.isMoving = true;
                     }
                     if (keyboard.pressed('W') || keyboard.pressed('up') || keyboard.pressed('space')) {
+                        if(GAME.Sounds.jump.isPaused())
+                            GAME.Sounds.jump.load().play();
+                        
                         if (player.jumpCount < 10 && !player.jumpLock) {
                             player.speed.y = 30;
                             player.jumpCount += 1;
@@ -67,8 +73,14 @@
                         player.animation.sprite.scale.x = player.animation.sprite.scale.x*0.8 + 1.0*0.2;
                     }
                     if(player.isMoving){
+                        if(GAME.Sounds.moving.isPaused()){
+                            GAME.Sounds.moving.load().play();
+                        }
                         player.animation.sprite.scale.y = player.animation.sprite.scale.y + 0.01 * Math.sin(+new Date()/100);
                         player.animation.sprite.scale.x = player.animation.sprite.scale.x + 0.01 * Math.sin(+new Date()/100);
+                    }
+                    else{
+                        GAME.Sounds.moving.pause();
                     }
                     if(!player.jumpLock){
                         player.animation.sprite.scale.y = player.animation.sprite.scale.y*0.9 + 2*0.1;

@@ -6,7 +6,8 @@
         "fire" : { name: "fire", count: 16 },
         "test" : { name: "test", count: 1 },
         "tree" : { name: "tree", count: 1 },
-        "bg"   : { name: "bg", count : 1}
+        "cloud": { name: "cloud", count : 2},
+        "bg"   : { name: "bg", count : 1},
     };
 
     _.extend(Sprite, {
@@ -59,6 +60,9 @@
             this.speed = 100;
             this.frameTime = 0;
             this.animationType = 0;
+            
+            this.onFade = function(){ };
+            this.onUpdate = function(){ };
 
             this.materials = Sprite.getMaterials(name);
             this.frameCount = this.materials.length;
@@ -87,11 +91,22 @@
                 
 
             this.update = function() {
-                if (that.started) {
+                if (that.started || that.fading) {
                     var now = +new Date();
                     
                     var lastFrame = that.frame;
                     if (now >= that.frameTime + that.speed) {
+                        if(that.fading) {
+                            console.log(that.sprite);
+                            if(!that.sprite.opacity) that.sprite.opacity = 1.0;
+                            that.sprite.opacity *= 0.95;
+                            that.sprite.material.opacity = that.sprite.opacity
+                            if(that.sprite.material.opacity < 0.1 && that.onFade) {
+                                that.onFade();
+                                that.fading = false;
+                            }
+                        }
+                        
                         if(that.animationType & Sprite.AnimationType.JERKY) {
                             that.frame += ((Math.random() < 0.5) ? that.direction : 0);
                         } else {
@@ -110,6 +125,8 @@
                         var currFrame = that.frame;
 
                         that.sprite.material = that.materials[currFrame];
+    
+                        this.onUpdate(that);
 
                         that.frameTime = now;
                     }
@@ -120,6 +137,10 @@
             };
             this.stop = function() {
                 that.started = false;
+            };
+            this.fade = function(onFade) {
+                that.fading = true;
+                that.onFade = onFade;
             };
         },
         getMaterials: function(name) {
@@ -163,7 +184,7 @@
                     geometry = new THREE.PlaneGeometry(material.width, material.height);
                     break;
             }
-            sprite = new THREE.Mesh(geometry, material);
+            var sprite = new THREE.Mesh(geometry, material);
 
             sprite.material = material;
             sprite.getWidth = function() { return material.width * sprite.scale.x; };

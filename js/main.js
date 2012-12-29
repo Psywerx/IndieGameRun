@@ -17,16 +17,20 @@
         collidables = [],
         fires = [],
         effects = [],
+        clouds = [],
         background = {};
 
     //Burndown demo :)
     /*function timeout() {
-        var burn = new Effect.BurnDown(tree, scene, function(){
+        var burn = new Effect.BurnDown(tree, scene, function(remains) {
+            //console.log(fires.length)
+            //fires = fires.concat(remains.fires);
+            //console.log(fires.length)
             effects = effects.filter(function(elt) { elt != burn; }); // :)
         });
         effects.push(burn);
     }
-    setTimeout(timeout, 2000);*/
+    setTimeout(timeout, 3000);*/
 
 
     var score = 0;
@@ -60,8 +64,33 @@
         tree = {};
         tree.sprite = Sprite.getSprite("tree");
         tree.sprite.scale.set(4, 4, 1);
-        tree.sprite.position.set(2500, -400 + sprite.getHeight()/2, 200);
+        tree.sprite.position.set(500, -400 + tree.sprite.getHeight()/2, 200);
         scene.add(tree.sprite);
+
+        clouds = _.range(10).map(function() {
+            var cloud = {};
+            cloud.animation = new Sprite.Animation("cloud");
+            cloud.animation.sprite.scale.set(4, 4, 1);
+            cloud.animation.sprite.position.set(
+                Math.random()*world.sprite.scale.x, 
+                1500 + Math.random()*1000 - Math.random()*1000, 
+                Math.random()*1000 - Math.random()*1000
+            );
+            cloud.animation.speed = 500+500*Math.random();
+            cloud.speed = 5*Math.random()-5*Math.random();
+            cloud.opacity = Math.random()*0.75+0.25;
+
+            cloud.animation.onUpdate = function() {
+                cloud.animation.sprite.position.x += cloud.speed;
+                cloud.animation.sprite.material.opacity = cloud.opacity;
+            }
+
+            cloud.animation.start();
+            cloud.animation.animationType = Sprite.AnimationType.BOUNCE | Sprite.AnimationType.JERKY;
+            scene.add(cloud.animation.sprite);
+            
+            return cloud;
+        });
 
         collidables.push(world);
 
@@ -118,6 +147,9 @@
 
         player.update(dt, collidables, world, camera);
 
+        clouds.forEach(function(cloud) {
+            cloud.animation.update();
+        });
         fires.forEach(function(fire) {
             fire.update();
             if (fire.sprite) {
@@ -138,9 +170,32 @@
         requestAnimationFrame(animate);
         renderer.render(scene, camera);
     }
+    
+    function loadLevel(levelNum, callback) {
+        var script = 'js/lev/lev'+levelNum+'.js';
+        
+        var el = document.createElement('script');
+        el.async = false;
+        el.src = script;
+        el.type = 'text/javascript';
+        
+        (document.getElementsByTagName('HEAD')[0]||document.body).appendChild(el);
+        
+        (function is_loaded(cb){
+            if(typeof window.level == 'undefined')
+                setTimeout(function(){ is_loaded(cb); }, 100);
+            else
+                cb();
+        })(function(){
+            console.log(level);
+            callback();
+        });    
+    }
 
 
     Sprite.loadAllTextures(function (){
-        init();
+        loadLevel(1, function() {
+            init();
+        });
     });
 })( GAME, THREE, THREEx, _);
