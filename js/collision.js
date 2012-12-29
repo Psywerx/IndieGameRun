@@ -74,13 +74,18 @@
     
     function getDirection(player, line){
         var point = getClosetPoint(player, line, true);
-        return {"x":player.x-point.x, "y":player.y-point.y, "z":0 };
+        var r = {
+            "x" : Math.round(player.x-point.x), 
+            "y" : Math.round(player.y-point.y), 
+            "z" : 0};
+        r.count = (r.x != 0) + (r.y != 0) + (r.z != 0);
+        return r;
     }
 
     function objectsCollide(position, player, obj, i) {
         //console.log("player",player);
         //console.log("object",obj);
-        var result = [];
+        var result = {};
         for ( var i in player) {
             for ( var j in obj) {
                 if (i!=1 || j!=0) break;
@@ -88,10 +93,14 @@
                 var objectLine = getLine(obj, j);
                 //qconsole.log(linesCross(playerLine, objectLine));
                 if (linesCross(playerLine, objectLine)) {
-                    result.push({
-                        "index" : i,
-                        "vector" : getDirection(position, objectLine)
-                    });
+                    var vector = getDirection(position, objectLine);
+                    if (result[j] && result[j].count < vector.count){
+                        vector = result[j];
+                    }
+                    result[j] = {
+                        "index" : j,
+                        "vector" : vector
+                    };
                 }
             }
         }
