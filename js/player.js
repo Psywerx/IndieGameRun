@@ -13,12 +13,13 @@
                     x : 0,
                     y : 0
                 },
-                animation : new Sprite.Animation("CUBE","img/playerStill", 2, function() {
+                animation : new Sprite.Animation("CUBE","img/playerStill", 3, function() {
                     player.animation.sprite.position.x = -1400;
                     player.animation.sprite.position.y = -200 + player.animation.sprite.getHeight();
                     var modifier = new THREE.SubdivisionModifier(2);
                     modifier.modify(player.animation.sprite.geometry);
                     player.animation.speed = 1000;
+                    player.animation.animationType = Sprite.AnimationType.JERKY;
                     player.animation.start();
                     scene.add(player.animation.sprite);
                 }),                

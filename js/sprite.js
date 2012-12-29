@@ -2,10 +2,11 @@
     var Sprite = G.Sprite = {};
 
     _.extend(Sprite, {
-        AnimationType : {
-            LOOP : 0,
-            ONCE : 1,
-            BOUNCE : 2,
+        AnimationType : { // Powers of 2, so they can be combined
+            LOOP : 1,
+            ONCE : 2,
+            BOUNCE : 4,
+            JERKY : 8,
         },
         Animation : function(geometryType, path, count, onLoadCallback) {
             var that = this;
@@ -16,7 +17,7 @@
             this.speed = 100;
             this.frameTime = 0;
             this.loaded = false;
-            this.type = Sprite.AnimationType.LOOP;
+            this.animationType = 0;
 
             this.materials = Sprite.loadMaterials(path, that.frameCount, null, function() {
                 var geometry = null;
@@ -44,14 +45,20 @@
                     
                     var lastFrame = that.frame;
                     if (now >= that.frameTime + that.speed) {
-                        that.frame += that.direction;
+                        if(that.animationType & Sprite.AnimationType.JERKY) {
+                            that.frame += ((Math.random() < 0.5) ? that.direction : 0);
+                        } else {
+                            that.frame += that.direction;
+                        }
+                        that.frame = Math.min(Math.max(0, that.frame), that.frameCount);
                         that.frame %= that.frameCount;
+                        
                         if(that.frame == 0) {
-                            if(that.type == Sprite.AnimationType.BOUNCE) that.direction = -that.direction;
+                            if(that.animationType & Sprite.AnimationType.BOUNCE) that.direction = -that.direction;
                         }
                         if(that.frame == that.frameCount-1) {
-                            if(that.type == Sprite.AnimationType.ONCE) that.stop();
-                            if(that.type == Sprite.AnimationType.BOUNCE) that.direction = -that.direction;
+                            if(that.animationType & Sprite.AnimationType.ONCE) that.stop();
+                            if(that.animationType & Sprite.AnimationType.BOUNCE) that.direction = -that.direction;
                         }
                         var currFrame = that.frame;
 
