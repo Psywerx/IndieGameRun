@@ -1,4 +1,4 @@
-(function(G, THREE, _) {
+(function(G, THREE, THREEx, _) {
     var Sprite = G.Sprite,
         Ground = G.Ground;
 
@@ -41,8 +41,8 @@
                 sprite.position = that.position;
                 sprite.rotation = that.rotation;
             });
-            that.scale.x = scalex || 1;
-            that.scale.y = scaley || scalex || 1;
+            that.scale.x = scaleX || 1;
+            that.scale.y = scaleY || scaleX || 1;
             that.width = that.sprites[0].width * that.scale.x;
             that.height = that.sprites[0].height * that.scale.y;
             that.position.x = x;
@@ -74,8 +74,8 @@
         this.stop = function() {
             that.started = false;
             that.sprites.forEach(function(sprite) {
-                scene.remove(sprite)
-            })
+                scene.remove(sprite);
+            });
         };
     }
 
@@ -88,7 +88,7 @@
     var keyboard = new THREEx.KeyboardState();
 
     function initWorld() {
-        world = {}
+        var world = {};
         Sprite.loadSprite(
             "img/test",
             function(sprite) {
@@ -157,17 +157,15 @@
             } else {
                 player.jumpLock = true;
             }
-
         } else {
             player.jumpLock = true;
         }
         player.speed.y -= 0.1 * dt;
         if (player.animation && player.animation.loaded) {
             // TODO: Check for collisions:
-            for ( var i in collidables) {
+            for ( var i in collidables ) {
                 var vertices = collidables[i].geometry.vertices;
             }
-
             player.animation.position.x += player.speed.x * dt * 0.1;
             player.animation.position.y += player.speed.y;
             if (player.animation.position.y < world.sprite.position.y + world.sprite.height/2 + player.animation.height / 2) {
@@ -197,4 +195,4 @@
     }
 
     init();
-})( GAME || {}, THREE, _);
+})( GAME || {}, THREE, THREEx, _);
