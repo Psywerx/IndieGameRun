@@ -47,19 +47,20 @@
 
     function initWorld() {
         world = {};
-        world.sprite = Sprite.getSprite("test");
+        world.sprite = Sprite.getSprite("test", "CUBE");
         world.sprite.scale.x = 10000;
         world.sprite.scale.y = 2.5;
+        world.sprite.scale.z = 8;
         
         world.sprite.material.color = 0x000000;
-        world.sprite.position.set(0, -200, 0);
+        world.sprite.position.set(0, -500, 0);
         
         scene.add(world.sprite);
 
         tree = {};
         tree.sprite = Sprite.getSprite("tree");
-        tree.sprite.scale.set(3, 3, 1);
-        tree.sprite.position.set(1800, -200 + sprite.getHeight()/2, 200);
+        tree.sprite.scale.set(4, 4, 1);
+        tree.sprite.position.set(2500, -400 + sprite.getHeight()/2, 200);
         scene.add(tree.sprite);
 
         collidables.push(world);
@@ -94,7 +95,7 @@
             var f = Drawables.fire();
             var scale = Math.random() * 0.5 + 0.5;
             f.sprite.scale.set(scale, scale, 1);
-            f.sprite.position.set(-1000 + 500 * i + Math.random() * 300, -200 + f.sprite.getHeight()/2, 0);
+            f.sprite.position.set(-1000 + 500 * i + Math.random() * 300, -400 + f.sprite.getHeight()/2, 0);
             f.animationType = Sprite.AnimationType.JERKY;
             if(i%2==0)  f.animationType |= Sprite.AnimationType.BOUNCE;
             f.start();
@@ -122,6 +123,7 @@
             if (fire.sprite) {
                 fire.sprite.position.z = 5;
             }
+            
         });
         effects.forEach(function(effect) {
             effect.update();
