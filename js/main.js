@@ -1,22 +1,37 @@
 (function(G, THREE, _) {
-    var Sprites = G.Sprites;
+    var Sprite = G.Sprite,
+        Ground = G.Ground;
 
-    var WIDTH = window.innerWidth - 100, HEIGHT = window.innerHeight - 100;
+    var WIDTH = window.innerWidth - 100,
+        HEIGHT = window.innerHeight - 100;
 
     var camera, scene, renderer;
     var geometry, material, mesh;
 
-    var collidables = [];
+    var score = 0;
+    var scoreSprite,
+        collidables = [];
 
-    function animation(path,num,x,y,scalex,scaley) {
+    init();
+
+    function padZeros(number, length) {
+        var str = '' + number;
+        while (str.length < length) {
+            str = '0' + str;
+        }
+        return str;
+    }
+
+    function animation(path, count, x, y, scaleX, scaleY) {
         var that = this;
-        this.running = false;
+        this.started = false;
         this.frame = 0;
-        this.frames = num;
+        this.frameCount = count;
         this.speed = 100;
         this.frameTime = 0;
         this.loaded = false;
-        this.sprites = Sprites.loadSprites(path, that.frames, function() {
+
+        this.sprites = Sprite.loadSprites(path, that.frameCount, null, function() {
             //scale, position, and rotation get set to same object for all sprites
             that.scale = that.sprites[0].scale;
             that.position = that.sprites[0].position;
@@ -37,27 +52,27 @@
         });
 
         this.update = function() {
-            if (that.running && that.loaded) {
+            if (that.started && that.loaded) {
                 var now = +new Date();
 
                 var lastFrame = that.frame;
-                if (now > that.frameTime + that.speed) {
+                if (now >= that.frameTime + that.speed) {
                     that.frame += 1;
-                    that.frame %= that.frames;
-                }
+                    that.frame %= that.frameCount;
+                    var currFrame = that.frame;
 
-                if (lastFrame !== that.frame) {
                     scene.remove(that.sprites[lastFrame]);
-                    scene.add(that.sprites[that.frame]);
+                    scene.add(that.sprites[currFrame]);
+
                     that.frameTime = now;
                 }
             }
         };
         this.start = function() {
-            that.running = true;
+            that.started = true;
         };
         this.stop = function() {
-            that.running = false;
+            that.started = false;
             that.sprites.forEach(function(sprite) {
                 scene.remove(sprite)
             })
@@ -73,19 +88,30 @@
     var keyboard = new THREEx.KeyboardState();
 
     function initWorld() {
-        var geometry = new THREE.PlaneGeometry(10000, 100);
-        var texture = THREE.ImageUtils.loadTexture('img/test.png', {}, function() {
-            animate();
-        });
-        var material = new THREE.MeshBasicMaterial({
-            color : 0x000000
-        });
-        world = new THREE.Mesh(geometry, material);
-        world.position.set(0, -200, 0);
-        world.width = texture.image.width;
-        world.height = texture.image.height;
-        scene.add(world);
-
+        world = {}
+        Sprite.loadSprite(
+            "img/test",
+            function(sprite) {
+                //console.log(world.sprite)
+                world.sprite = sprite;
+                sprite.scale.x = 10000;
+                sprite.material.color = 0x000000;
+                sprite.position.set(0, -200, 0);
+                scene.add(world.sprite);
+                animate();
+            }
+        );
+    }
+    function initPlayer() {
+        player = {};
+        player.jumpCount = 0;
+        player.speed = {
+            x : 0,
+            y : 0
+        };
+        player.animation = new animation("img/playerStill", 2, -1400, -200);
+        player.animation.speed = 1000;
+        player.animation.start();
     }
 
     function init() {
@@ -109,7 +135,8 @@
             f.start();
             fires.push(f);
         }
-
+        scoreSprite = new G.text(padZeros(score, 6));
+        scene.add(scoreSprite.sprite);
         document.body.appendChild(renderer.domElement);
     }
 
@@ -135,26 +162,30 @@
             player.jumpLock = true;
         }
         player.speed.y -= 0.1 * dt;
-        if (player.loaded) {
+        if (player.animation && player.animation.loaded) {
             // TODO: Check for collisions:
             for ( var i in collidables) {
                 var vertices = collidables[i].geometry.vertices;
             }
 
-            player.sprite.position.x += player.speed.x * dt * 0.1;
-            player.sprite.position.y += player.speed.y;
-            if (player.sprite.position.y < world.position.y + world.height + player.sprite.height / 2 - 10) {
-                player.sprite.position.y = world.position.y + world.height + player.sprite.height / 2 - 10;
+            player.animation.position.x += player.speed.x * dt * 0.1;
+            player.animation.position.y += player.speed.y;
+            if (player.animation.position.y < world.sprite.position.y + world.sprite.height/2 + player.animation.height / 2) {
+                player.animation.position.y = world.sprite.position.y + world.sprite.height/2 + player.animation.height / 2;
                 player.speed.y = 0;
                 player.jumpCount = 0;
                 player.jumpLock = false;
 
             }
+            player.animation.update();
         }
 
         fires.forEach(function(fire) {
             fire.update();
         });
+
+		score += 1;
+//        scoreSprite.update(padZeros(score, 6));
     }
 
     function animate() {
