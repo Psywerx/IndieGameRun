@@ -4,8 +4,8 @@
         Drawables = G.Drawables,
         Ground = G.Ground;
 
-    var WIDTH = window.innerWidth - 100,
-        HEIGHT = window.innerHeight - 100;
+    var WIDTH = 800,
+        HEIGHT = 600;
 
     var camera, scene, renderer;
     var geometry, material, mesh;
@@ -96,6 +96,7 @@
 
         renderer = new THREE.WebGLRenderer();
         renderer.setSize(WIDTH, HEIGHT);
+     
 
         _.range(5).forEach(function(i){
             var f = Drawables.fire(function() {
@@ -112,7 +113,11 @@
         
         scoreSprite = new G.text(padZeros(score, 6));
         scene.add(scoreSprite.sprite);
-        document.body.appendChild(renderer.domElement);
+        var canvas = renderer.domElement;
+        canvas.style.marginLeft = "auto";
+        canvas.style.marginRight = "auto";
+        canvas.style.display = "block";
+        document.getElementById("content").appendChild(canvas);
     }
 
     function update() {
