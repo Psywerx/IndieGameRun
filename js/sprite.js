@@ -50,8 +50,8 @@
                         } else {
                             that.frame += that.direction;
                         }
+                        that.frame = Math.min(Math.max(0, that.frame), that.frameCount);
                         that.frame %= that.frameCount;
-                        that.frame = Math.max(0, that.frame);
                         
                         if(that.frame == 0) {
                             if(that.animationType & Sprite.AnimationType.BOUNCE) that.direction = -that.direction;
