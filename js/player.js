@@ -19,7 +19,7 @@
                     var modifier = new THREE.SubdivisionModifier(2);
                     modifier.modify(player.animation.sprite.geometry);
                     player.animation.speed = 1000;
-                    player.animation.type = Sprite.AnimationType.JERKY;
+                    player.animation.animationType = Sprite.AnimationType.JERKY;
                     player.animation.start();
                     scene.add(player.animation.sprite);
                 }),

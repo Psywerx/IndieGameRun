@@ -93,11 +93,11 @@
                 var scale = Math.random() * 0.5 + 0.5;
                 f.sprite.scale.set(scale, scale, 1);
                 f.sprite.position.set(-1000 + 500 * i + Math.random() * 300, -200 + f.sprite.getHeight()/2, 0);
-                f.type = Sprite.AnimationType.JERKY;
-                if(i%2==0)  f.type |= Sprite.AnimationType.BOUNCE;
+                f.animationType = Sprite.AnimationType.JERKY;
+                if(i%2==0)  f.animationType |= Sprite.AnimationType.BOUNCE;
+                f.start();
                 scene.add(f.sprite);
             });
-            f.start();
             fires.push(f);
         });
 

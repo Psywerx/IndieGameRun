@@ -17,7 +17,7 @@
             this.speed = 100;
             this.frameTime = 0;
             this.loaded = false;
-            this.animationType = Sprite.AnimationType.LOOP;
+            this.animationType = 0;
 
             this.materials = Sprite.loadMaterials(path, that.frameCount, null, function() {
                 var geometry = null;
@@ -46,11 +46,13 @@
                     var lastFrame = that.frame;
                     if (now >= that.frameTime + that.speed) {
                         if(that.animationType & Sprite.AnimationType.JERKY) {
-                            that.frame += (Math.random()<0.5) ? that.direction : 0;
+                            that.frame += ((Math.random() < 0.5) ? that.direction : 0);
                         } else {
                             that.frame += that.direction;
                         }
                         that.frame %= that.frameCount;
+                        that.frame = Math.max(0, that.frame);
+                        
                         if(that.frame == 0) {
                             if(that.animationType & Sprite.AnimationType.BOUNCE) that.direction = -that.direction;
                         }
