@@ -229,7 +229,6 @@
             GAME.levelCount
         )
         if(levelNum >= GAME.levelCount) {
-            alert("happy ending screen !!!");
             GAME.nextLevel = 0;
             GAME.currLevel = 0;
         } else {
