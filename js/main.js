@@ -15,8 +15,10 @@
 
     var state = "intro";
     
+    GAME.levelCount = 4;//+1
     GAME.currLevel = 0;
     GAME.nextLevel = 1;
+    GAME.loadingLevel = false;
     
     var player = {},
         world = {},
@@ -151,44 +153,45 @@
     }
 
     function update() {
-        if(GAME.nextLevel != 0) {
-            loadLevel(GAME.nextLevel);
-        }
-    
-        var dt = (+new Date()) - prevTime;
-        
-        switch(state) {
-        case "intro":
-            GAME.slideMenu1(dt);
-            if(Object.keys(keyboard.keyCodes).length>0){
-                state = "game";
+        if(!GAME.loadingLevel) {
+            if(GAME.nextLevel != 0) {
+                alert("level"+GAME.nextLevel+" screen");
+                loadLevel(GAME.nextLevel);
             }
-                
-        break;
-        
-        case "game":
-            camera.position.x = player.animation.sprite.x;
-            GAME.slideMenu2(dt);
+            var dt = (+new Date()) - prevTime;
             
-            player.update(dt, collidables, world, camera);
-            
-            clouds && clouds.forEach(function(cloud) {
-            //console.log(cloud)
-            cloud.sprite.update(dt);
-            });
-            fires.forEach(function(fire) {
-                fire.update();  
-            });
-            effects.forEach(function(effect) {
-                effect.update();
-            });
+            switch(state) {
+            case "intro":
+                GAME.slideMenu1(dt);
+                if(Object.keys(keyboard.keyCodes).length>0){
+                    state = "game";
+                }
+                    
             break;
+            
+            case "game":
+                camera.position.x = player.animation.sprite.x;
+                GAME.slideMenu2(dt);
+                
+                player.update(dt, collidables, world, camera);
+                
+                clouds && clouds.forEach(function(cloud) {
+                //console.log(cloud)
+                cloud.sprite.update(dt);
+                });
+                fires.forEach(function(fire) {
+                    fire.update();  
+                });
+                effects.forEach(function(effect) {
+                    effect.update();
+                });
+                break;
+            }
+            prevTime = +new Date();
+            
+
+            Sun.update(dt,camera);
         }
-        prevTime = +new Date();
-        
-
-        Sun.update(dt,camera);
-
     }
 
     function animate() {
@@ -219,102 +222,113 @@
     }
 
     function loadLevel(levelNum, callback) {
-        GAME.nextLevel = 0;
-        GAME.currLevel = levelNum;
-        loadJS('js/lev/lev'+levelNum+'.js', function() {
-            effects.forEach(function(effect) { effect.cleanup(); });
-            effects = [];
+        if(levelNum >= GAME.levelCount) {
+            alert("happy ending screen !!!");
+            GAME.nextLevel = 0;
+            GAME.currLevel = 0;
+        } else {
+            GAME.loadingLevel = true;
+            GAME.nextLevel = 0;
+            GAME.currLevel = levelNum;
+            level = undefined;
+            loadJS('js/lev/lev'+levelNum+'.js', function() {
+                effects.forEach(function(effect) { effect.cleanup(); });
+                effects = [];
 
-            collidables.forEach(function(c) { scene.remove(c.sprite); })
-            collidables = [];
-        
-            //world = {};
-            //background = {};
+                collidables.forEach(function(c) { scene.remove(c.sprite); })
+                collidables = [];
+            
+                //world = {};
+                //background = {};
 
-            fires.forEach(function(fire) { scene.remove(fire.sprite) })
-            fires = [];
-            
-            trees.forEach(function(tree) { scene.remove(tree.sprite) })
-            trees = [];
-            
-            clouds.forEach(function(cloud) { scene.remove(cloud.sprite) })
-            clouds = [];
-            
-            suns = [];
-            
-            grounds.forEach(function(ground) { scene.remove(ground.sprite) })
-            grounds = [];
-            
-            scene.remove(player.animation.sprite);
-            player = new Player(scene);
+                fires.forEach(function(fire) { scene.remove(fire.sprite) })
+                fires = [];
+                
+                trees.forEach(function(tree) { scene.remove(tree.sprite) })
+                trees = [];
+                
+                clouds.forEach(function(cloud) { scene.remove(cloud.sprite) })
+                clouds = [];
+                
+                suns = [];
+                
+                grounds.forEach(function(ground) { scene.remove(ground.sprite) })
+                grounds = [];
+                
+                scene.remove(player.animation.sprite);
+                player = new Player(scene);
 
 
-            if(level.objects.player) {
-                camera.position.x = level.objects.player[0].x;
-                player.animation.sprite.position.x = level.objects.player[0].x;
-                player.animation.sprite.position.y = level.objects.player[0].y;
-                effects.push(new Effect.Melty(player, scene));
-            }
-            if(level.objects.clouds) clouds = _.map(level.objects.clouds, function(cloud) {
-                var newCloud = {}
-                newCloud.sprite = Sprite.getSprite(cloud.texture || "cloud", "PLANE", cloud.w, cloud.h);
-                newCloud.sprite.position.set(cloud.x, cloud.y, cloud.depth);
-                newCloud.sprite.update = function(dt) {
-                    newCloud.sprite.position.x += cloud.speed.x*dt*0.001;
+                if(level.objects.player) {
+                    camera.position.x = level.objects.player[0].x;
+                    player.animation.sprite.position.x = level.objects.player[0].x;
+                    player.animation.sprite.position.y = level.objects.player[0].y;
+                    effects.push(new Effect.Melty(player, scene));
                 }
-                scene.add(newCloud.sprite);
-                
-                return newCloud;
-            });            
-            if(level.objects.grounds) grounds = _.map(level.objects.grounds, function(ground) {
-                var newGround = {}
-                newGround.sprite = Drawables.makeGround(
-                    ground.x,
-                    ground.y,
-                    ground.z,
-                    ground.w,
-                    ground.h,
-                    ground.depth || 0, 
-                    ground.texture || "floor_dark",
-                    scene
-                );
-                scene.add(newGround.sprite);
-                collidables.push(newGround);
-                
-                return newGround;
-            });
+                if(level.objects.clouds) clouds = _.map(level.objects.clouds, function(cloud) {
+                    var newCloud = {}
+                    newCloud.sprite = Sprite.getSprite(cloud.texture || "cloud", "PLANE", cloud.w, cloud.h);
+                    newCloud.sprite.position.set(cloud.x, cloud.y, cloud.depth);
+                    newCloud.sprite.update = function(dt) {
+                        newCloud.sprite.position.x += cloud.speed.x*dt*0.001;
+                    }
+                    scene.add(newCloud.sprite);
+                    
+                    return newCloud;
+                });            
+                if(level.objects.grounds) grounds = _.map(level.objects.grounds, function(ground) {
+                    var newGround = {}
+                    newGround.sprite = Drawables.makeGround(
+                        ground.x,
+                        ground.y,
+                        ground.z,
+                        ground.w,
+                        ground.h,
+                        ground.depth || 0, 
+                        ground.texture || "floor_dark",
+                        scene
+                    );
+                    scene.add(newGround.sprite);
+                    collidables.push(newGround);
+                    
+                    return newGround;
+                });
 
-            if(level.objects.fires) fires = _.map(level.objects.fires, function(fire) {
-                var newFire = {}
-                newFire.animation = Drawables.makeFire(fire.texture || "fire", "PLANE", fire.w, fire.h);
-                newFire.animation.sprite.position.set(fire.x, fire.y, fire.depth);
-                newFire.animation.collisionType = "Fire";
-                newFire.animation.start();
-                scene.add(newFire.animation.sprite);
-                collidables.push(newFire.animation);
-                
-                return newFire.animation;
-            });
-            if(level.objects.trees) trees = _.map(level.objects.trees, function(tree) {
-                var newTree = {};
-                newTree.sprite = Sprite.getSprite(tree.texture || "tree", "PLANE", tree.w, tree.h);
-                newTree.sprite.position.set(tree.x, tree.y, tree.depth || 0);
-                newTree.sprite.update = function(dt) {
+                if(level.objects.fires) fires = _.map(level.objects.fires, function(fire) {
+                    var newFire = {}
+                    newFire.animation = Drawables.makeFire(fire.texture || "fire", "PLANE", fire.w, fire.h);
+                    newFire.animation.sprite.position.set(fire.x, fire.y, fire.depth);
+                    newFire.animation.collisionType = "Fire";
+                    newFire.animation.start();
+                    scene.add(newFire.animation.sprite);
+                    collidables.push(newFire.animation);
+                    
+                    return newFire.animation;
+                });
+                if(level.objects.trees) trees = _.map(level.objects.trees, function(tree) {
+                    var newTree = {};
+                    newTree.sprite = Sprite.getSprite(tree.texture || "tree", "PLANE", tree.w, tree.h);
+                    newTree.sprite.position.set(tree.x, tree.y, tree.depth || 0);
+                    newTree.sprite.update = function(dt) {
 
-                };
-                console.log(player);
-                scene.add(newTree.sprite);
-                
-                return newTree;
-            });            
+                    };
+                    console.log(player);
+                    scene.add(newTree.sprite);
+                    
+                    return newTree;
+                });            
 
-            if(level.objects.suns) suns = _.map(level.objects.suns, function(sun) {
+                if(level.objects.suns) suns = _.map(level.objects.suns, function(sun) {
+                    
+                    Sun.init(sun,scene, camera);
+                });
                 
-                Sun.init(sun,scene, camera);
+                callback && callback();
+
+                GAME.loadingLevel = false;
+                GAME.nextLevel = 0;
             });
-            
-            callback && callback();
-        });
+        }
     }
 
 
