@@ -93,22 +93,32 @@
                         player.animation.sprite.scale.x = player.animation.sprite.scale.x*0.8 + 1.0*0.2;
                     }
                     var col = Collision.colliding(player, collidables);
-                    _.each(col, function(col) {
-                        _.each(Object.keys(col), function(collid) {
+                    _.each(col, function(c) {
+                        _.each(Object.keys(c), function(collid) {
                             
-                            
-                            var collide = col[collid];
+                            var collide = c[collid];
                             
                             var h = player.animation.sprite.getHeight(),
                                 w = player.animation.sprite.getWidth();
                                 
                             if(player.speed.y * collide.vector.y < 0) {
                                 player.speed.y = 0.0;
-                                player.animation.sprite.position.y += ((h/2) - collide.vector.y)/2;
+                                if(collide.vector.y > 0){
+                                    player.animation.sprite.position.y += ((h/2) - collide.vector.y)/2;
+                                }
+                                else{
+                                    player.animation.sprite.position.y -= ((h/2) - collide.vector.y)/10;    
+                                }
                             }
                             else if(player.speed.x * collide.vector.x < 0) {
                                 player.speed.x = 0.0;
-                                player.animation.sprite.position.x -= (((w/2) + collide.vector.x)/10);
+                                if(collide.vector.x > 0){
+                                    player.animation.sprite.position.x += (((w/2) + collide.vector.x)/1000);
+                                }
+                                else{
+                                    player.animation.sprite.position.x -= (((w/2) + collide.vector.x)/100);
+
+                                }
                             }
 
                             if(collide.vector.y > 0) {
