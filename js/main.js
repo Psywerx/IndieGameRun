@@ -206,7 +206,7 @@
                 effects.push(new Effect.Melty(player, scene));
             }
             if(level.objects.grounds) grounds = _.each(level.objects.grounds, function(ground) {
-                var newGround = {}
+                var newGround = {};
                 newGround.sprite = Ground.makeGround(
                     ground.x,
                     ground.y,

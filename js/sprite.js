@@ -95,7 +95,7 @@
                             console.log(that.sprite);
                             if(!that.sprite.opacity) that.sprite.opacity = 1.0;
                             that.sprite.opacity *= 0.95;
-                            that.sprite.material.opacity = that.sprite.opacity
+                            that.sprite.material.opacity = that.sprite.opacity;
                             if(that.sprite.material.opacity < 0.1 && that.onFade) {
                                 that.onFade();
                                 that.fading = false;
