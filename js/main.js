@@ -122,8 +122,8 @@
         renderer.setSize(WIDTH, HEIGHT);
 
 
-        _.range(5).forEach(function(i){
-            var f = Drawables.fire();
+        /*_.range(5).forEach(function(i){
+            var f = Drawables.makeFire();
             var scale = Math.random() * 0.5 + 0.5;
             f.sprite.scale.set(scale, scale, 1);
             f.sprite.position.set(-1000 + 500 * i + Math.random() * 300, -400 + f.sprite.getHeight()/2, 0);
@@ -132,15 +132,13 @@
             f.start();
             scene.add(f.sprite);
             fires.push(f);
-        });
+        });*/
 
         var canvas = renderer.domElement;
         canvas.style.marginLeft = "auto";
         canvas.style.marginRight = "auto";
         canvas.style.display = "block";
         document.getElementById("content").appendChild(canvas);
-
-        animate();
     }
 
     function update() {
@@ -150,15 +148,12 @@
         
         player.update(dt, collidables, world, camera);
         
-        clouds.forEach(function(cloud) {
-            cloud.animation.update();
+        clouds && clouds.forEach(function(cloud) {
+            //console.log(cloud)
+            cloud.sprite.update(dt);
         });
         fires.forEach(function(fire) {
-            fire.update();
-            if (fire.sprite) {
-                fire.sprite.position.z = 5;
-            }
-            
+            fire.sprite.update();            
         });
         effects.forEach(function(effect) {
             effect.update();
@@ -198,19 +193,19 @@
 
     Sprite.loadAllTextures(function () {
         loadLevel(1, function() {
-            init();
+            init();            
             if(level.objects.player) {
                 camera.position.x = level.objects.player[0].x;
                 player.animation.sprite.position.x = level.objects.player[0].x;
                 player.animation.sprite.position.y = level.objects.player[0].y;
                 effects.push(new Effect.Melty(player, scene));
             }
-            if(level.objects.grounds) grounds = _.each(level.objects.grounds, function(ground) {
+            if(level.objects.grounds) grounds = _.map(level.objects.grounds, function(ground) {
                 var newGround = {}
-                newGround.sprite = Ground.makeGround(
+                newGround.sprite = Drawables.makeGround(
                     ground.x,
                     ground.y,
-                    ground.w,// || -200,
+                    ground.w,
                     ground.h,
                     ground.depth || 0, 
                     ground.texture || "floor_dark",
@@ -221,6 +216,41 @@
                 
                 return newGround;
             });
+            if(level.objects.clouds) clouds = _.map(level.objects.clouds, function(cloud) {
+                var newCloud = {}
+                newCloud.sprite = Drawables.makeCloud(
+                    cloud.x,
+                    cloud.y,
+                    cloud.w,
+                    cloud.h,
+                    cloud.speed || { x:0, y:0 },
+                    cloud.depth || Math.random()*500 - Math.random()*500, 
+                    cloud.texture || "cloud",
+                    scene
+                );
+                scene.add(newCloud.sprite);
+                collidables.push(newCloud);
+                
+                return newCloud;
+            });            
+            if(level.objects.fires) fires = _.map(level.objects.fires, function(fire) {
+                var newFire = {}
+                newFire.sprite = Drawables.makeFire(
+                    fire.x,
+                    fire.y,
+                    fire.w,
+                    fire.h,
+                    fire.depth || Math.random()*500 - Math.random()*500, 
+                    fire.texture || "fire",
+                    scene
+                );
+                scene.add(newFire.sprite);
+                collidables.push(newFire);
+                
+                return newFire;
+            });
+            console.log(clouds)
+            animate();
         });
     });
 })( GAME, THREE, THREEx, _);

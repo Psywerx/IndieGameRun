@@ -6,7 +6,7 @@
         "fire" : { name: "fire", count: 16 },
         "test" : { name: "test", count: 1 },
         "tree" : { name: "tree", count: 1 },
-        "cloud": { name: "cloud", count : 2},
+        "cloud": { name: "cloud", count : 1},
         "bg"   : { name: "bg", count : 1},
     };
 
