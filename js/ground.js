@@ -3,17 +3,15 @@
     var Ground = G.Ground = {};
     
     _.extend(Ground, {
-        drawGrond : function(f, t, lit) {
+        makeGround : function(x, y, w, h, depth, texture, scene) {
             var imgSize = 100.0;
-            var w = t - f;
-            var h = 100;
-            var geometry = new THREE.PlaneGeometry(w, h);
+            var geometry = new THREE.CubeGeometry(w, h, depth);
 
             var image = new Image();
             image.onload = function() {
                 texture.needsUpdate = true;
             };
-            image.src = lit ? "img/floor_light.png" : "img/floor_dark.png";
+            image.src = "img/"+texture+".png";
 
             var texture = new THREE.Texture(image, new THREE.UVMapping(), THREE.RepeatWrapping, THREE.RepeatWrapping,
                     THREE.NearestFilter, THREE.LinearMipMapLinearFilter);
@@ -25,11 +23,18 @@
                 map : texture
             });
 
-            var ground = new THREE.Mesh(geometry, material);
-            ground.position.set(f + w * 0.5, 0, 0);
+            var sprite = new THREE.Mesh(geometry, material);
+            sprite.position.set(x, y, depth);
 
-            return ground;
+            var x = new THREE.PlaneGeometry(w, h);
+            x.position = sprite.position;
+            var aa = (x).vertices;
+            sprite.collisionFrame = [aa[0],aa[1],aa[3],aa[2]];
+            
+            console.log(sprite);
+            scene.add(x);
 
+            return sprite;
         }
     });
 })(GAME, THREE, _);
