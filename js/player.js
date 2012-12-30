@@ -34,6 +34,13 @@
                                                                     // :/
                     player.speed.x = 0;
                     player.isMoving = false;
+                    if (keyboard.pressed('B'))  {
+                        GAME.nextLevel = GAME.currLevel;
+                    }
+                    if (keyboard.pressed('N'))  {
+                        GAME.nextLevel = GAME.currLevel+1;
+                    }
+
                     if (keyboard.pressed('A') || keyboard.pressed('left')) {
                         player.speed.x -= 10;
                         player.isMoving = true;
@@ -175,12 +182,13 @@
                         camera.position.x = player.animation.sprite.position.x;
                     }
                     if(player.animation.sprite.position.x > 13000){
-                        
+                        GAME.nextLevel = GAME.currLevel+1;
                         console.log("NEXT LEVEL");
                     }
                     // }
                     player.sizeFactor = Math.max(0, player.sizeFactor - dt/100000);
                     if(player.sizeFactor < 0.5){
+                        GAME.nextLevel = GAME.currLevel;
                         console.log("YOU SHOULD BE DEAD");
                     }
                     player.animation.sprite.scale.x *= player.sizeFactor;

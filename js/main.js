@@ -15,6 +15,9 @@
 
     var state = "intro";
     
+    GAME.currLevel = 0;
+    GAME.nextLevel = 1;
+    
     var player = {},
         world = {},
         collidables = [],
@@ -56,14 +59,14 @@
     var keyboard = new THREEx.KeyboardState();
 
     function initWorld() {
-        world = {};
+        /*world = {};
         world.sprite = Sprite.getSprite("test", "CUBE");
         world.sprite.scale.x = 10000;
         world.sprite.scale.y = 2.5;
         world.sprite.scale.z = 8;
         
         world.sprite.material.color = 0x000000;
-        world.sprite.position.set(0, -500, 0);
+        world.sprite.position.set(0, -500, 0);*/
         /*
         scene.add(world.sprite);
         collidables.push(world);*/
@@ -148,9 +151,13 @@
     }
 
     function update() {
+        if(GAME.nextLevel != 0) {
+            loadLevel(GAME.nextLevel);
+        }
+    
         var dt = (+new Date()) - prevTime;
         
-        switch(state){
+        switch(state) {
         case "intro":
             GAME.slideMenu1(dt);
             if(Object.keys(keyboard.keyCodes).length>0){
@@ -192,9 +199,7 @@
         renderer.render(scene, camera);
     }
     
-    function loadLevel(levelNum, callback) {
-        var script = 'js/lev/lev'+levelNum+'.js';
-        
+    function loadJS(script, callback) {
         var el = document.createElement('script');
         el.async = false;
         el.src = script;
@@ -213,10 +218,37 @@
         });    
     }
 
+    function loadLevel(levelNum, callback) {
+        GAME.nextLevel = 0;
+        GAME.currLevel = levelNum;
+        loadJS('js/lev/lev'+levelNum+'.js', function() {
+            effects.forEach(function(effect) { effect.cleanup(); });
+            effects = [];
 
-    Sprite.loadAllTextures(function () {
-        loadLevel(1, function(level) {
-            init();            
+            collidables.forEach(function(c) { scene.remove(c.sprite); })
+            collidables = [];
+        
+            //world = {};
+            //background = {};
+
+            fires.forEach(function(fire) { scene.remove(fire.sprite) })
+            fires = [];
+            
+            trees.forEach(function(tree) { scene.remove(tree.sprite) })
+            trees = [];
+            
+            clouds.forEach(function(cloud) { scene.remove(cloud.sprite) })
+            clouds = [];
+            
+            suns = [];
+            
+            grounds.forEach(function(ground) { scene.remove(ground.sprite) })
+            grounds = [];
+            
+            scene.remove(player.animation.sprite);
+            player = new Player(scene);
+
+
             if(level.objects.player) {
                 camera.position.x = level.objects.player[0].x;
                 player.animation.sprite.position.x = level.objects.player[0].x;
@@ -251,6 +283,7 @@
                 
                 return newGround;
             });
+
             if(level.objects.fires) fires = _.map(level.objects.fires, function(fire) {
                 var newFire = {}
                 newFire.animation = Drawables.makeFire(fire.texture || "fire", "PLANE", fire.w, fire.h);
@@ -274,10 +307,20 @@
                 
                 return newTree;
             });            
+
             if(level.objects.suns) suns = _.map(level.objects.suns, function(sun) {
                 
                 Sun.init(sun,scene, camera);
-            });            
+            });
+            
+            callback && callback();
+        });
+    }
+
+
+    Sprite.loadAllTextures(function () {
+        init();            
+        loadLevel(GAME.nextLevel, function() {
             animate();
         });
     });

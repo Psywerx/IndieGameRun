@@ -60,6 +60,11 @@
                 
                 that.particleSystem.geometry.__dirtyVertices = true;
             };
+            
+            this.cleanup = function() {
+                scene.remove(that.particleSystem);
+                that.update = function() { }
+            }
         },
         BurnDown : function(object, scene, onBurntCallback) { //Look's like I need the global scene... not cool I guess.
             if (!object.burning) {
@@ -130,6 +135,13 @@
                         }
                     }
                 };
+                this.cleanup = function() {
+                    that.fires.forEach(function(fire) { 
+                        scene.remove(fire.sprite);
+                    });
+                    scene.remove(object.sprite);
+                    that.update = function() { }
+                }
             }
         },
     });
