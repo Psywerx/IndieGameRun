@@ -21,9 +21,7 @@
                     pY = that.player.animation.sprite.position.y,// - player.animation.sprite.getHeight()/2,
                     pZ = that.player.animation.sprite.position.z;
                   
-                var particle = new THREE.Vertex(
-                    new THREE.Vector3(pX, pY, pZ)
-                );
+                var particle = new THREE.Vector3(pX, pY, pZ)
 
                 particle.age = +new Date();
               

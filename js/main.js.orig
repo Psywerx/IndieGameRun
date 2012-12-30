@@ -104,7 +104,7 @@
         scene.add(background);
 
     }
-
+    
     function init() {
         camera = new THREE.PerspectiveCamera(75, WIDTH / HEIGHT, 1, 10000);
 //        camera = new THREE.OrthographicCamera( WIDTH / - 2, WIDTH/ 2, HEIGHT/ 2, HEIGHT/ - 2, 1, 100000 );
@@ -147,6 +147,7 @@
     function update() {
         var dt = (+new Date()) - prevTime;
         
+<<<<<<< HEAD
         switch(state){
         case "intro":
             GAME.slideMenu1(dt);
@@ -162,12 +163,15 @@
             
             player.update(dt, collidables, world, camera);
             
-            clouds && clouds.forEach(function(cloud) {
-            //console.log(cloud)
-            cloud.sprite.update(dt);
+            clouds.forEach(function(cloud) {
+                cloud.animation.update();
             });
             fires.forEach(function(fire) {
-                fire.update();  
+                fire.update();
+                if (fire.sprite) {
+                    fire.sprite.position.z = 5;
+                }
+                
             });
             effects.forEach(function(effect) {
                 effect.update();
@@ -176,6 +180,18 @@
         }
         prevTime = +new Date();
         
+=======
+        clouds && clouds.forEach(function(cloud) {
+            //console.log(cloud)
+            cloud.sprite.update(dt);
+        });
+        fires.forEach(function(fire) {
+            fire.update();            
+        });
+        effects.forEach(function(effect) {
+            effect.update();
+        });
+>>>>>>> origin/hairy
 
     }
 
