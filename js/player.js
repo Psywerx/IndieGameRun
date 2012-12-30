@@ -57,7 +57,7 @@
                         player.jumpLock = true;
                     }
                     if (keyboard.pressed('J') && keyboard.pressed('K')){
-                        halt
+                        halt;
                     }
                     if (keyboard.pressed('S') || keyboard.pressed('down')) {
                         player.isCrouched = true;
