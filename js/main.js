@@ -153,7 +153,7 @@
             cloud.sprite.update(dt);
         });
         fires.forEach(function(fire) {
-            fire.sprite.update();            
+            fire.update();            
         });
         effects.forEach(function(effect) {
             effect.update();
@@ -200,6 +200,17 @@
                 player.animation.sprite.position.y = level.objects.player[0].y;
                 effects.push(new Effect.Melty(player, scene));
             }
+            if(level.objects.clouds) clouds = _.map(level.objects.clouds, function(cloud) {
+                var newCloud = {}
+                newCloud.sprite = Sprite.getSprite(cloud.texture || "cloud", "PLANE", cloud.w, cloud.h);
+                newCloud.sprite.position.set(cloud.x, cloud.y, cloud.depth);
+                newCloud.sprite.update = function(dt) {
+                    newCloud.sprite.position.x += cloud.speed.x*dt*0.001;
+                }
+                scene.add(newCloud.sprite);
+                
+                return newCloud;
+            });            
             if(level.objects.grounds) grounds = _.map(level.objects.grounds, function(ground) {
                 var newGround = {}
                 newGround.sprite = Drawables.makeGround(
@@ -216,41 +227,21 @@
                 
                 return newGround;
             });
-            if(level.objects.clouds) clouds = _.map(level.objects.clouds, function(cloud) {
-                var newCloud = {}
-                newCloud.sprite = Drawables.makeCloud(
-                    cloud.x,
-                    cloud.y,
-                    cloud.w,
-                    cloud.h,
-                    cloud.speed || { x:0, y:0 },
-                    cloud.depth || Math.random()*500 - Math.random()*500, 
-                    cloud.texture || "cloud",
-                    scene
-                );
-                scene.add(newCloud.sprite);
-                collidables.push(newCloud);
-                
-                return newCloud;
-            });            
             if(level.objects.fires) fires = _.map(level.objects.fires, function(fire) {
                 var newFire = {}
-                newFire.sprite = Drawables.makeFire(
-                    fire.x,
-                    fire.y,
-                    fire.w,
-                    fire.h,
-                    fire.depth || Math.random()*500 - Math.random()*500, 
-                    fire.texture || "fire",
-                    scene
-                );
-                scene.add(newFire.sprite);
-                collidables.push(newFire);
+                newFire.animation = Drawables.makeFire(fire.texture || "fire", "PLANE", fire.w, fire.h);
+                newFire.animation.sprite.position.set(fire.x, fire.y, fire.depth);
                 
-                return newFire;
+                newFire.animation.start();
+                scene.add(newFire.animation.sprite);
+                collidables.push(newFire.animation);
+                
+                return newFire.animation;
             });
             console.log(clouds)
             animate();
+            console.log(scene);
         });
     });
 })( GAME, THREE, THREEx, _);
+

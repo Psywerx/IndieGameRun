@@ -7,7 +7,9 @@
         "test" : { name: "test", count: 1 },
         "tree" : { name: "tree", count: 1 },
         "cloud": { name: "cloud", count : 1},
+        "cloud1": { name: "cloud1", count : 1},
         "bg"   : { name: "bg", count : 1},
+        "icecube1" : {name: "icecube1", count: 1},
     };
 
     _.extend(Sprite, {
@@ -52,7 +54,7 @@
             PLANE : "PLANE",
             CUBE : "CUBE",
         },
-        Animation : function(name, geometryType) {
+        Animation : function(name, geometryType, w, h) {
             var that = this;
             this.started = false;
             this.frame = 0;
@@ -69,19 +71,19 @@
             var geometry = null;
             switch (geometryType) {
                 case Sprite.GeometryType.CUBE:
-                    geometry = new THREE.CubeGeometry(that.materials[0].width, that.materials[0].height, that.materials[0].height, 3, 3, 3);                    
+                    geometry = new THREE.CubeGeometry(w || that.materials[0].width, h || that.materials[0].height, h || that.materials[0].height, 3, 3, 3);                    
                     break;
                 case Sprite.GeometryType.PLANE: 
                 default:
-                    geometry = new THREE.PlaneGeometry(that.materials[0].width, that.materials[0].height);
+                    geometry = new THREE.PlaneGeometry(w || that.materials[0].width, h || that.materials[0].height);
                     break;
             }
             
             that.sprite = new THREE.Mesh(geometry, that.materials[0]);
-            that.sprite.getWidth = function() { return that.materials[0].width * that.sprite.scale.x; };
-            that.sprite.getHeight = function() { return that.materials[0].height * that.sprite.scale.y; };
+            that.sprite.getWidth = function() { return w || that.materials[0].width * that.sprite.scale.x; };
+            that.sprite.getHeight = function() { return h || that.materials[0].height * that.sprite.scale.y; };
 
-            var aa = (new THREE.PlaneGeometry(that.materials[0].width, that.materials[0].height)).vertices;
+            var aa = (new THREE.PlaneGeometry(w || that.materials[0].width, h || that.materials[0].height)).vertices;
             that.sprite.collisionFrame = [aa[0],aa[1],aa[3],aa[2]];
                 
 
@@ -95,7 +97,7 @@
                             console.log(that.sprite);
                             if(!that.sprite.opacity) that.sprite.opacity = 1.0;
                             that.sprite.opacity *= 0.95;
-                            that.sprite.material.opacity = that.sprite.opacity
+                            that.sprite.material.opacity = that.sprite.opacity;
                             if(that.sprite.material.opacity < 0.1 && that.onFade) {
                                 that.onFade();
                                 that.fading = false;
@@ -162,25 +164,25 @@
                 callback && callback(material);
             }
         },
-        getSprite: function(name, geometryType) {
+        getSprite: function(name, geometryType, w, h) {
             var material = Sprite.getMaterial(name);
             var geometry = null;
             switch (geometryType) {
                 case Sprite.GeometryType.CUBE:
-                    geometry = new THREE.CubeGeometry(material.width, material.height, material.height, 3, 3, 3);                    
+                    geometry = new THREE.CubeGeometry(w || material.width, h || material.height, h || material.height, 3, 3, 3);                    
                     break;
                 case Sprite.GeometryType.PLANE:
                 default:
-                    geometry = new THREE.PlaneGeometry(material.width, material.height);
+                    geometry = new THREE.PlaneGeometry(w || material.width, h || material.height);
                     break;
             }
             var sprite = new THREE.Mesh(geometry, material);
 
             sprite.material = material;
-            sprite.getWidth = function() { return material.width * sprite.scale.x; };
-            sprite.getHeight = function() { return material.height * sprite.scale.y; };
+            sprite.getWidth = function() { return w || material.width * sprite.scale.x; };
+            sprite.getHeight = function() { return h || material.height * sprite.scale.y; };
             
-            var aa = (new THREE.PlaneGeometry(material.width, material.height)).vertices;
+            var aa = (new THREE.PlaneGeometry(w || material.width, h || material.height)).vertices;
             sprite.collisionFrame = [aa[0],aa[1],aa[3],aa[2]];
 
             return sprite;

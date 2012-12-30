@@ -5,7 +5,7 @@
     _.extend(Effect, {
         Melty : function(player, scene) {
             var that = this;
-            this.color = 0x00ffff;
+            this.color = 0x38bdff;
 
             var particleCount = 180;
             this.player = player;
@@ -48,18 +48,18 @@
                 for(var p = 0; p < particleCount; p++) {
                     var particle = that.particles.vertices[p];
                     if(now < particle.age + 2000*Math.random()) {
-                        particle.x = (particle.x*0.95 + that.player.animation.sprite.position.x*0.05)
-                        particle.y = (particle.y*0.95 + that.player.animation.sprite.position.y*0.05)
+                        particle.x = (particle.x*0.95 + that.player.animation.sprite.position.x*0.05);
+                        particle.y = (particle.y*0.95 + that.player.animation.sprite.position.y*0.05);
                     } else {
                         particle.age = now;
-                        particle.x = that.player.animation.sprite.position.x + Math.random() * player.animation.sprite.getWidth() - player.animation.sprite.getWidth()/2
-                        particle.y = that.player.animation.sprite.position.y - Math.random() * player.animation.sprite.getHeight()/2 + Math.random() * player.animation.sprite.getHeight()/3
+                        particle.x = that.player.animation.sprite.position.x + Math.random() * player.animation.sprite.getWidth() - player.animation.sprite.getWidth()/2;
+                        particle.y = that.player.animation.sprite.position.y - Math.random() * player.animation.sprite.getHeight()/2 + Math.random() * player.animation.sprite.getHeight()/3;
                     }
                     particle.y -= 1+(now-particle.age)/10;
                 }
                 
                 that.particleSystem.geometry.__dirtyVertices = true;
-            }
+            };
         },
         BurnDown : function(object, scene, onBurntCallback) { //Look's like I need the global scene... not cool I guess.
             if (!object.burning) {
@@ -71,7 +71,7 @@
                 this.done = false;
 
                 this.fires = _.range(15).map(function() { 
-                    var f = Drawables.fire()
+                    var f = Drawables.fire();
                     var scale = Math.random() * 0.3 + 0.2;
                     f.sprite.scale.set(scale, scale, 1);
                     f.sprite.position.set(
@@ -107,7 +107,7 @@
                                 fire.sprite.rotation.z += (Math.random()-0.5);
                                 fire.sprite.position.y -= (Math.random()+0.5) * dy;
                             });
-                            object.sprite.position.y -= dy
+                            object.sprite.position.y -= dy;
                             object.sprite.rotation.z += (Math.random()-0.5)*0.1;
                             
                             if (object.sprite.scale.y < 0.1) {
