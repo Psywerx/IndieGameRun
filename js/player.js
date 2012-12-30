@@ -44,8 +44,9 @@
                         player.isMoving = true;
                     }
                     if (keyboard.pressed('W') || keyboard.pressed('up') || keyboard.pressed('space')) {
-                        if(GAME.Sounds.jump.isPaused())
-                            GAME.Sounds.jump.load().play();
+                        if(GAME.Sounds.duck.isPaused())
+                            GAME.Sounds.jump.setVolume( 100 );
+                            GAME.Sounds.duck.load().play();
                         
                         if (player.jumpCount < 10 && !player.jumpLock) {
                             player.speed.y = 30;
@@ -60,9 +61,17 @@
                         halt;
                     }
                     if (keyboard.pressed('S') || keyboard.pressed('down')) {
+                        if(!player.isCrouched) {
+                            GAME.Sounds.jump.load().play();
+                        }
                         player.isCrouched = true;
                     } else {
                         if(player.isCrouched && player.speed.y == 0) player.speed.y = 17;
+                        if(player.isCrouched) {
+                            GAME.Sounds.jump.setVolume( 65 );
+                            GAME.Sounds.jump.load().play();
+                        }
+
                         player.isCrouched = false;
                     }
                     
@@ -75,14 +84,21 @@
                         player.animation.sprite.scale.x = player.animation.sprite.scale.x*0.8 + 1.0*0.2;
                     }
                     if(player.isMoving){
-                        if(GAME.Sounds.moving.isPaused()){
-                            GAME.Sounds.moving.load().play();
+                        if(player.jumpLock) GAME.Sounds.moving.stop();
+                        if(!player.jumpLock && GAME.Sounds.moving.isPaused()) {
+                            if(player.isCrouched) {
+                                GAME.Sounds.moving.setVolume( 50 );
+                             } else {
+                                GAME.Sounds.moving.setVolume( 100 );
+                             }
+
+                            GAME.Sounds.moving.load().fadeIn(500);
                         }
                         player.animation.sprite.scale.y = player.animation.sprite.scale.y + 0.01 * Math.sin(+new Date()/100);
                         player.animation.sprite.scale.x = player.animation.sprite.scale.x + 0.01 * Math.sin(+new Date()/100);
                     }
                     else{
-                        GAME.Sounds.moving.pause();
+                        GAME.Sounds.moving.stop();
                     }
                     if(!player.jumpLock){
                         player.animation.sprite.scale.y = player.animation.sprite.scale.y*0.9 + 2*0.1;

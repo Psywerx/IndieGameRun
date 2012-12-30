@@ -10,6 +10,11 @@
                 formats : [ "ogg" ],
                 preload : true,
                 loop : false
+            }),
+            duck : new buzz.sound("sounds/duck", {
+                formats : [ "ogg" ],
+                preload : true,
+                loop : false
             })
         }
     };
