@@ -1,6 +1,7 @@
 (function(G, THREE, _) {
     var Sprite = G.Sprite;
     var menu1 = {}, menu2 = {};
+    var levelC = {};
     var slide1 = false;
     _.extend(G, {
         
@@ -31,6 +32,29 @@
         slideMenu2 : function(dt){
             menu1.material.visible = false;// -= (dt)/100;
             menu2.material.visible = false;// -= (dt)/100;// menu1.position.y * 0.9 + 4001 * 0.1;
+        },
+        showLevel: function(scene, lvl, offsetx) {
+            try { if(levelC.material) scene.remove(levelC); } catch(err) { console.log(err); }
+            levelC = Sprite.getSprite("level"+lvl, "PLANE");
+            levelC.position.set(0,0,500);
+            levelC.scale.set(7,7,1);
+            levelC.material.opacity = 1;
+            scene.add(levelC);
+            console.log("ohai");
+        },
+        slideLevel : function(dt, scene) {
+            try {
+                if(levelC.material) {
+                    levelC.material.opacity -= (dt)/5000;
+                    //levelC.position.set(Math.random()*10000-Math.random()*10000,Math.random()*10000-Math.random()*10000,Math.random()*1000-Math.random()*1000);
+                    if(levelC.material.opacity < 0.1) {
+                        scene.remove(levelC);
+                        levelC = {}
+                        console.log("removed");
+                    }
+                }
+            } catch(err) { console.log(err); }
         }
+        
     });
 })(GAME, THREE, _);

@@ -153,12 +153,12 @@
     }
 
     function update() {
+        var dt = (+new Date()) - prevTime;
+        GAME.slideLevel(dt, scene);
         if(!GAME.loadingLevel) {
             if(GAME.nextLevel != 0) {
-                console.log("level"+GAME.nextLevel+" screen");
                 loadLevel(GAME.nextLevel);
             }
-            var dt = (+new Date()) - prevTime;
             
             switch(state) {
             case "intro":
@@ -336,7 +336,8 @@
                 callback && callback();
 
                 GAME.loadingLevel = false;
-                console.log("loaded level: "+GAME.nextLevel);
+                GAME.showLevel(scene, levelNum);
+                console.log("loaded level: "+levelNum);
                 GAME.nextLevel = 0;
             });
         }

@@ -15,6 +15,15 @@
         "intro2" : {name: "intro2", count: 1},
         "house1" : {name: "house1", count: 1},
         "house2" : {name: "house2", count: 1},
+        "level1" : {name: "level1", count: 1},
+        "level2" : {name: "level2", count: 1},
+        "level3" : {name: "level3", count: 1},
+        "level4" : {name: "level4", count: 1},
+        "level5" : {name: "level5", count: 1},
+        "level6" : {name: "level6", count: 1},
+        "level7" : {name: "level7", count: 1},
+        "level8" : {name: "level8", count: 1},
+        "level9" : {name: "level9", count: 1},
     };
 
     _.extend(Sprite, {
