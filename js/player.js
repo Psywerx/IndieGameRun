@@ -211,7 +211,7 @@
                     }
                     // }
                     player.sizeFactor = Math.max(0, player.sizeFactor - dt/100000);
-                    if(player.sizeFactor < 0.5){
+                    if(player.sizeFactor < 0.5 || player.animation.sprite.position.y < -200){
                         GAME.nextLevel = GAME.currLevel;
                         console.log("YOU SHOULD BE DEAD");
                     }
