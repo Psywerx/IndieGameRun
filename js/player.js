@@ -175,7 +175,6 @@
                     }
                     // }
                     player.sizeFactor = Math.max(0, player.sizeFactor - dt/100000);
-                    console.log(player.sizeFactor);
                     if(player.sizeFactor < 0.5){
                         console.log("YOU SHOULD BE DEAD");
                     }
