@@ -238,9 +238,18 @@
                 
                 return newFire.animation;
             });
-            console.log(clouds)
+            if(level.objects.trees) trees = _.map(level.objects.trees, function(tree) {
+                var newTree = {}
+                newTree.sprite = Sprite.getSprite(tree.texture || "tree", "PLANE", tree.w, tree.h);
+                newTree.sprite.position.set(tree.x, tree.y, tree.depth || 0);
+                newTree.sprite.update = function(dt) {
+
+                }
+                scene.add(newTree.sprite);
+                
+                return newTree;
+            });            
             animate();
-            console.log(scene);
         });
     });
 })( GAME, THREE, THREEx, _);
