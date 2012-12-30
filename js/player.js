@@ -153,7 +153,7 @@
                             
                             
                             if(collidables[collide.index].collisionType == "Fire"){
-                                player.sizeFactor = Math.max(0, player.sizeFactor - dt/1000);
+                                player.sizeFactor = Math.max(0, player.sizeFactor - dt/(1000));
                                 return;
                             }
                             
@@ -207,7 +207,7 @@
                         console.log("NEXT LEVEL");
                     }
                     // }
-                    player.sizeFactor = Math.max(0, player.sizeFactor - dt/100000);
+                    player.sizeFactor = Math.max(0, player.sizeFactor - dt/(100000 * (GAME.currLevel==6 ? 4 : 0)));
                     if(player.sizeFactor < 0.5 || player.animation.sprite.position.y < -200){
                         GAME.nextLevel = GAME.currLevel;
                         console.log("YOU SHOULD BE DEAD");

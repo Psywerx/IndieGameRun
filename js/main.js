@@ -17,7 +17,7 @@
     
     GAME.levelCount = 7;//+1
     GAME.currLevel = 0;
-    GAME.nextLevel = 6;
+    GAME.nextLevel = 1;
     GAME.loadingLevel = false;
     
     var player = {},
