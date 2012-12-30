@@ -4,7 +4,7 @@
         Drawables = G.Drawables,
         Ground = G.Ground,
         Player = G.Player,
-        Collision = G.Collision;
+        Collision = G.Collision,
         Sun = G.Sun;
 
     var WIDTH = 800,
@@ -17,6 +17,7 @@
         world = {},
         collidables = [],
         fires = [],
+        trees = [],
         effects = [],
         clouds = [],
         suns = [],
@@ -160,9 +161,8 @@
         effects.forEach(function(effect) {
             effect.update();
         });
-        suns.forEach(function(effect) {
-            effect.update();
-        });
+
+        Sun.update(dt,camera);
 
     }
 
@@ -244,22 +244,20 @@
                 return newFire.animation;
             });
             if(level.objects.trees) trees = _.map(level.objects.trees, function(tree) {
-                var newTree = {}
+                var newTree = {};
                 newTree.sprite = Sprite.getSprite(tree.texture || "tree", "PLANE", tree.w, tree.h);
                 newTree.sprite.position.set(tree.x, tree.y, tree.depth || 0);
                 newTree.sprite.update = function(dt) {
 
-                }
+                };
+                console.log(player);
                 scene.add(newTree.sprite);
                 
                 return newTree;
             });            
             if(level.objects.suns) suns = _.map(level.objects.suns, function(sun) {
                 
-                Sun.init(sun);
-                scene.add(newTree.sprite);
-                
-                return newTree;
+                Sun.init(sun,scene, camera);
             });            
             animate();
         });
