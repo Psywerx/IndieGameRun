@@ -215,7 +215,7 @@
 
 
     Sprite.loadAllTextures(function () {
-        loadLevel(1, function(level) {
+        loadLevel(2, function(level) {
             init();            
             if(level.objects.player) {
                 camera.position.x = level.objects.player[0].x;
@@ -255,7 +255,7 @@
                 var newFire = {}
                 newFire.animation = Drawables.makeFire(fire.texture || "fire", "PLANE", fire.w, fire.h);
                 newFire.animation.sprite.position.set(fire.x, fire.y, fire.depth);
-                
+                newFire.animation.collisionType = "Fire";
                 newFire.animation.start();
                 scene.add(newFire.animation.sprite);
                 collidables.push(newFire.animation);

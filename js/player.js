@@ -22,6 +22,7 @@
             var player = {
                 jumpCount : 0,
                 isCrouched : false,
+                sizeFactor : 1,
                 speed : {
                     x : 0,
                     y : 0
@@ -116,7 +117,13 @@
                         _.each(Object.keys(c), function(collid) {
 
                             var collide = c[collid];
-
+                            
+                            
+                            if(collidables[collide.index].collisionType == "Fire"){
+                                player.sizeFactor = Math.max(0, player.sizeFactor - dt/1000);
+                                return;
+                            }
+                            
                             var h = player.animation.sprite.getHeight(), w = player.animation.sprite.getWidth();
 
                             if (player.speed.y * collide.vector.y < 0) {
@@ -167,7 +174,14 @@
                         console.log("NEXT LEVEL");
                     }
                     // }
-
+                    player.sizeFactor = Math.max(0, player.sizeFactor - dt/100000);
+                    console.log(player.sizeFactor);
+                    if(player.sizeFactor < 0.5){
+                        console.log("YOU SHOULD BE DEAD");
+                    }
+                    player.animation.sprite.scale.x *= player.sizeFactor;
+                    player.animation.sprite.scale.y *= player.sizeFactor;
+                    player.animation.sprite.scale.z *= player.sizeFactor;
                     player.animation.update();
                 }
             };
