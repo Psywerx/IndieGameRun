@@ -155,7 +155,7 @@
     function update() {
         if(!GAME.loadingLevel) {
             if(GAME.nextLevel != 0) {
-                alert("level"+GAME.nextLevel+" screen");
+                console.log("level"+GAME.nextLevel+" screen");
                 loadLevel(GAME.nextLevel);
             }
             var dt = (+new Date()) - prevTime;
