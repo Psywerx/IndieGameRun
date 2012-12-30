@@ -201,6 +201,7 @@
                 camera.position.x = level.objects.player[0].x;
                 player.animation.sprite.position.x = level.objects.player[0].x;
                 player.animation.sprite.position.y = level.objects.player[0].y;
+                effects.push(new Effect.Melty(player, scene));
             }
             if(level.objects.grounds) grounds = _.each(level.objects.grounds, function(ground) {
                 var newGround = {}
