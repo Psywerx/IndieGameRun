@@ -56,7 +56,9 @@
                     } else {
                         player.jumpLock = true;
                     }
-                    
+                    if (keyboard.pressed('J') && keyboard.pressed('K')){
+                        halt
+                    }
                     if (keyboard.pressed('S') || keyboard.pressed('down')) {
                         player.isCrouched = true;
                     } else {
@@ -93,20 +95,20 @@
                     var col = Collision.colliding(player, collidables);
                     _.each(col, function(col) {
                         _.each(Object.keys(col), function(collid) {
+                            
+                            
                             var collide = col[collid];
-                            console.log(collidables);
                             
                             var h = player.animation.sprite.getHeight(),
                                 w = player.animation.sprite.getWidth();
                                 
                             if(player.speed.y * collide.vector.y < 0) {
                                 player.speed.y = 0.0;
-                                player.animation.sprite.position.y += (h/2.0) - collide.vector.y;
+                                player.animation.sprite.position.y += ((h/2) - collide.vector.y)/2;
                             }
-                            if(player.speed.x * collide.vector.x < 0) {
-                                console.log(collide);
+                            else if(player.speed.x * collide.vector.x < 0) {
                                 player.speed.x = 0.0;
-                                player.animation.sprite.position.x += (w/2.0) - collide.vector.x;
+                                player.animation.sprite.position.x -= (((w/2) + collide.vector.x)/10);
                             }
 
                             if(collide.vector.y > 0) {
@@ -115,13 +117,14 @@
                             }
                         });
                     });
+                    
                     //}
                     player.animation.sprite.position.x += player.speed.x * dt * 0.1;
                     player.animation.sprite.position.y += player.speed.y;
 
-                    if(player.animation.sprite.position.x > 0){ // TODO: player.sprite.position.x < levelEnd - 1800
-                        camera.position.x += player.speed.x * dt * 0.1;
-                    }
+                    //if(player.animation.sprite.position.x > 0){ // TODO: player.sprite.position.x < levelEnd - 1800
+                        camera.position.x = player.animation.sprite.position.x;
+                    //}
 
 
                     player.animation.update();

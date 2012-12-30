@@ -63,36 +63,36 @@
         scene.add(world.sprite);
         collidables.push(world);*/
 
-        tree = {};
-        tree.sprite = Sprite.getSprite("tree");
-        tree.sprite.scale.set(4, 4, 1);
-        tree.sprite.position.set(500, -400 + tree.sprite.getHeight()/2, 200);
-        scene.add(tree.sprite);
-
-        clouds = _.range(10).map(function() {
-            var cloud = {};
-            cloud.animation = new Sprite.Animation("cloud");
-            cloud.animation.sprite.scale.set(4, 4, 1);
-            cloud.animation.sprite.position.set(
-                Math.random()*world.sprite.scale.x, 
-                1500 + Math.random()*1000 - Math.random()*1000, 
-                Math.random()*1000 - Math.random()*1000
-            );
-            cloud.animation.speed = 500+500*Math.random();
-            cloud.speed = 5*Math.random()-5*Math.random();
-            cloud.opacity = Math.random()*0.75+0.25;
-
-            cloud.animation.onUpdate = function() {
-                cloud.animation.sprite.position.x += cloud.speed;
-                cloud.animation.sprite.material.opacity = cloud.opacity;
-            }
-
-            cloud.animation.start();
-            cloud.animation.animationType = Sprite.AnimationType.BOUNCE | Sprite.AnimationType.JERKY;
-            scene.add(cloud.animation.sprite);
-            
-            return cloud;
-        });
+//        tree = {};
+//        tree.sprite = Sprite.getSprite("tree");
+//        tree.sprite.scale.set(4, 4, 1);
+//        tree.sprite.position.set(500, -400 + tree.sprite.getHeight()/2, 200);
+//        scene.add(tree.sprite);
+//
+//        clouds = _.range(10).map(function() {
+//            var cloud = {};
+//            cloud.animation = new Sprite.Animation("cloud");
+//            cloud.animation.sprite.scale.set(4, 4, 1);
+//            cloud.animation.sprite.position.set(
+//                Math.random()*world.sprite.scale.x, 
+//                1500 + Math.random()*1000 - Math.random()*1000, 
+//                Math.random()*1000 - Math.random()*1000
+//            );
+//            cloud.animation.speed = 500+500*Math.random();
+//            cloud.speed = 5*Math.random()-5*Math.random();
+//            cloud.opacity = Math.random()*0.75+0.25;
+//
+//            cloud.animation.onUpdate = function() {
+//                cloud.animation.sprite.position.x += cloud.speed;
+//                cloud.animation.sprite.material.opacity = cloud.opacity;
+//            }
+//
+//            cloud.animation.start();
+//            cloud.animation.animationType = Sprite.AnimationType.BOUNCE | Sprite.AnimationType.JERKY;
+//            scene.add(cloud.animation.sprite);
+//            
+//            return cloud;
+//        });
 
 
         background = Drawables.background();
@@ -105,6 +105,7 @@
 
     function init() {
         camera = new THREE.PerspectiveCamera(75, WIDTH / HEIGHT, 1, 10000);
+//        camera = new THREE.OrthographicCamera( WIDTH / - 2, WIDTH/ 2, HEIGHT/ 2, HEIGHT/ - 2, 1, 100000 );
         camera.position.z = 2000;
         camera.position.y = 1000;
 
@@ -145,9 +146,10 @@
     function update() {
         var dt = (+new Date()) - prevTime;
         prevTime = +new Date();
-
+        camera.position.x = player.animation.sprite.x;
+        
         player.update(dt, collidables, world, camera);
-
+        
         clouds.forEach(function(cloud) {
             cloud.animation.update();
         });
@@ -205,11 +207,13 @@
             if(level.objects.grounds) grounds = _.each(level.objects.grounds, function(ground) {
                 var newGround = {}
                 newGround.sprite = Ground.makeGround(
-                    ground.f,
-                    ground.t,
-                    ground.y,// || -200,
+                    ground.x,
+                    ground.y,
+                    ground.w,// || -200,
+                    ground.h,
                     ground.depth || 0, 
-                    ground.texture || "floor_dark"
+                    ground.texture || "floor_dark",
+                    scene
                 );
                 scene.add(newGround.sprite);
                 collidables.push(newGround);

@@ -47,7 +47,7 @@
             result.push({
                 "x" : e.x * scale.x + vec.x,
                 "y" : e.y * scale.y + vec.y,
-                "z" : e.z * scale.z + vec.z
+                "z" : 0
             });
         });
         
@@ -82,25 +82,30 @@
         return r;
     }
 
-    function objectsCollide(position, player, obj, i) {
-        //console.log("player",player);
-        //console.log("object",obj);
+    function objectsCollide(position, player, obj, dd) {
+//        console.log("player",player);
+//        console.log("object",obj);
         var result = {};
         for ( var i in player) {
             for ( var j in obj) {
-                if (i!=1 || j!=0) break;
                 var playerLine = getLine(player, i);
                 var objectLine = getLine(obj, j);
+//                console.log("pline", playerLine)
+//                console.log("obectL", objectLine)
                 //qconsole.log(linesCross(playerLine, objectLine));
                 if (linesCross(playerLine, objectLine)) {
                     var vector = getDirection(position, objectLine);
-                    if (result[j] && result[j].count < vector.count){
-                        vector = result[j];
+//                    console.log("vec", vector)
+                        
+                    if (result[dd] && result[dd].vector.count < vector.count){
+//                        console.log("I AM THE IF");
+                        vector = result[dd].vector;
                     }
-                    result[j] = {
-                        "index" : j,
+                    result[dd] = {
+                        "index" : dd,
                         "vector" : vector
                     };
+//                    console.log("resdd", result[dd]);
                 }
             }
         }
@@ -114,10 +119,22 @@
             _.range(collidables.length).forEach(function (i) {
                 var obj = getActualPosition(collidables[i].sprite);
                 var co = objectsCollide(player.animation.sprite.position,playerPosition, obj, i);
-                arr.push(co);
+                if(Object.keys(co).length > 0){
+                    arr.push(co);
+                }
             });
+//            console.log("length", arr.length)
+//            arr = _.compact(arr);
+//            if(collidables.length > 0 && arr.length > 0){
+////                console.log("collidables:", collidables)
+//                console.log("ARR", arr);
+//                console.log("ARR", arr[0][0].vector);
+////                asdf
+//            }
+            
             return arr;
         }
+    
     });
 
 })(GAME || {}, THREE, _);
