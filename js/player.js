@@ -1,7 +1,7 @@
 (function(G, THREE, THREEx, _) {
 
     var Sprite = G.Sprite, Collision = G.Collision, Sounds = G.Sounds;
-    var keyboard = new THREEx.KeyboardState();
+    var keyboard = null;//new THREEx.KeyboardState();
 
     var animation = function(scene) {
         var anim = new Sprite.Animation("icecube1", "CUBE");
@@ -32,18 +32,25 @@
                                                                     // extra
                                                                     // parameters
                                                                     // :/
+                                                                    
+                    if(!keyboard) {
+                        keyboard = new THREEx.KeyboardState();
+                    }
+                    
                     player.speed.x = 0;
                     player.isMoving = false;
                     if (keyboard.pressed('B'))  {
                         GAME.nextLevel = GAME.currLevel;
+                        GAME.loadinglevel = true;
                         keyboard.destroy();
-                        keyboard = new THREEx.KeyboardState();
+                        keyboard = undefined;
                         return;
                     }
                     if (keyboard.pressed('N'))  {
                         GAME.nextLevel = GAME.currLevel+1;
+                        GAME.loadinglevel = true;
                         keyboard.destroy();
-                        keyboard = new THREEx.KeyboardState();
+                        keyboard = undefined;
                         return;
                     }
 

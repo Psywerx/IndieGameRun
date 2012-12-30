@@ -15,7 +15,7 @@
 
     var state = "intro";
     
-    GAME.levelCount = 4;//+1
+    GAME.levelCount = 5;//+1
     GAME.currLevel = 0;
     GAME.nextLevel = 1;
     GAME.loadingLevel = false;
