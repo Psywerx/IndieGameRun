@@ -327,7 +327,11 @@
                 if(level.objects.suns) suns = _.map(level.objects.suns, function(sun) {
                     
                     Sun.init(sun,scene, camera);
-                });
+                });          
+                var home = Sprite.getSprite("house1", "PLANE");
+                home.position.set(14000, 920, 350);
+                home.scale.set(3,3);
+                scene.add(home);
                 
                 callback && callback();
 

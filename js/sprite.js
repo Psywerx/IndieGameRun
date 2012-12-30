@@ -13,6 +13,8 @@
         "bg" : { name: "bg", count : 1},
         "intro1" : {name: "intro1", count: 1},
         "intro2" : {name: "intro2", count: 1},
+        "house1" : {name: "house1", count: 1},
+        "house2" : {name: "house2", count: 1},
     };
 
     _.extend(Sprite, {

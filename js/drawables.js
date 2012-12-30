@@ -10,7 +10,7 @@
             var fire = new Sprite.Animation("fire", "PLANE", w, h);
             fire.sprite.position.set(x, y, depth);
             fire.sprite.animationType = Sprite.AnimationType.JERKY;
-            return fire
+            return fire;
         },
         makeGround : function(x, y,z, w, h, depth, texture, scene) {
             var imgSize = 100.0;

@@ -20,9 +20,7 @@ level = {
             
             { x: 10100, y: 150, z:50, w: 1200, h : 500, depth: 10, texture: "concret" },
             { x: 12000, y: 50, z:0, w: 333, h : 200, depth: 110, texture: "concret" },
-            { x: 15000, y: 50, z:0, w: 600, h : 1800, depth: 200, texture: "concret" },
-            { x: 15000, y: 800, z:0, w: 5600, h : 200, depth: 120, texture: "concret" },
-            
+
 //          
             
 //            { f: 3400, t: 3700, y: 100, depth: 100, texture: "floor_light" }
