@@ -25,8 +25,8 @@
             var texture = new THREE.Texture(image, new THREE.UVMapping(), THREE.RepeatWrapping, THREE.RepeatWrapping,
                     THREE.NearestFilter, THREE.LinearMipMapLinearFilter);
 
-            texture.repeat.x = w / imgSize;
-            texture.repeat.y = h / imgSize;
+            texture.repeat.x = w / imgSize / 8;
+            texture.repeat.y = h / imgSize / 8;
 
             var material = new THREE.MeshLambertMaterial({
                 map : texture
