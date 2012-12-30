@@ -16,7 +16,7 @@ level = {
             { x: 1200, y: 900, w: 1700,  h: 1400, depth: -100, texture: "cloud1", speed: { x: 177, y: 0 } }
         ],
         fires : [
-            { x: 400, y: 350, w: 200, h: 300, depth: 0 }
+            { x: 100, y: 350, w: 200, h: 300, depth: 0 }
         ],
         trees : [
             { x: 600, y: 1600, w: 1000, h: 1500, depth: 300 }
