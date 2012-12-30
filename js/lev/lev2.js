@@ -4,16 +4,16 @@ level = {
     objects : {
         player : [{ x: 0, y: 350 } ],
         grounds : [
-            { x: 100, y: 100, z:0, w: 1000, h : 400, depth: 200, texture: "concret" },
-            { x: 1400, y: 0, z:0, w: 1000,  h: 1000, depth: 100, texture: "concret" },
+            { x: 100, y: 100, z:0, w: 1000, h : 400, depth: 300, texture: "concret" },
+            { x: 1400, y: 0, z:0, w: 1000,  h: 1000, depth: 300, texture: "concret" },
             { x: 1000, y: -300, z:0, w: 500000,  h: 500, depth: 400, texture: "concret" },
-            { x: 3400, y: 0, z:0, w: 1000,  h: 1000, depth: 100, texture: "concret" },
-            { x: 4800, y: 0, z:0, w: 1000,  h: 500, depth: 80, texture: "concret" },
-            { x: 9000, y: 0, z:0, w: 120,  h: 100, depth: 80, texture: "concret" },
-            { x: 9540, y: 0, z:0, w: 250,  h: 200, depth: 80, texture: "granit" },
-            { x: 97800, y: 0, z:0, w: 320,  h: 300, depth: 80, texture: "granit" },
-            { x: 10200, y: 0, z:0, w: 420,  h: 200, depth: 80, texture: "granit" },
-            { x: 12200, y: 500, z:0, w: 10420,  h: 300, depth: 160, texture: "granit" },
+            { x: 3400, y: 0, z:0, w: 1000,  h: 1000, depth: 400, texture: "concret" },
+            { x: 4800, y: 0, z:0, w: 1000,  h: 500, depth: 380, texture: "concret" },
+            { x: 9000, y: 0, z:0, w: 120,  h: 100, depth: 380, texture: "concret" },
+            { x: 9540, y: 0, z:0, w: 250,  h: 200, depth: 280, texture: "granit" },
+            { x: 97800, y: 0, z:0, w: 320,  h: 300, depth: 380, texture: "granit" },
+            { x: 10200, y: 0, z:0, w: 420,  h: 200, depth: 280, texture: "granit" },
+            { x: 12200, y: 500, z:0, w: 10420,  h: 300, depth: 260, texture: "granit" },
 
             
            // { x: 1000, y: 900, z:0, w: 5000,  h: 400, depth: 100, texture: "concret" },

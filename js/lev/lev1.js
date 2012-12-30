@@ -7,19 +7,19 @@ level = {
             { x: 100, y: -200, z:0, w: 10000000, h : 400, depth: 500, texture: "dirt" },
             { x: -2000, y: 1000, z:0, w: 2000, h: 4000, depth: 200, texture: "concret"},
             { x: 3100, y: 50, z:0, w: 300, h : 100, depth: 120, texture: "concret" },
-            { x: 3400, y: 50, z:0, w: 400, h : 200, depth: 110, texture: "concret" },
-            { x: 3800, y: 50, z:0, w: 600, h : 400, depth: 120, texture: "concret" },
+            { x: 3400, y: 50, z:0, w: 400, h : 200, depth: 210, texture: "concret" },
+            { x: 3800, y: 50, z:0, w: 600, h : 400, depth: 220, texture: "concret" },
             
             
-            { x: 5100, y: 50, z:0, w: 1200, h : 500, depth: 90, texture: "concret" },
+            { x: 5100, y: 50, z:0, w: 1200, h : 500, depth: 190, texture: "concret" },
             { x: 7400, y: 50, z:0, w: 4002, h : 300, depth: 110, texture: "concret" },
-            { x: 6000, y: 50, z:0, w: 600, h : 400, depth: 120, texture: "concret" },
+            { x: 6000, y: 50, z:0, w: 600, h : 400, depth: 220, texture: "concret" },
             
-            { x: 8000, y: 50, z:0, w: 700, h : 400, depth: 120, texture: "granit" },
+            { x: 8000, y: 50, z:0, w: 700, h : 400, depth: 320, texture: "granit" },
             
             
-            { x: 10100, y: 150, z:50, w: 1200, h : 500, depth: 10, texture: "concret" },
-            { x: 12000, y: 50, z:0, w: 333, h : 200, depth: 110, texture: "concret" },
+            { x: 10100, y: 150, z:50, w: 1200, h : 500, depth: 200, texture: "concret" },
+            { x: 12000, y: 50, z:0, w: 333, h : 200, depth: 410, texture: "concret" },
 
 //          
             

@@ -18,7 +18,7 @@ level = {
             { x: 8000, y: 50, z:0, w: 700, h : 700, depth: 120, texture: "granit" },
             
             
-            { x: 10100, y: 150, z:50, w: 1200, h : 500, depth: 10, texture: "concret" },
+            { x: 10100, y: 150, z:0, w: 1200, h : 500, depth: 500, texture: "concret" },
             { x: 12000, y: 50, z:0, w: 333, h : 200, depth: 110, texture: "concret" },
 
             
