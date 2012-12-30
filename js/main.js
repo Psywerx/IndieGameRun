@@ -215,7 +215,7 @@
 
 
     Sprite.loadAllTextures(function () {
-        loadLevel(2, function(level) {
+        loadLevel(1, function(level) {
             init();            
             if(level.objects.player) {
                 camera.position.x = level.objects.player[0].x;
@@ -278,6 +278,7 @@
                 
                 Sun.init(sun,scene, camera);
             });            
+
             animate();
         });
     });

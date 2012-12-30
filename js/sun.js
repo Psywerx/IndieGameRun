@@ -10,6 +10,7 @@
         size= 500,
         posx = 0,
         posy = 0,
+        directionalLight = null,
         sprite= null;
       
    
@@ -30,6 +31,8 @@
            alpha += omega*dt;
            calcPos();
            sprite.position.set(posx+camera.position.x, posy+camera.position.y, -500);
+           directionalLight.position.set(posx,posy,-1).normalize();
+           
         },
         init : function(sunObject,scene){
             x = sunObject.x;
@@ -44,6 +47,10 @@
             sprite.position.set(posx, posy, 0);
             console.log("sun",sprite);
             scene.add(sprite);
+            
+            directionalLight = new THREE.DirectionalLight(0xffffff)
+            directionalLight.position.set(posx,posy,-1).normalize();
+            scene.add(directionalLight);
         }
     });
 })( GAME, THREE, _ );

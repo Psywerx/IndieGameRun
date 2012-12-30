@@ -40,7 +40,7 @@ level = {
             { x: 5000, y: 600, w: 1000, h: 1500, depth: 200 }
         ],
         suns : [
-            { x: 0, y: -500, r: 2000 , alpha: Math.PI/4, omega: 0.00002, size: 2000 }
+            { x: 0, y: -500, r: 2000 , alpha: Math.PI/4, omega: 0.00006, size: 2000 }
         ]
     }
 };
