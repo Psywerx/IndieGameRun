@@ -4,7 +4,8 @@
         Drawables = G.Drawables,
         Ground = G.Ground,
         Player = G.Player,
-        Collision = G.Collision;
+        Collision = G.Collision,
+        Sun = G.Sun;
 
     var WIDTH = 800,
         HEIGHT = 600;
@@ -18,8 +19,10 @@
         world = {},
         collidables = [],
         fires = [],
+        trees = [],
         effects = [],
         clouds = [],
+        suns = [],
         grounds = [],
         background = {};
 
@@ -104,7 +107,7 @@
         scene.add(background);
 
     }
-    
+
     function init() {
         camera = new THREE.PerspectiveCamera(75, WIDTH / HEIGHT, 1, 10000);
 //        camera = new THREE.OrthographicCamera( WIDTH / - 2, WIDTH/ 2, HEIGHT/ 2, HEIGHT/ - 2, 1, 100000 );
@@ -147,7 +150,6 @@
     function update() {
         var dt = (+new Date()) - prevTime;
         
-<<<<<<< HEAD
         switch(state){
         case "intro":
             GAME.slideMenu1(dt);
@@ -163,15 +165,12 @@
             
             player.update(dt, collidables, world, camera);
             
-            clouds.forEach(function(cloud) {
-                cloud.animation.update();
+            clouds && clouds.forEach(function(cloud) {
+            //console.log(cloud)
+            cloud.sprite.update(dt);
             });
             fires.forEach(function(fire) {
-                fire.update();
-                if (fire.sprite) {
-                    fire.sprite.position.z = 5;
-                }
-                
+                fire.update();  
             });
             effects.forEach(function(effect) {
                 effect.update();
@@ -180,18 +179,8 @@
         }
         prevTime = +new Date();
         
-=======
-        clouds && clouds.forEach(function(cloud) {
-            //console.log(cloud)
-            cloud.sprite.update(dt);
-        });
-        fires.forEach(function(fire) {
-            fire.update();            
-        });
-        effects.forEach(function(effect) {
-            effect.update();
-        });
->>>>>>> origin/hairy
+
+        Sun.update(dt,camera);
 
     }
 
@@ -219,14 +208,18 @@
             else
                 cb();
         })(function(){
-            console.log(level);
-            callback();
+            //console.log(level);
+            callback(level);
         });    
     }
 
 
     Sprite.loadAllTextures(function () {
-        loadLevel(1, function() {
+<<<<<<< HEAD
+        loadLevel(1, function(level) {
+=======
+        loadLevel(3, function(level) {
+>>>>>>> Added level 3
             init();            
             if(level.objects.player) {
                 camera.position.x = level.objects.player[0].x;
@@ -250,6 +243,7 @@
                 newGround.sprite = Drawables.makeGround(
                     ground.x,
                     ground.y,
+                    ground.z,
                     ground.w,
                     ground.h,
                     ground.depth || 0, 
@@ -265,7 +259,7 @@
                 var newFire = {}
                 newFire.animation = Drawables.makeFire(fire.texture || "fire", "PLANE", fire.w, fire.h);
                 newFire.animation.sprite.position.set(fire.x, fire.y, fire.depth);
-                
+                newFire.animation.collisionType = "Fire";
                 newFire.animation.start();
                 scene.add(newFire.animation.sprite);
                 collidables.push(newFire.animation);
@@ -273,16 +267,22 @@
                 return newFire.animation;
             });
             if(level.objects.trees) trees = _.map(level.objects.trees, function(tree) {
-                var newTree = {}
+                var newTree = {};
                 newTree.sprite = Sprite.getSprite(tree.texture || "tree", "PLANE", tree.w, tree.h);
                 newTree.sprite.position.set(tree.x, tree.y, tree.depth || 0);
                 newTree.sprite.update = function(dt) {
 
-                }
+                };
+                console.log(player);
                 scene.add(newTree.sprite);
                 
                 return newTree;
             });            
+            if(level.objects.suns) suns = _.map(level.objects.suns, function(sun) {
+                
+                Sun.init(sun,scene, camera);
+            });            
+
             animate();
         });
     });

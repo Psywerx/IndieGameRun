@@ -278,7 +278,6 @@
                 
                 Sun.init(sun,scene, camera);
             });            
-
             animate();
         });
     });

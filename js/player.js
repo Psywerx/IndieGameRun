@@ -44,6 +44,11 @@
                         player.speed.x += 10;
                         player.isMoving = true;
                     }
+                    if(keyboard.pressed('P')){
+                        console.log(player.animation.sprite.position.x,
+                                player.animation.sprite.position.y,
+                                player.animation.sprite.position.z);
+                    }
                     if (keyboard.pressed('W') || keyboard.pressed('up') || keyboard.pressed('space')) {
                         if (GAME.Sounds.duck.isPaused())
                             GAME.Sounds.jump.setVolume(100);
