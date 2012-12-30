@@ -9,6 +9,7 @@
         "fire" : { name: "fire", count: 16 },
         "test" : { name: "test", count: 1 },
         "tree" : { name: "tree", count: 1 },
+        "bush" : { name: "bush", count: 1 },
         "sun" : { name: "sun", count: 1 },
         "bg" : { name: "bg", count : 1},
         "intro1" : {name: "intro1", count: 1},

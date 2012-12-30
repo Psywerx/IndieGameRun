@@ -71,8 +71,6 @@
                     }
                     if (keyboard.pressed('W') || keyboard.pressed('up') || keyboard.pressed('space')) {
                         try {
-                            if (GAME.Sounds.duck.isPaused())
-                                GAME.Sounds.jump.setVolume(100);
                             GAME.Sounds.duck.load().play();
                         } catch(err) {}
 
@@ -101,7 +99,6 @@
 
                         try {
                             if (player.isCrouched) {
-                                GAME.Sounds.jump.setVolume(65);
                                 GAME.Sounds.jump.load().play();
                             }
                         } catch(err) {}
@@ -156,7 +153,7 @@
                             
                             
                             if(collidables[collide.index].collisionType == "Fire"){
-                                player.sizeFactor = Math.max(0, player.sizeFactor - dt/1000);
+                                player.sizeFactor = Math.max(0, player.sizeFactor - dt/(1000));
                                 return;
                             }
                             
@@ -210,7 +207,7 @@
                         console.log("NEXT LEVEL");
                     }
                     // }
-                    player.sizeFactor = Math.max(0, player.sizeFactor - dt/100000);
+                    player.sizeFactor = Math.max(0, player.sizeFactor - dt/(100000 * (GAME.currLevel==6 ? 4 : 1)));
                     if(player.sizeFactor < 0.5 || player.animation.sprite.position.y < -200){
                         GAME.nextLevel = GAME.currLevel;
                         console.log("YOU SHOULD BE DEAD");
