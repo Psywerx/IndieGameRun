@@ -5,6 +5,7 @@
         Ground = G.Ground,
         Player = G.Player,
         Collision = G.Collision;
+        Sun = G.Sun;
 
     var WIDTH = 800,
         HEIGHT = 600;
@@ -18,6 +19,7 @@
         fires = [],
         effects = [],
         clouds = [],
+        suns = [],
         grounds = [],
         background = {};
 
@@ -158,6 +160,9 @@
         effects.forEach(function(effect) {
             effect.update();
         });
+        suns.forEach(function(effect) {
+            effect.update();
+        });
 
     }
 
@@ -185,14 +190,14 @@
             else
                 cb();
         })(function(){
-            console.log(level);
-            callback();
+            //console.log(level);
+            callback(level);
         });    
     }
 
 
     Sprite.loadAllTextures(function () {
-        loadLevel(1, function() {
+        loadLevel(1, function(level) {
             init();            
             if(level.objects.player) {
                 camera.position.x = level.objects.player[0].x;
@@ -245,6 +250,13 @@
                 newTree.sprite.update = function(dt) {
 
                 }
+                scene.add(newTree.sprite);
+                
+                return newTree;
+            });            
+            if(level.objects.suns) suns = _.map(level.objects.suns, function(sun) {
+                
+                Sun.init(sun);
                 scene.add(newTree.sprite);
                 
                 return newTree;

@@ -21,5 +21,8 @@ level = {
         trees : [
             { x: 600, y: 1600, w: 1000, h: 1500, depth: 300 }
         ],
-    },
+        suns : [
+            { x: 0, y: -500, r: 700 , alpha: 0, omega: 0.01, size: 50 }
+        ]
+    }
 };

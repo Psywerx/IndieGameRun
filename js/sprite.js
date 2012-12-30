@@ -2,14 +2,15 @@
     var Sprite = G.Sprite = {};
 
     var textures = {
+        "icecube1" : {name: "icecube1", count: 1},
         "player" : { name: "player", count: 3 },
+        "cloud1": { name: "cloud1", count : 1},
+        "cloud": { name: "cloud", count : 1},
         "fire" : { name: "fire", count: 16 },
         "test" : { name: "test", count: 1 },
         "tree" : { name: "tree", count: 1 },
-        "cloud": { name: "cloud", count : 1},
-        "cloud1": { name: "cloud1", count : 1},
-        "bg"   : { name: "bg", count : 1},
-        "icecube1" : {name: "icecube1", count: 1},
+        "sun" : { name: "sun", count: 1 },
+        "bg" : { name: "bg", count : 1},
     };
 
     _.extend(Sprite, {
