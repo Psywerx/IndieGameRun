@@ -47,7 +47,7 @@
                 if(levelC.material) {
                     levelC.material.opacity -= (dt)/5000;
                     //levelC.position.set(Math.random()*10000-Math.random()*10000,Math.random()*10000-Math.random()*10000,Math.random()*1000-Math.random()*1000);
-                    if(levelC.material.opacity < 0.1) {
+                    if(levelC.material.opacity < 0.01) {
                         scene.remove(levelC);
                         levelC = {}
                         console.log("removed");
