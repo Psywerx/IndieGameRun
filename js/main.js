@@ -4,7 +4,8 @@
         Drawables = G.Drawables,
         Ground = G.Ground,
         Player = G.Player,
-        Collision = G.Collision;
+        Collision = G.Collision,
+        Sun = G.Sun;
 
     var WIDTH = 800,
         HEIGHT = 600;
@@ -18,8 +19,10 @@
         world = {},
         collidables = [],
         fires = [],
+        trees = [],
         effects = [],
         clouds = [],
+        suns = [],
         grounds = [],
         background = {};
 
@@ -177,6 +180,8 @@
         prevTime = +new Date();
         
 
+        Sun.update(dt,camera);
+
     }
 
     function animate() {
@@ -203,14 +208,14 @@
             else
                 cb();
         })(function(){
-            console.log(level);
-            callback();
+            //console.log(level);
+            callback(level);
         });    
     }
 
 
     Sprite.loadAllTextures(function () {
-        loadLevel(1, function() {
+        loadLevel(1, function(level) {
             init();            
             if(level.objects.player) {
                 camera.position.x = level.objects.player[0].x;
@@ -257,15 +262,20 @@
                 return newFire.animation;
             });
             if(level.objects.trees) trees = _.map(level.objects.trees, function(tree) {
-                var newTree = {}
+                var newTree = {};
                 newTree.sprite = Sprite.getSprite(tree.texture || "tree", "PLANE", tree.w, tree.h);
                 newTree.sprite.position.set(tree.x, tree.y, tree.depth || 0);
                 newTree.sprite.update = function(dt) {
 
-                }
+                };
+                console.log(player);
                 scene.add(newTree.sprite);
                 
                 return newTree;
+            });            
+            if(level.objects.suns) suns = _.map(level.objects.suns, function(sun) {
+                
+                Sun.init(sun,scene, camera);
             });            
             animate();
         });
