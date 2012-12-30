@@ -239,6 +239,7 @@
                 newGround.sprite = Drawables.makeGround(
                     ground.x,
                     ground.y,
+                    ground.z,
                     ground.w,
                     ground.h,
                     ground.depth || 0, 

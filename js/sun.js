@@ -29,7 +29,7 @@
         update : function (dt,camera) {
            alpha += omega*dt;
            calcPos();
-           sprite.position.set(posx+camera.position.x, posy+camera.position.y, 0);
+           sprite.position.set(posx+camera.position.x, posy+camera.position.y, -500);
         },
         init : function(sunObject,scene){
             x = sunObject.x;

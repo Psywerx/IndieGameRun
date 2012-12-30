@@ -12,7 +12,7 @@
             fire.sprite.animationType = Sprite.AnimationType.JERKY;
             return fire
         },
-        makeGround : function(x, y, w, h, depth, texture, scene) {
+        makeGround : function(x, y,z, w, h, depth, texture, scene) {
             var imgSize = 100.0;
             var geometry = new THREE.CubeGeometry(w, h, depth);
 
@@ -33,7 +33,7 @@
             });
 
             var sprite = new THREE.Mesh(geometry, material);
-            sprite.position.set(x, y, depth);
+            sprite.position.set(x, y, z);
 
             var x = new THREE.PlaneGeometry(w, h);
             x.position = sprite.position;
@@ -55,11 +55,12 @@
 
             var material = new THREE.MeshLambertMaterial({
                 //map : texture
-                color : 0x00ff00
+                color : 0x00ff00,
+                transparency:true, opacity:1, depthWrite: true, depthTest: true
             });
 
             var sprite = new THREE.Mesh(geometry, material);
-            sprite.position.set(x, y, depth);
+            sprite.position.set(x, y, 10*Math.random());
             sprite.scale.set(5, 5, 1);
 
             var x = new THREE.PlaneGeometry(w, h);

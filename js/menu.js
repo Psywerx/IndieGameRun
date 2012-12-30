@@ -17,7 +17,6 @@
             menu2.position.set(0,1000,1000);
             menu2.scale.set(3,3,1);
             scene.add(menu2);
-            
             setTimeout(function(){
                 slide1 = true;
             },3000);
@@ -30,8 +29,8 @@
             }
         },
         slideMenu2 : function(dt){
-            menu1.material.opacity -= (dt)/100;
-            menu2.material.opacity -= (dt)/100;// menu1.position.y * 0.9 + 4001 * 0.1;
+            menu1.material.visible = false;// -= (dt)/100;
+            menu2.material.visible = false;// -= (dt)/100;// menu1.position.y * 0.9 + 4001 * 0.1;
         }
     });
 })(GAME, THREE, _);
