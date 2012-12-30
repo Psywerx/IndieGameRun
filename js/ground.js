@@ -3,10 +3,8 @@
     var Ground = G.Ground = {};
     
     _.extend(Ground, {
-        makeGround : function(f, t, y, depth, texture) {
+        makeGround : function(x, y, w, h, depth, texture, scene) {
             var imgSize = 100.0;
-            var w = t - f;
-            var h = 100;
             var geometry = new THREE.CubeGeometry(w, h, depth);
 
             var image = new Image();
@@ -26,11 +24,15 @@
             });
 
             var sprite = new THREE.Mesh(geometry, material);
-            sprite.position.set(f + w * 0.5, y, depth);
-            sprite.scale.set(w/imgSize, h/imgSize, 1);
+            sprite.position.set(x, y, depth);
 
-            var aa = (new THREE.PlaneGeometry(w, h)).vertices;
+            var x = new THREE.PlaneGeometry(w, h);
+            x.position = sprite.position;
+            var aa = (x).vertices;
             sprite.collisionFrame = [aa[0],aa[1],aa[3],aa[2]];
+            
+            console.log(sprite);
+            scene.add(x);
 
             return sprite;
         }
