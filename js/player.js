@@ -140,7 +140,6 @@
                     player.animation.update();
                 }
             };
-
             return player;
         }
     });

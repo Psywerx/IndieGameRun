@@ -12,6 +12,8 @@
     var camera, scene, renderer;
     var geometry, material, mesh;
 
+    var state = "intro";
+    
     var player = {},
         world = {},
         collidables = [],
@@ -102,7 +104,7 @@
         scene.add(background);
 
     }
-
+    
     function init() {
         camera = new THREE.PerspectiveCamera(75, WIDTH / HEIGHT, 1, 10000);
 //        camera = new THREE.OrthographicCamera( WIDTH / - 2, WIDTH/ 2, HEIGHT/ 2, HEIGHT/ - 2, 1, 100000 );
@@ -112,6 +114,7 @@
         scene = new THREE.Scene();
 
         initWorld();
+        G.showIntro(scene);
 
         player = new Player(scene);
 
@@ -145,24 +148,39 @@
 
     function update() {
         var dt = (+new Date()) - prevTime;
-        prevTime = +new Date();
-        camera.position.x = player.animation.sprite.x;
         
-        player.update(dt, collidables, world, camera);
-        
-        clouds.forEach(function(cloud) {
-            cloud.animation.update();
-        });
-        fires.forEach(function(fire) {
-            fire.update();
-            if (fire.sprite) {
-                fire.sprite.position.z = 5;
+        switch(state){
+        case "intro":
+            GAME.slideMenu1(dt);
+            if(Object.keys(keyboard.keyCodes).length>0){
+                state = "game";
             }
+                
+        break;
+        
+        case "game":
+            camera.position.x = player.animation.sprite.x;
+            GAME.slideMenu2(dt);
             
-        });
-        effects.forEach(function(effect) {
-            effect.update();
-        });
+            player.update(dt, collidables, world, camera);
+            
+            clouds.forEach(function(cloud) {
+                cloud.animation.update();
+            });
+            fires.forEach(function(fire) {
+                fire.update();
+                if (fire.sprite) {
+                    fire.sprite.position.z = 5;
+                }
+                
+            });
+            effects.forEach(function(effect) {
+                effect.update();
+            });
+            break;
+        }
+        prevTime = +new Date();
+        
 
     }
 
