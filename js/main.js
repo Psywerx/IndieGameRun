@@ -222,6 +222,12 @@
     }
 
     function loadLevel(levelNum, callback) {
+        console.log(
+            levelNum,
+            GAME.nextLevel,
+            GAME.currLevel,
+            GAME.levelCount
+        )
         if(levelNum >= GAME.levelCount) {
             alert("happy ending screen !!!");
             GAME.nextLevel = 0;
@@ -326,6 +332,7 @@
                 callback && callback();
 
                 GAME.loadingLevel = false;
+                console.log("loaded level: "+GAME.nextLevel);
                 GAME.nextLevel = 0;
             });
         }

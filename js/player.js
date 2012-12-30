@@ -36,9 +36,15 @@
                     player.isMoving = false;
                     if (keyboard.pressed('B'))  {
                         GAME.nextLevel = GAME.currLevel;
+                        keyboard.destroy();
+                        keyboard = new THREEx.KeyboardState();
+                        return;
                     }
                     if (keyboard.pressed('N'))  {
                         GAME.nextLevel = GAME.currLevel+1;
+                        keyboard.destroy();
+                        keyboard = new THREEx.KeyboardState();
+                        return;
                     }
 
                     if (keyboard.pressed('A') || keyboard.pressed('left')) {
