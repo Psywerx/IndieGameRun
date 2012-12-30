@@ -13,11 +13,11 @@
     var camera, scene, renderer;
     var geometry, material, mesh;
 
-    var state = "intro";
+    var state = "game";
     
-    GAME.levelCount = 6;//+1
+    GAME.levelCount = 7;//+1
     GAME.currLevel = 0;
-    GAME.nextLevel = 1;
+    GAME.nextLevel = 6;
     GAME.loadingLevel = false;
     
     var player = {},
