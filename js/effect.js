@@ -9,6 +9,7 @@
 
             var particleCount = 180;
             this.player = player;
+            this.startWidth = player.animation.sprite.getWidth();
             this.particles = new THREE.Geometry();
             this.pMaterial =
               new THREE.ParticleBasicMaterial({
@@ -45,17 +46,22 @@
             
             this.update = function() {
                 var now = +new Date();
+                var ratio = Math.min(1, player.animation.sprite.getWidth()/this.startWidth);
                 for(var p = 0; p < particleCount; p++) {
                     var particle = that.particles.vertices[p];
-                    if(now < particle.age + 2000*Math.random()) {
-                        particle.x = (particle.x*0.95 + that.player.animation.sprite.position.x*0.05);
-                        particle.y = (particle.y*0.95 + that.player.animation.sprite.position.y*0.05);
-                    } else {
-                        particle.age = now;
-                        particle.x = that.player.animation.sprite.position.x + Math.random() * player.animation.sprite.getWidth() - player.animation.sprite.getWidth()/2;
-                        particle.y = that.player.animation.sprite.position.y - Math.random() * player.animation.sprite.getHeight()/2 + Math.random() * player.animation.sprite.getHeight()/3;
+                    if(p < particleCount * ratio) {
+                        if(now < particle.age + 2000*Math.random()) {
+                            particle.x += (Math.random()*50 - Math.random()*50)*ratio;
+                            particle.y += (Math.random()*25 - Math.random()*25)*ratio;
+                            particle.x = (particle.x*0.9 + that.player.animation.sprite.position.x*0.1);
+                            particle.y = (particle.y*0.9 + that.player.animation.sprite.position.y*0.1);
+                        } else {
+                            particle.age = now;
+                            particle.x = that.player.animation.sprite.position.x + Math.random() * player.animation.sprite.getWidth() - player.animation.sprite.getWidth()/2;
+                            particle.y = that.player.animation.sprite.position.y - Math.random() * player.animation.sprite.getHeight()/2 + Math.random() * player.animation.sprite.getHeight()/3;
+                        }
                     }
-                    particle.y -= 1+(now-particle.age)/10;
+                    particle.y -= 1+(now-particle.age)/5;
                 }
                 
                 that.particleSystem.geometry.__dirtyVertices = true;
