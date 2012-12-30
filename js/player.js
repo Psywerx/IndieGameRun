@@ -6,7 +6,7 @@
     var keyboard = new THREEx.KeyboardState();
 
     var animation = function(scene) {
-        var anim = new Sprite.Animation("player", "CUBE");
+        var anim = new Sprite.Animation("icecube1", "CUBE");
         anim.sprite.position.x = -1400;
         anim.sprite.position.y = 100 + anim.sprite.getHeight();
         var modifier = new THREE.SubdivisionModifier(2);

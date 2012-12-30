@@ -8,6 +8,7 @@
         "tree" : { name: "tree", count: 1 },
         "cloud": { name: "cloud", count : 2},
         "bg"   : { name: "bg", count : 1},
+        "icecube1" : {name: "icecube1", count: 1},
     };
 
     _.extend(Sprite, {

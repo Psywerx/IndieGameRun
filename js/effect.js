@@ -5,7 +5,7 @@
     _.extend(Effect, {
         Melty : function(player, scene) {
             var that = this;
-            this.color = 0x00ffff;
+            this.color = 0x38bdff;
 
             var particleCount = 180;
             this.player = player;
