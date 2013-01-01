@@ -311,7 +311,6 @@
                     newTree.sprite.update = function(dt) {
 
                     };
-                    console.log(player);
                     scene.add(newTree.sprite);
                     
                     return newTree;
@@ -330,7 +329,6 @@
 
                 GAME.loadingLevel = false;
                 GAME.showLevel(scene, levelNum);
-                console.log("loaded level: "+levelNum);
                 GAME.nextLevel = 0;
             });
         }

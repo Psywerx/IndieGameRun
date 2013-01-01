@@ -40,7 +40,6 @@
             levelC.scale.set(7,7,1);
             levelC.material.opacity = 1;
             scene.add(levelC);
-            console.log("ohai");
         },
         slideLevel : function(dt, scene) {
             try {
@@ -50,7 +49,6 @@
                     if(levelC.material.opacity < 0.01) {
                         scene.remove(levelC);
                         levelC = {};
-                        console.log("removed");
                     }
                 }
             } catch(err) { console.log(err); }
