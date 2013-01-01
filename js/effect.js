@@ -22,7 +22,7 @@
                     pY = that.player.animation.sprite.position.y,// - player.animation.sprite.getHeight()/2,
                     pZ = that.player.animation.sprite.position.z;
                   
-                var particle = new THREE.Vector3(pX, pY, pZ)
+                var particle = new THREE.Vector3(pX, pY, pZ);
 
                 particle.age = +new Date();
               
@@ -69,8 +69,8 @@
             
             this.cleanup = function() {
                 scene.remove(that.particleSystem);
-                that.update = function() { }
-            }
+                that.update = function() { };
+            };
         },
         BurnDown : function(object, scene, onBurntCallback) { //Look's like I need the global scene... not cool I guess.
             if (!object.burning) {
@@ -146,8 +146,8 @@
                         scene.remove(fire.sprite);
                     });
                     scene.remove(object.sprite);
-                    that.update = function() { }
-                }
+                    that.update = function() { };
+                };
             }
         },
     });

@@ -49,7 +49,7 @@
             scene.add(sprite);
             
             if(directionalLight) scene.remove(directionalLight);
-            directionalLight = new THREE.DirectionalLight(0xffffff)
+            directionalLight = new THREE.DirectionalLight(0xffffff);
             directionalLight.position.set(posx,posy,-1).normalize();
             scene.add(directionalLight);
         }
