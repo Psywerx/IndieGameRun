@@ -182,7 +182,6 @@
                             }
                         });
                     });
-
                     // }
                     player.animation.sprite.position.x += player.speed.x * dt * 0.1;
                     player.animation.sprite.position.y += player.speed.y;
@@ -212,7 +211,7 @@
                     }
                     player.animation.sprite.scale.x *= player.sizeFactor;
                     player.animation.sprite.scale.y *= player.sizeFactor;
-                    player.animation.sprite.scale.z *= player.sizeFactor;
+                    player.animation.sprite.scale.z -= 0.001*player.sizeFactor;
                     player.animation.update();
                 }
             };

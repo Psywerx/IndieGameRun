@@ -9,7 +9,6 @@
            
             
             menu1 = Sprite.getSprite("intro1", "PLANE");
-            console.log(menu1.sprite);
             menu1.position.set(0,1000,1000);
             menu1.scale.set(3,3,1);
             scene.add(menu1);

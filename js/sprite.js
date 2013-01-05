@@ -192,7 +192,7 @@
                     break;
             }
             var sprite = new THREE.Mesh(geometry, material);
-
+            //console.log(name, sprite, geometry, material);
             sprite.material = material;
             sprite.getWidth = function() { return w || material.width * sprite.scale.x; };
             sprite.getHeight = function() { return h || material.height * sprite.scale.y; };

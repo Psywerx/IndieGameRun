@@ -13,7 +13,7 @@
     var camera, scene, renderer;
     var geometry, material, mesh;
 
-    var state = "game";
+    var state = "intro";
     
     GAME.levelCount = 7;//+1
     GAME.currLevel = 0;
